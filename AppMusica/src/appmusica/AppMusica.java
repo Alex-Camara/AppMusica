@@ -33,7 +33,7 @@ public class AppMusica extends Application {
      */
     public void showMainWindows() {
         AnchorPane rootPane = new AnchorPane();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/presentacion/IGUInicioSesion.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/presentacion/IGUBiblioteca.fxml"));
 
         try {
             rootPane = loader.load();
