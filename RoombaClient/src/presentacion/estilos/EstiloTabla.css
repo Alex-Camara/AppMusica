@@ -1,0 +1,51 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 3/05/2018, 05:11:13 PM
+    Author     : Alex Cámara
+*/
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #E0DEF5;
+} 
+
+.table-view .column-header-background .text{
+    -fx-font-family: "Proxima Nova Alt Rg";
+    -fx-fill: black ;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #FFD7B4;
+}
+
+.table-row-cell:empty, .table-cell:empty:hover {
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #FFC797;
+}
+
+.table-row-cell:selected .text {
+       -fx-fill: black ;
+}
+
+.table-row-cell .text {
+       -fx-font-family: "Proxima Nova Alt Rg";
+       -fx-fill: black ;
+}
+.scroll-bar:horizontal {
+    -fx-opacity: 0;
+}
+.scroll-bar:vertical {
+    -fx-opacity: .5;
+}
+#contenido .text {
+    -fx-fill: white ;
+}
