@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logica;
+package logica.conexion;
 
 import java.io.Serializable;
 
@@ -14,6 +14,14 @@ import java.io.Serializable;
 public class Mensaje implements Serializable{
    private String asunto;
    private Object objeto;
+
+   public Mensaje() {
+   }
+   
+
+   public Mensaje(String asunto) {
+      this.asunto = asunto;
+   }
 
     public String getAsunto() {
         return asunto;

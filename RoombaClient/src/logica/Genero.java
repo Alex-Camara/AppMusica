@@ -5,11 +5,31 @@
  */
 package logica;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Alex Cámara
  */
-public class Genero {
+public class Genero implements Serializable{
     private int idGenero;
     private String nombre;
+
+   public int getIdGenero() {
+      return idGenero;
+   }
+
+   public String getNombre() {
+      return nombre;
+   }
+
+   public void setIdGenero(int idGenero) {
+      this.idGenero = idGenero;
+   }
+
+   public void setNombre(String nombre) {
+      this.nombre = nombre;
+   }
+    
+    
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logica;
+package logica.conexion;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import presentacion.IGUBibliotecaController;
 
 /**
  *
@@ -22,7 +23,7 @@ public class Servidor {
 
     private static InetAddress host;
     private static final int PUERTO = 1234;
-    private static ObjectInputStream entradaRed;
+    public static ObjectInputStream entradaRed;
     private static ObjectOutputStream salidaRed;
     private static Socket socket = null;
 
@@ -42,13 +43,24 @@ public class Servidor {
             salidaRed = new ObjectOutputStream(socket.getOutputStream());
             entradaRed = new ObjectInputStream(socket.getInputStream());
             
-            //iniciarEscuchaDeMensajes();
+           
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+    public static void enviarMensaje(Mensaje mensajeEnviar){
+      new Thread(() -> {
+          try {
+             System.out.println("asuntoEnviar "+ mensajeEnviar.getAsunto());
+             salidaRed.writeObject(mensajeEnviar);
+             System.out.println("Enviado en Servidor");
+          } catch (IOException ex) {
+             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+          }
+       }).start();
+    }
 
-    public static Object enviarMensaje(Mensaje mensajeAEnviar) {
+    public static Object enviarUsuario(Mensaje mensajeAEnviar) {
         Object respuesta = null;
         try {
             salidaRed.writeObject(mensajeAEnviar);
@@ -61,18 +73,13 @@ public class Servidor {
         return respuesta;
     }
     
-    public static void iniciarEscuchaDeMensajes() {
+    public static void iniciarEscuchaDeMensajes(IGUBibliotecaController bibliotecaController) {
 
-        Thread hiloEscuchaMensajes = new Thread(new Runnable() {
-            @Override
-            public void run() {
-               
-            }
-        });
+        EscuchaMensajes hiloEscuchaMensajes = new EscuchaMensajes(bibliotecaController); 
         hiloEscuchaMensajes.start();
     }
 
-    public static void cerrarConexion(Socket socket) {
+    public static void cerrarConexion() {
         try {
             System.out.println("\nCerrando la conexión");
             socket.close();

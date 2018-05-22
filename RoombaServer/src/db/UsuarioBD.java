@@ -39,6 +39,7 @@ public class UsuarioBD implements UsuarioDao {
          usuario.setMaterno(resultado.getString("materno"));
          usuario.setTipoUsuario(resultado.getString("nombreArtistico"));
          usuario.setIdBiblioteca(resultado.getInt("idBiblioteca"));
+         usuario.setTipoUsuario(resultado.getString("tipoUsuario"));
       }
         return usuario;
     }

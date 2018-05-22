@@ -5,13 +5,14 @@
  */
 package logica;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Alex Cámara
  */
-public class Biblioteca {
+public class Biblioteca implements Serializable {
     private int idBiblioteca;
     private List<Cancion> canciones;
 

@@ -17,7 +17,8 @@ public class Cancion implements Serializable{
     private double duracion;
     private String artista;
     private int calificacion;
-    private int idAlbum;
+    private int album_idAlbum;
+    private String ruta;
 
     public int getIdCancion() {
         return idCancion;
@@ -59,13 +60,24 @@ public class Cancion implements Serializable{
         this.artista = artista;
     }
 
-    public int getIdAlbum() {
-        return idAlbum;
-    }
+   public int getAlbum_idAlbum() {
+      return album_idAlbum;
+   }
 
-    public void setIdAlbum(int idAlbum) {
-        this.idAlbum = idAlbum;
-    }
+   public void setAlbum_idAlbum(int album_idAlbum) {
+      this.album_idAlbum = album_idAlbum;
+   }
+
+
+
+   public String getRuta() {
+      return ruta;
+   }
+
+   public void setRuta(String ruta) {
+      this.ruta = ruta;
+   }
+    
     
     
 }
