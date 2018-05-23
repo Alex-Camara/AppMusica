@@ -37,7 +37,6 @@ public class BibliotecaBD implements BibliotecaDao {
          Cancion cancion = new Cancion();
          cancion.setIdCancion(resultado.getInt("idCancion"));
          cancion.setArtista(resultado.getString("artista"));
-         cancion.setDuracion(resultado.getDouble("duracion"));
          cancion.setAlbum_idAlbum(resultado.getInt("Album_idAlbum"));
          cancion.setNombre(resultado.getString("nombre"));
          cancion.setRuta(resultado.getString("ruta"));
