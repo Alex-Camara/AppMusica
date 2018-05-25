@@ -9,11 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import logica.Album;
-import logica.Biblioteca;
-import logica.Cancion;
 
 /**
  *
@@ -21,28 +17,28 @@ import logica.Cancion;
  */
 public class AlbumBD implements AlbumDao {
 
-    @Override
-    public Album recuperarAlbumes(int idAlbum) throws SQLException {
-        Connection conexion = null;
-        conexion = Conexion.conectar();
-        PreparedStatement sentencia = null;
-        ResultSet resultado = null;
-        Album album = new Album();
+   @Override
+   public Album recuperarAlbumes(int idAlbum) throws SQLException {
+      Connection conexion = null;
+      conexion = Conexion.conectar();
+      PreparedStatement sentencia = null;
+      ResultSet resultado = null;
+      Album album = new Album();
 
-        String consulta = "SELECT * FROM album WHERE idAlbum = ?;";
+      String consulta = "SELECT * FROM album WHERE idAlbum = ?;";
 
-        sentencia = conexion.prepareStatement(consulta);
-        sentencia.setInt(1, idAlbum);
-        resultado = sentencia.executeQuery();
+      sentencia = conexion.prepareStatement(consulta);
+      sentencia.setInt(1, idAlbum);
+      resultado = sentencia.executeQuery();
 
-        while (resultado != null && resultado.next()) {
-
-            album.setIdAlbum(resultado.getInt("idAlbum"));
-            album.setNombre(resultado.getString("nombre"));
-            album.setEstudio(resultado.getString("estudio"));
-            album.setAnioLanzamiento(resultado.getInt("anioLanzamiento"));
-        }
-        return album;
-    }
+      while (resultado != null && resultado.next()) {
+         album.setIdAlbum(resultado.getInt("idAlbum"));
+         album.setNombre(resultado.getString("nombre"));
+         album.setEstudio(resultado.getString("estudio"));
+         album.setAnioLanzamiento(resultado.getInt("anioLanzamiento"));
+         album.setIdGenero(resultado.getInt("idGenero"));
+      }
+      return album;
+   }
 
 }

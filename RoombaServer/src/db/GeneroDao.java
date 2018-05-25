@@ -6,12 +6,14 @@
 package db;
 
 import java.sql.SQLException;
-import logica.Album;
+import java.util.List;
+import logica.Genero;
 
 /**
  *
- * @author Alex Cámara
+ * @author javr
  */
-public interface AlbumDao {
-    Album recuperarAlbumes(int idAlbum) throws SQLException;
+public interface GeneroDao {
+    Genero recuperarGenero(int idGenero) throws SQLException;
+    List<Genero> recuperarCatalogo() throws SQLException;
 }

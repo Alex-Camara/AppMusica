@@ -11,9 +11,10 @@ import java.io.Serializable;
  *
  * @author Alex Cámara
  */
-public class Genero implements Serializable{
-    private int idGenero;
-    private String nombre;
+public class Genero implements Serializable {
+
+   private int idGenero;
+   private String nombre;
 
    public int getIdGenero() {
       return idGenero;
@@ -30,6 +31,8 @@ public class Genero implements Serializable{
    public void setNombre(String nombre) {
       this.nombre = nombre;
    }
-    
-    
+   @Override
+   public String toString() {
+      return nombre;
+   }
 }

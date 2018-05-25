@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #F0EFF7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #F0EFF7;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <Pane prefHeight="523.0" prefWidth="200.0" style="-fx-background-color: #E0DEF5;" BorderPane.alignment="CENTER">
          <children>
@@ -312,7 +312,7 @@
                       <RowConstraints maxHeight="447.61634826660156" minHeight="10.0" prefHeight="446.56492614746094" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="labelPaneArtNombre" alignment="CENTER" prefHeight="22.0" prefWidth="341.0" text="Sin artistas :(" wrapText="true">
+                        <Label fx:id="labelPaneArtistaNombre" alignment="CENTER" prefHeight="22.0" prefWidth="341.0" text="Sin artistas :(" wrapText="true">
                            <font>
                               <Font name="Proxima Nova Alt Bold" size="17.0" />
                            </font>
@@ -322,14 +322,14 @@
                         </Label>
                         <TableView fx:id="tableCancionesArtista" prefHeight="518.0" prefWidth="333.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTabla.css" GridPane.rowIndex="1">
                            <columns>
-                              <TableColumn fx:id="tcaColumnNombre" editable="false" prefWidth="332.00001525878906" text=" " />
+                              <TableColumn fx:id="tcaColumnNombre" editable="false" minWidth="340.0" prefWidth="-1.0" resizable="false" text=" " />
                            </columns>
                         </TableView>
                      </children>
                   </GridPane>
                </children>
             </Pane>
-            <Pane fx:id="paneAlbumes" prefHeight="539.0" prefWidth="699.0">
+            <Pane fx:id="paneAlbumes" prefHeight="539.0" prefWidth="699.0" visible="false">
                <children>
                   <TableView fx:id="tableAlbumes" prefHeight="518.0" prefWidth="333.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTablaGrande.css">
                      <columns>
@@ -367,15 +367,48 @@
                      </children>
                   </GridPane>
                </children></Pane>
+            <Pane fx:id="paneGeneros" layoutX="-2.0" layoutY="-2.0" prefHeight="542.0" prefWidth="702.0" visible="false">
+               <children>
+                  <TableView fx:id="tableGeneros" layoutY="2.0" prefHeight="518.0" prefWidth="333.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTablaGrande.css">
+                     <columns>
+                        <TableColumn fx:id="tgColumnGenero" editable="false" prefWidth="332.00001525878906" text="Géneros" />
+                     </columns>
+                  </TableView>
+                  <GridPane layoutX="336.0" layoutY="3.0" prefHeight="519.0" prefWidth="340.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="243.6400146484375" minHeight="10.0" prefHeight="55.43507385253906" valignment="BOTTOM" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="447.61634826660156" minHeight="10.0" prefHeight="446.56492614746094" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label fx:id="labelPaneGeneroNombre" alignment="CENTER" prefHeight="22.0" prefWidth="341.0" text="Sin géneros :S" wrapText="true">
+                           <font>
+                              <Font name="Proxima Nova Alt Bold" size="17.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </Label>
+                        <TableView fx:id="tableCancionesGenero" prefHeight="518.0" prefWidth="333.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTabla.css" GridPane.rowIndex="1">
+                           <columns>
+                              <TableColumn fx:id="tcgColumnNombre" editable="false" minWidth="340.0" prefWidth="-1.0" resizable="false" text=" " />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </children>
+            </Pane>
             <Pane fx:id="paneSubirContenido" prefHeight="538.0" prefWidth="698.0" visible="false" />
-            <Pane fx:id="paneAgregarLocal" layoutX="-1.0" layoutY="-1.0" prefHeight="539.0" prefWidth="699.0" visible="false">
+            <Pane fx:id="paneAgregarLocal" layoutX="-1.0" layoutY="-1.0" prefHeight="539.0" prefWidth="699.0">
                <children>
                   <Label layoutX="220.0" layoutY="3.0" text="Agregar canción local">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="buttonSeleccionarArch" layoutX="59.0" layoutY="51.0" style="-fx-border-color: black;" text="Seleccionar archivo" />
+                  <JFXButton fx:id="buttonSeleccionarArchivo" layoutX="59.0" layoutY="51.0" onAction="#ClicSeleccionarArchivoLocal" style="-fx-border-color: black;" text="Seleccionar archivo" />
                   <GridPane hgap="15.0" layoutX="29.0" layoutY="90.0" prefHeight="169.0" prefWidth="647.0" vgap="10.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.09970092773438" minWidth="10.0" />
@@ -393,14 +426,14 @@
                         <Label text="Artista" GridPane.columnIndex="1" />
                         <Label text="Álbum" GridPane.columnIndex="2" />
                         <Label text="Género" GridPane.columnIndex="3" />
-                        <JFXTextField fx:id="tFieldArtistaArch" focusColor="#ffc797" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <JFXTextField fx:id="tFieldNombreArch" focusColor="#ffc797" layoutX="171.0" layoutY="56.0" GridPane.rowIndex="1" />
-                        <JFXTextField fx:id="tFieldAlbumArch" focusColor="#ffc797" layoutX="10.0" layoutY="56.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <JFXTextField fx:id="tFieldArtistaArchivo" focusColor="#ffc797" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <JFXTextField fx:id="tFieldNombreArchivo" focusColor="#ffc797" layoutX="171.0" layoutY="56.0" GridPane.rowIndex="1" />
+                        <JFXTextField fx:id="tFieldAlbumArchivo" focusColor="#ffc797" layoutX="10.0" layoutY="56.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </JFXTextField>
-                        <JFXButton fx:id="buttonAgregarArch" style="-fx-border-color: black;" text="Agregar canción" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <JFXButton fx:id="buttonAgregarArchivo" onAction="#clicAgregarArchivoLocal" style="-fx-border-color: black;" text="Agregar canción" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <JFXComboBox fx:id="comboGenero" focusColor="#ffc797" prefHeight="27.0" prefWidth="121.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      </children>
                      <opaqueInsets>
@@ -408,7 +441,12 @@
                      </opaqueInsets>
                   </GridPane>
                   <ListView fx:id="listArchivos" layoutX="32.0" layoutY="267.0" prefHeight="119.0" prefWidth="474.0" />
-                  <JFXButton fx:id="buttonAgregarListArch" layoutX="37.0" layoutY="425.0" style="-fx-border-color: black;" text="Agregar canciones" />
+                  <JFXButton fx:id="buttonAgregarListArchivos" layoutX="37.0" layoutY="425.0" style="-fx-border-color: black;" text="Agregar canciones" />
+                  <Label fx:id="labelPaneAgregarCancionNombre" layoutX="230.0" layoutY="53.0" prefHeight="18.0" prefWidth="343.0" text=" ">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
                </children></Pane>
             <Pane fx:id="paneListas" prefHeight="537.0" prefWidth="698.0" visible="false" />
          </children>

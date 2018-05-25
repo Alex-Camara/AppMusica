@@ -17,7 +17,7 @@ public class Album implements Serializable {
     private String estudio;
     private int anioLanzamiento;
     private int idUsuario;
-    private Genero genero;
+    private int idGenero;
 
    public int getIdAlbum() {
       return idAlbum;
@@ -37,10 +37,6 @@ public class Album implements Serializable {
 
    public int getIdUsuario() {
       return idUsuario;
-   }
-
-   public Genero getGenero() {
-      return genero;
    }
 
    public void setIdAlbum(int idAlbum) {
@@ -63,9 +59,11 @@ public class Album implements Serializable {
       this.idUsuario = idUsuario;
    }
 
-   public void setGenero(Genero genero) {
-      this.genero = genero;
+   public int getIdGenero() {
+      return idGenero;
    }
-    
-    
+
+   public void setIdGenero(int idGenero) {
+      this.idGenero = idGenero;
+   }
 }
