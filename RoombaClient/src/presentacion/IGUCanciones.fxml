@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="paneCanciones" prefHeight="538.0" prefWidth="698.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tableCanciones" prefHeight="517.0" prefWidth="683.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTabla.css">
+         <columns>
+            <TableColumn fx:id="tcOpciones" prefWidth="23.0" />
+            <TableColumn fx:id="tcColumnNombre" minWidth="0.0" prefWidth="374.0" text="Nombre" />
+            <TableColumn fx:id="tcColumnArtista" minWidth="0.0" prefWidth="187.0" text="Artista" />
+            <TableColumn fx:id="tcColumnCalificacion" prefWidth="98.0" text="Calificación" />
+         </columns>
+      </TableView>
+      <ImageView fx:id="ImageEllipsis" fitHeight="19.0" fitWidth="21.0" layoutX="-34.0" layoutY="5.0" preserveRatio="true">
+         <image>
+            <Image url="@recursos/iconos/Ellipsis.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>

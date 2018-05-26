@@ -1,0 +1,28 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 26/05/2018, 09:56:14 AM
+    Author     : Alex Cámara
+*/
+
+.menu-item .label{
+    -fx-font-family: "Proxima Nova Alt Rg";
+    -fx-font-size: 12px;
+    -fx-label-line-length: 8;
+    -fx-text-fill: black;
+}
+
+.menu-item {
+    -fx-background-color: #F0EFF7;
+}
+
+.menu-item:focused {
+    -fx-background-color: #FFD7B4;
+}
+
+.context-menu {
+    -fx-background-color: #F0EFF7;
+}

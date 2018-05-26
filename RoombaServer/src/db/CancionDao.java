@@ -16,5 +16,6 @@ import logica.Cancion;
 public interface CancionDao {
    public List<Cancion> recuperarCancionesHistorial(int idUsuario) throws SQLException;
    public Cancion recuperarCancion(int idCancion) throws SQLException;
+   public int actualizarCalificacion(int idCancion, int calificacion) throws SQLException;
    
 }

@@ -20,7 +20,7 @@ public class BibliotecaBD implements BibliotecaDao {
     * @return @throws SQLException
     */
    @Override
-   public Biblioteca recuperarBilioteca() throws SQLException {
+   public Biblioteca recuperarBiblioteca(int idBiblioteca) throws SQLException {
       Connection conexion = null;
       conexion = Conexion.conectar();
       PreparedStatement sentencia = null;
@@ -31,7 +31,8 @@ public class BibliotecaBD implements BibliotecaDao {
       String consulta = "SELECT * FROM cancion WHERE privada = 0;";
 
       sentencia = conexion.prepareStatement(consulta);
-      resultado = sentencia.executeQuery();
+        //sentencia.setInt(1, idBiblioteca);
+        resultado = sentencia.executeQuery();
 
       while (resultado != null && resultado.next()) {
          Cancion cancion = new Cancion();
@@ -43,13 +44,10 @@ public class BibliotecaBD implements BibliotecaDao {
          canciones.add(cancion);
          
       }
+      biblioteca.setIdBiblioteca(idBiblioteca);
       biblioteca.setCanciones(canciones);
       return biblioteca;
    }
 
-   @Override
-   public Biblioteca recuperarBilioteca(int idUsuario) throws SQLException {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-   }
 }
 

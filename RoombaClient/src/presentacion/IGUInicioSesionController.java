@@ -17,7 +17,7 @@ import logica.conexion.Servidor;
 import static logica.conexion.Servidor.enviarUsuario;
 import static logica.conexion.Servidor.iniciarConversacion;
 import logica.Usuario;
-import presentacion.recursos.Emergente;
+import presentacion.Utileria.Emergente;
 
 /**
  * FXML Controller class

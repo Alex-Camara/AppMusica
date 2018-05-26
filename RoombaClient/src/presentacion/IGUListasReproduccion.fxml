@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="paneListas" prefHeight="542.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tableCanciones" layoutY="2.0" prefHeight="518.0" prefWidth="696.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTablaGrande.css" visible="false">
+         <columns>
+            <TableColumn fx:id="tcNombre" editable="false" prefWidth="378.0" text="Nombre" />
+            <TableColumn fx:id="tcArtista" prefWidth="235.0" text="Artista" />
+            <TableColumn fx:id="tcCancion" prefWidth="81.0" text="Calificación" />
+         </columns>
+      </TableView>
+      <TableView fx:id="tableListas" layoutY="2.0" prefHeight="518.0" prefWidth="696.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTabla.css">
+         <columns>
+            <TableColumn fx:id="tcOpciones" prefWidth="23.0" />
+            <TableColumn fx:id="tcNombreLista" editable="false" prefWidth="672.0" text="Nombre" />
+         </columns>
+      </TableView>
+   </children>
+</Pane>

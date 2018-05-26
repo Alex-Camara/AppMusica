@@ -6,13 +6,13 @@
 package db;
 
 import java.sql.SQLException;
-import logica.Biblioteca;
+import java.util.List;
+import logica.ListaReproduccion;
 
 /**
  *
- * @author javr
+ * @author Alex Cámara
  */
-public interface BibliotecaDao {
-   public Biblioteca recuperarBiblioteca(int idBiblioteca) throws SQLException;
-   
+public interface ListasReproduccionDao {
+    List<ListaReproduccion> recuperarListas(int idBiblioteca) throws SQLException;
 }

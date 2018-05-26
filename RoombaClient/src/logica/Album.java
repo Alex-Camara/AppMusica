@@ -66,4 +66,5 @@ public class Album implements Serializable {
    public void setIdGenero(int idGenero) {
       this.idGenero = idGenero;
    }
+  
 }
