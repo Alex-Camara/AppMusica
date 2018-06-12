@@ -42,6 +42,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
             ListaReproduccion lista = new ListaReproduccion();
             lista.setIdListaReproduccion(resultado.getInt("idListaReproduccion"));
             lista.setNombre(resultado.getString("nombre"));
+            lista.setIdBiblioteca(idBiblioteca);
             listasReproduccion.add(lista);
         }
 
@@ -87,4 +88,77 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         return listasCanciones;
     }
 
+    @Override
+    public int agregarLista(ListaReproduccion nuevaLista, int idBiblioteca) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "insert into listaReproduccion (nombre, idBiblioteca) values(?, ?)";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setString(1, nuevaLista.getNombre());
+        sentencia.setInt(2, idBiblioteca);
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    @Override
+    public int editarLista(ListaReproduccion lista) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "update listareproduccion set nombre = ? where idlistareproduccion = ?;";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setString(1, lista.getNombre());
+        sentencia.setInt(2, lista.getIdListaReproduccion());
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    @Override
+    public int eliminarLista(ListaReproduccion lista) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+        eliminarCancionesDeLista(lista.getIdListaReproduccion());
+
+        String consulta = "delete from listareproduccion where idListaReproduccion = ?";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, lista.getIdListaReproduccion());
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    public int eliminarCancionesDeLista(int idLista) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "delete from cancionlocal_has_listareproduccion where idListaReproduccion = ?;";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idLista);
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    @Override
+    public int agregarCancionALista(Cancion cancion, ListaReproduccion lista) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "insert into cancionlocal_has_listareproduccion (idBiblioteca, idCancionLocal, idListaReproduccion) values(?, ?, ?)";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, lista.getIdBiblioteca());
+        sentencia.setInt(2, cancion.getIdCancion());
+        sentencia.setInt(3, lista.getIdListaReproduccion());
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
 }

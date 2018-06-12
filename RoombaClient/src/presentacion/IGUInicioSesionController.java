@@ -17,6 +17,7 @@ import logica.conexion.Servidor;
 import static logica.conexion.Servidor.enviarUsuario;
 import static logica.conexion.Servidor.iniciarConversacion;
 import logica.Usuario;
+import logica.conexion.ServidorFormato;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -39,7 +40,8 @@ public class IGUInicioSesionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //server = new Servidor();
-        
+        //ServidorFormato.abrirConexion();
+        //ServidorFormato.iniciarConversacion();
     }
 
     @FXML

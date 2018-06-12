@@ -35,29 +35,31 @@ public class Servidor {
             System.exit(1);
         }
     }
-    
+
     public static void iniciarConversacion() {
 
         try {
             socket = new Socket(host, PUERTO);
             salidaRed = new ObjectOutputStream(socket.getOutputStream());
             entradaRed = new ObjectInputStream(socket.getInputStream());
-            
-           
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    public static void enviarMensaje(Mensaje mensajeEnviar){
-      new Thread(() -> {
-          try {
-             System.out.println("asuntoEnviar "+ mensajeEnviar.getAsunto());
-             salidaRed.writeObject(mensajeEnviar);
-             System.out.println("Enviado en Servidor");
-          } catch (IOException ex) {
-             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
-          }
-       }).start();
+
+    public static void enviarMensaje(Mensaje mensajeEnviar) {
+        new Thread(() -> {
+            try {
+                //System.out.println("asuntoEnviar " + mensajeEnviar.getAsunto());
+
+                salidaRed.writeObject(mensajeEnviar);
+                
+                //System.out.println("Enviado en Servidor");
+            } catch (IOException ex) {
+                Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }
 
     public static Object enviarUsuario(Mensaje mensajeAEnviar) {
@@ -72,10 +74,10 @@ public class Servidor {
         }
         return respuesta;
     }
-    
+
     public static void iniciarEscuchaDeMensajes(IGUBibliotecaController bibliotecaController) {
 
-        EscuchaMensajes hiloEscuchaMensajes = new EscuchaMensajes(bibliotecaController); 
+        EscuchaMensajes hiloEscuchaMensajes = new EscuchaMensajes(bibliotecaController);
         hiloEscuchaMensajes.start();
     }
 

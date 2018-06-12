@@ -63,10 +63,10 @@ public class CancionBD implements CancionDao {
         Connection conexion = null;
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
-        
-         String consulta = "update CancionLocal SET calificacion = ? where idCancionLocal = ?;";
-         
-         try {
+
+        String consulta = "update CancionLocal SET calificacion = ? where idCancionLocal = ?;";
+
+        try {
             sentencia = conexion.prepareStatement(consulta);
             sentencia.setInt(1, calificacion);
             sentencia.setInt(2, idCancion);
@@ -76,6 +76,25 @@ public class CancionBD implements CancionDao {
             Logger.getLogger(CancionBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
+    }
+
+    @Override
+    public List<Cancion> recuperarCancionesExternas() throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        List<Cancion> canciones = new ArrayList<>();
+
+        String consulta = "SELECT * FROM cancion WHERE privada = 0;";
+        sentencia = conexion.prepareStatement(consulta);
+        resultado = sentencia.executeQuery();
+        while (resultado != null && resultado.next()) {
+            Cancion cancionRecuperada = recuperarCancion(resultado.getInt("idCancion"));
+            canciones.add(cancionRecuperada);
+
+        }
+        return canciones;
     }
 
 }

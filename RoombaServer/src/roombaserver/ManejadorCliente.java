@@ -18,9 +18,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static jdk.nashorn.internal.objects.NativeArray.map;
 import logica.Album;
 import logica.Biblioteca;
 import logica.Cancion;
@@ -43,6 +46,7 @@ public class ManejadorCliente extends Thread {
     private final Socket cliente;
     private ObjectInputStream entrada;
     private ObjectOutputStream salida;
+    private int idBiblioteca;
 
     public ManejadorCliente(Socket socket) {
         this.cliente = socket;
@@ -91,50 +95,113 @@ public class ManejadorCliente extends Thread {
                     Usuario usuarioRecibido2 = (Usuario) mensajeRecibido.getObjeto();
                     BibliotecaDao biblioteca = new BibliotecaBD();
                     Biblioteca bibliotecaServidor = biblioteca.recuperarBiblioteca(usuarioRecibido2.getIdBiblioteca());
-                    Mensaje mensaje1 = new Mensaje("canciones");
-                    mensaje1.setObjeto(bibliotecaServidor);
-                    salida.writeObject(mensaje1);
+                    Mensaje mensaje = new Mensaje("canciones");
+                    mensaje.setObjeto(bibliotecaServidor);
+                    salida.writeObject(mensaje);
+                    idBiblioteca = usuarioRecibido2.getIdBiblioteca();
 
                     List<Album> albumesCanciones = recuperarAlbumes(bibliotecaServidor);
-                    Mensaje mensaje2 = new Mensaje("albumes");
-                    mensaje2.setObjeto(albumesCanciones);
-                    salida.writeObject(mensaje2);
+                    mensaje = new Mensaje("albumes");
+                    mensaje.setObjeto(albumesCanciones);
+                    salida.writeObject(mensaje);
 
                     List<Genero> generoCanciones = recuperarGeneros(albumesCanciones);
-                    Mensaje mensaje3 = new Mensaje("generos");
-                    mensaje3.setObjeto(generoCanciones);
-                    salida.writeObject(mensaje3);
-                    
+                    mensaje = new Mensaje("generos");
+                    mensaje.setObjeto(generoCanciones);
+                    salida.writeObject(mensaje);
+
                     List<ListaReproduccion> listasReproduccion = new ArrayList<>();
                     ListasReproduccionDao listaServidor = new ListasReproduccionBD();
                     listasReproduccion = listaServidor.recuperarListas(bibliotecaServidor.getIdBiblioteca());
-                    Mensaje mensaje4 = new Mensaje("listasReproduccion");
-                    mensaje4.setObjeto(listasReproduccion);
-                    System.out.println("listas recuepradas: " + listasReproduccion);
-                    System.out.println("biblioteca: " + bibliotecaServidor.getIdBiblioteca());
-                    salida.writeObject(mensaje4);
+                    mensaje = new Mensaje("listasReproduccion");
+                    mensaje.setObjeto(listasReproduccion);
+                    //System.out.println("listas recuepradas: " + listasReproduccion);
+                    //System.out.println("biblioteca: " + bibliotecaServidor.getIdBiblioteca());
+                    salida.writeObject(mensaje);
                     break;
                 case "recuperarHistorial":
                     Usuario usuarioHistorial = (Usuario) mensajeRecibido.getObjeto();
                     CancionDao cancionesServidor = new CancionBD();
                     List<Cancion> cancionesHistorial = cancionesServidor.recuperarCancionesHistorial(
                             usuarioHistorial.getIdUsuario());
-                    Mensaje mensaje5 = new Mensaje("historial");
-                    mensaje5.setObjeto(cancionesHistorial);
-                    salida.writeObject(mensaje5);
+                    mensaje = new Mensaje("historial");
+                    mensaje.setObjeto(cancionesHistorial);
+                    salida.writeObject(mensaje);
                     break;
                 case "recuperarCatalogoGeneros":
                     GeneroDao generoServidor = new GeneroBD();
                     List<Genero> generos = generoServidor.recuperarCatalogo();
-                    Mensaje mensaje6 = new Mensaje("catalogoGeneros");
-                    mensaje6.setObjeto(generos);
-                    salida.writeObject(mensaje6);
+                    mensaje = new Mensaje("catalogoGeneros");
+                    mensaje.setObjeto(generos);
+                    salida.writeObject(mensaje);
                     break;
                 case "actualizarCalificación":
                     Cancion cancion = (Cancion) mensajeRecibido.getObjeto();
                     CancionDao cancionServidor = new CancionBD();
                     System.out.println("calificacion a actualizar: " + cancion.getCalificacion());
                     cancionServidor.actualizarCalificacion(cancion.getIdCancion(), cancion.getCalificacion());
+                    break;
+                case "agregarLista":
+                    ListaReproduccion lista = (ListaReproduccion) mensajeRecibido.getObjeto();
+                    listaServidor = new ListasReproduccionBD();
+                    listaServidor.agregarLista(lista, idBiblioteca);
+                    listasReproduccion = listaServidor.recuperarListas(idBiblioteca);
+                    mensaje = new Mensaje("listasReproduccion");
+                    mensaje.setObjeto(listasReproduccion);
+                    salida.writeObject(mensaje);
+                    break;
+                case "editarLista":
+                    lista = (ListaReproduccion) mensajeRecibido.getObjeto();
+                    listaServidor = new ListasReproduccionBD();
+                    listaServidor.editarLista(lista);
+                    listasReproduccion = listaServidor.recuperarListas(idBiblioteca);
+                    mensaje = new Mensaje("listasReproduccion");
+                    mensaje.setObjeto(listasReproduccion);
+                    salida.writeObject(mensaje);
+                    break;
+                case "eliminarLista":
+                    lista = (ListaReproduccion) mensajeRecibido.getObjeto();
+                    listaServidor = new ListasReproduccionBD();
+                    listaServidor.eliminarLista(lista);
+                    listasReproduccion = listaServidor.recuperarListas(idBiblioteca);
+                    mensaje = new Mensaje("listasReproduccion");
+                    mensaje.setObjeto(listasReproduccion);
+                    salida.writeObject(mensaje);
+                    break;
+                case "agregarCancionALista":
+                    ListaReproduccion lista2 = null;
+                    HashMap<ListaReproduccion, Cancion> hash = new HashMap<>();
+                    hash = (HashMap<ListaReproduccion, Cancion>) mensajeRecibido.getObjeto();
+                    listaServidor = new ListasReproduccionBD();
+                    Map.Entry<ListaReproduccion, Cancion> entry = hash.entrySet().iterator().next();
+                    lista2 = entry.getKey();
+                    Cancion cancion2 = entry.getValue();
+                    listaServidor.agregarCancionALista(cancion2, lista2);
+                    listasReproduccion = listaServidor.recuperarListas(idBiblioteca);
+                    mensaje = new Mensaje("listasReproduccion");
+                    mensaje.setObjeto(listasReproduccion);
+                    salida.writeObject(mensaje);
+                    lista2 = null;
+                    break;
+                case "recuperarCancionesExternas":
+                    cancionesServidor = new CancionBD();
+                    List<Cancion> cancionesExternas = cancionesServidor.recuperarCancionesExternas();
+                    mensaje = new Mensaje("cancionesExternas");
+                    mensaje.setObjeto(cancionesExternas);
+                    salida.writeObject(mensaje);
+                    
+                    albumesCanciones = recuperarAlbumes(cancionesExternas);
+                    mensaje = new Mensaje("albumesExternos");
+                    mensaje.setObjeto(albumesCanciones);
+                    salida.writeObject(mensaje);
+                    
+                    generoCanciones = recuperarGeneros(albumesCanciones);
+                    mensaje = new Mensaje("generosExternos");
+                    mensaje.setObjeto(generoCanciones);
+                    salida.writeObject(mensaje);
+                    break;
+                case "cerrarConexión":
+                    continuar = false;
                     break;
                 default:
                     break;
@@ -146,7 +213,9 @@ public class ManejadorCliente extends Thread {
     }
 
     public void cerrarConexión() throws IOException {
-        System.out.println("Cerrando la conexión con el cliente ...");
+        System.out.println("Cerrando la conexión con el RoombaClient ...");
+        Mensaje mensajeSalida = new Mensaje("cerrarConexión");
+        salida.writeObject(mensajeSalida);
         cliente.close();
     }
 
@@ -157,6 +226,24 @@ public class ManejadorCliente extends Thread {
 
         for (int i = 0; i < bibliotecaServ.getCanciones().size(); i++) {
             idAlbum = bibliotecaServ.getCanciones().get(i).getAlbum_idAlbum();
+            if (!listaIdAlbumes.contains(idAlbum)) {
+
+                listaIdAlbumes.add(idAlbum);
+                AlbumDao album = new AlbumBD();
+                Album albumServ = album.recuperarAlbumes(idAlbum);
+                albumes.add(albumServ);
+            }
+        }
+        return albumes;
+    }
+    
+    private List<Album> recuperarAlbumes(List<Cancion> cancionesExternas) throws SQLException {
+        List<Album> albumes = new ArrayList<>();
+        List<Integer> listaIdAlbumes = new ArrayList<>();
+        int idAlbum;
+
+        for (int i = 0; i < cancionesExternas.size(); i++) {
+            idAlbum = cancionesExternas.get(i).getAlbum_idAlbum();
             if (!listaIdAlbumes.contains(idAlbum)) {
 
                 listaIdAlbumes.add(idAlbum);
@@ -182,14 +269,5 @@ public class ManejadorCliente extends Thread {
             }
         }
         return generos;
-    }
-    
-    private List<ListaReproduccion> recuperarListasReproduccion(int idBiblioteca) throws SQLException {
-        List<ListaReproduccion> listasReproduccion = new ArrayList<>();
-
-                GeneroDao genero = new GeneroBD();
-                Genero generoServ = genero.recuperarGenero(idBiblioteca);
- 
-        return listasReproduccion;
     }
 }

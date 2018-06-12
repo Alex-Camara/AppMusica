@@ -14,9 +14,18 @@ import java.util.List;
  */
 public class ListaReproduccion implements Serializable {
     private int idListaReproduccion;
+    private int idBiblioteca;
     private String nombre;
     private List<Cancion> canciones;
 
+    public int getIdBiblioteca() {
+        return idBiblioteca;
+    }
+
+    public void setIdBiblioteca(int idBiblioteca) {
+        this.idBiblioteca = idBiblioteca;
+    }
+    
     public int getIdListaReproduccion() {
         return idListaReproduccion;
     }
@@ -41,5 +50,8 @@ public class ListaReproduccion implements Serializable {
         this.canciones = canciones;
     }
     
-    
+    @Override
+    public String toString(){
+        return nombre;
+    }
 }

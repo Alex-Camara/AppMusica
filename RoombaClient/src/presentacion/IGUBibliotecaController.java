@@ -110,6 +110,10 @@ public class IGUBibliotecaController implements Initializable {
     private static final String COLOR_TEXTO_RESALTADO = "-fx-text-fill: #DB981A;";
     private boolean biblioteca = true;
     private Usuario usuario = null;
+    private int idBiblioteca;
+    List<Cancion> cancionesExternas = new ArrayList<>();
+    List<Album> albumesExternos = new ArrayList<>();
+    List<Genero> generosExternos = new ArrayList<>();
     List<Cancion> canciones = new ArrayList<>();
     List<Album> albumes = new ArrayList<>();
     List<Genero> generos = new ArrayList<>();
@@ -145,6 +149,10 @@ public class IGUBibliotecaController implements Initializable {
         cargarPanes();
         clicCanciones();
         verificarCreador();
+        /*Mensaje mensajeCanciones = new Mensaje("recuperarCanciones");
+            mensajeCanciones.setObjeto(usuario);
+        Servidor.enviarMensaje(mensajeCanciones);*/
+
     }
 
     public void setUsuario(Usuario usuario) {
@@ -181,6 +189,7 @@ public class IGUBibliotecaController implements Initializable {
         buttonExplorar.setStyle(RESALTADO);
         buttonBiblioteca.setStyle(COLOR_TOGGLEBUTTON_NORMAL);
 
+        clicCanciones();
         //paneCanciones.setVisible(true);
         //Debe recuperar la lista del servirodr
 //      cargarTablaCanciones(canciones);
@@ -192,6 +201,7 @@ public class IGUBibliotecaController implements Initializable {
         buttonBiblioteca.setStyle(RESALTADO);
         buttonExplorar.setStyle(COLOR_TOGGLEBUTTON_NORMAL);
 
+        clicCanciones();
         //paneCanciones.setVisible(true);
         //Debe recuperar la lista de la biblioteca
 //      cargarTablaCanciones(canciones);
@@ -206,13 +216,14 @@ public class IGUBibliotecaController implements Initializable {
             //ir por canciones de biblioteca
             Mensaje mensajeCanciones = new Mensaje("recuperarCanciones");
             mensajeCanciones.setObjeto(usuario);
+            idBiblioteca = usuario.getIdBiblioteca();
             Servidor.enviarMensaje(mensajeCanciones);
             borderPanePrincipal.setCenter(paneCanciones);
-            //controladorCanciones.setVisibilidad(true);
         } else {
             //ir por canciones del servidor
-//         cargarTablaCanciones(canciones);
-//         paneCanciones.setVisible(true);
+            Mensaje mensajeRecuperarCanciones = new Mensaje("recuperarCancionesExternas");
+            Servidor.enviarMensaje(mensajeRecuperarCanciones);
+            borderPanePrincipal.setCenter(paneCanciones);
         }
 
     }
@@ -223,14 +234,12 @@ public class IGUBibliotecaController implements Initializable {
         buttonArtistas.setStyle(COLOR_TEXTO_RESALTADO);
 
         borderPanePrincipal.setCenter(paneArtistas);
+        controladorArtistas.setControladorBarraReproduccion(controladorBarraReproduccion);
 
         if (biblioteca) {
             controladorArtistas.cargarTablaArtistas(canciones);
-            //controladorArtistas.setVisibilidad(true);
         } else {
-//         //ir por Artistas sin repeticon (canciones) del servidor
-//         cargarTablaArtistas(canciones);
-//         paneArtistas.setVisible(true);
+            controladorArtistas.cargarTablaArtistas(cancionesExternas);
         }
     }
 
@@ -249,26 +258,36 @@ public class IGUBibliotecaController implements Initializable {
     private void clicAlbumes() {
         ocultarSeleccion();
         buttonAlbumes.setStyle(COLOR_TEXTO_RESALTADO);
-        //ocultarContenidos();
 
         borderPanePrincipal.setCenter(paneAlbumes);
+        controladorAlbumes.setControladorBarraReproduccion(controladorBarraReproduccion);
+        if (biblioteca) {
+            controladorAlbumes.cargarTablaAlbumes(albumes, canciones);
+        } else {
+            controladorAlbumes.cargarTablaAlbumes(albumes, cancionesExternas);
+        }
 
-        controladorAlbumes.cargarTablaAlbumes(albumes, canciones);
-        //controladorAlbumes.setVisibilidad(true);
     }
 
     @FXML
     private void clicGeneros() {
         ocultarSeleccion();
         buttonGeneros.setStyle(COLOR_TEXTO_RESALTADO);
-        //ocultarContenidos();
         borderPanePrincipal.setCenter(paneGeneros);
-        controladorGeneros.cargarTablaGeneros(generos, albumes, canciones);
-        //controladorGeneros.setVisibilidad(true);
+        controladorGeneros.setControladorBarraReproduccion(controladorBarraReproduccion);
+
+        if (biblioteca) {
+            controladorGeneros.cargarTablaGeneros(generos, albumes, canciones);
+        } else{
+            controladorGeneros.cargarTablaGeneros(generosExternos, albumesExternos, cancionesExternas);
+        }
+        
     }
 
     @FXML
     private void clicSubirLocal() {
+        clicBiblioteca();
+        ocultarSeleccion();
         Servidor.enviarMensaje(new Mensaje("recuperarCatalogoGeneros"));
         ocultarSeleccion();
         buttonAgregarLocal.setStyle(COLOR_TEXTO_RESALTADO);
@@ -279,11 +298,14 @@ public class IGUBibliotecaController implements Initializable {
 
     @FXML
     private void clicListas() {
+        clicBiblioteca();
         ocultarSeleccion();
         buttonListas.setStyle(COLOR_TEXTO_RESALTADO);
 
         borderPanePrincipal.setCenter(paneListasReproduccion);
-        controladorListas.cargarTablaListas(listasReproduccion, controladorBarraReproduccion);
+        controladorListas.setListasReproduccion(listasReproduccion);
+        controladorListas.setControladorBarraReproduccion(controladorBarraReproduccion);
+        controladorListas.cargarTablaListas();
         //paneListasReproduccion.setVisibilidad(true);
     }
 
@@ -300,7 +322,8 @@ public class IGUBibliotecaController implements Initializable {
 
     @FXML
     private void clicSalir() {
-        Servidor.cerrarConexion();
+        Mensaje mensajeSalida = new Mensaje("cerrarConexión");
+        Servidor.enviarMensaje(mensajeSalida);
     }
 
     public void ocultarSeleccion() {
@@ -349,13 +372,13 @@ public class IGUBibliotecaController implements Initializable {
             case "canciones":
                 Biblioteca bibliotecaServ = (Biblioteca) mensaje.getObjeto();
                 canciones = bibliotecaServ.getCanciones();
-                System.out.println("canciones Rec " + canciones.get(0).toString());
-                controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
+                //System.out.println("canciones Rec " + canciones.get(0).toString());
+                //controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
                 break;
             case "albumes":
                 albumes = (List<Album>) mensaje.getObjeto();
-                System.out.println("albumes Rec " + albumes.get(0).getNombre());
-                System.out.println("albumes Rec " + albumes.get(0).getIdAlbum());
+                //System.out.println("albumes Rec " + albumes.get(0).getNombre());
+                //System.out.println("albumes Rec " + albumes.get(0).getIdAlbum());
                 break;
             case "generos":
                 generos = (List<Genero>) mensaje.getObjeto();
@@ -363,17 +386,36 @@ public class IGUBibliotecaController implements Initializable {
                 break;
             case "historial":
                 List<Cancion> cancionesHistorial = (List<Cancion>) mensaje.getObjeto();
-                System.out.println("Canciones Historial " + cancionesHistorial.get(0).getNombre());
+                //System.out.println("Canciones Historial " + cancionesHistorial.get(0).getNombre());
                 controladorCanciones.cargarTablaCanciones(cancionesHistorial, controladorBarraReproduccion);
                 break;
             case "catalogoGeneros":
                 List<Genero> catalogoGeneros = (List<Genero>) mensaje.getObjeto();
-                System.out.println("Gen catalogo " + catalogoGeneros.get(0).getNombre());
+                //System.out.println("Gen catalogo " + catalogoGeneros.get(0).getNombre());
                 controladorAgregarLocal.cargarComboGeneros(catalogoGeneros);
                 break;
             case "listasReproduccion":
                 listasReproduccion = (List<ListaReproduccion>) mensaje.getObjeto();
+                controladorCanciones.setListasReproduccion(listasReproduccion);
+                controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
                 //System.out.println("Listas " + listasReproduccion.get(0).getNombre());
+                break;
+            case "cancionesExternas":
+                cancionesExternas = (List<Cancion>) mensaje.getObjeto();
+                //System.out.println("Canciones Historial " + cancionesHistorial.get(0).getNombre());
+                controladorCanciones.cargarTablaCanciones(cancionesExternas, controladorBarraReproduccion);
+                break;
+            case "albumesExternos":
+                albumesExternos = (List<Album>) mensaje.getObjeto();
+                //System.out.println("albumes Rec " + albumes.get(0).getNombre());
+                //System.out.println("albumes Rec " + albumes.get(0).getIdAlbum());
+                break;
+            case "generosExternos":
+                generosExternos = (List<Genero>) mensaje.getObjeto();
+                System.out.println("Generos " + generos.get(0).getNombre());
+                break;
+            case "cerrarConexión":
+                Servidor.cerrarConexion();
                 break;
 
         }

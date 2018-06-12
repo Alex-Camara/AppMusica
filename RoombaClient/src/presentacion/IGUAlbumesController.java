@@ -19,9 +19,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import logica.Album;
 import logica.Cancion;
 
@@ -46,6 +48,11 @@ public class IGUAlbumesController implements Initializable {
     private TableColumn<?, ?> tcaColumnNombreAlbum;
     private List<Cancion> canciones;
     private List<Album> albumes;
+    private IGUBarraReproduccionController controladorBarraReproduccion;
+
+    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+        this.controladorBarraReproduccion = controladorBarraReproduccion;
+    }
 
     public List<Cancion> getCanciones() {
         return canciones;
@@ -62,19 +69,19 @@ public class IGUAlbumesController implements Initializable {
     public void setAlbumes(List<Album> albumes) {
         this.albumes = albumes;
     }
-    
-    public void setVisibilidad(boolean estatus){
+
+    public void setVisibilidad(boolean estatus) {
         paneAlbumes.setVisible(estatus);
     }
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
     }
-    
+
     public void agregarListenersTablaAlbumes(List<Cancion> canciones) {
         tableAlbumes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -84,7 +91,7 @@ public class IGUAlbumesController implements Initializable {
             }
         });
     }
-    
+
     public List<Cancion> recuperarCancionesPorAlbum(int idAlbum, List<Cancion> canciones) {
         List<Cancion> cancionesAlbum = new ArrayList<>();
         for (int i = 0; i < canciones.size(); i++) {
@@ -94,15 +101,36 @@ public class IGUAlbumesController implements Initializable {
         }
         return cancionesAlbum;
     }
-    
-     private void cargarTablaCancionesAlbum(List<Cancion> cancionesAlbum) {
+
+    private void cargarTablaCancionesAlbum(List<Cancion> cancionesAlbum) {
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(cancionesAlbum
         );
         tcaColumnNombreAlbum.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         tableCancionesAlbum.setItems(obsCanciones);
+        agregarListenersTablaCanciones();
     }
-     
-     public void cargarTablaAlbumes(List<Album> albumes, List<Cancion> canciones) {
+
+    public void agregarListenersTablaCanciones() {
+        tableCancionesAlbum.setRowFactory(
+                new Callback<TableView<Cancion>, TableRow<Cancion>>() {
+            @Override
+            public TableRow<Cancion> call(TableView<Cancion> tableView) {
+                final TableRow<Cancion> row = new TableRow<>();
+
+                //SELECCIÓN DE UNA CANCIÓN
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        Cancion cancion = row.getItem();
+                        controladorBarraReproduccion.setCancion(cancion);
+                        controladorBarraReproduccion.cargarBarraReproduccion();
+                    }
+                });
+                return row;
+            }
+        });
+    }
+
+    public void cargarTablaAlbumes(List<Album> albumes, List<Cancion> canciones) {
         labelPaneAlbumNombre.setText(albumes.get(0).getNombre());
         ObservableList<Album> obsAlbumes = FXCollections.observableArrayList(albumes);
         talColumnAlbum.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
@@ -118,7 +146,7 @@ public class IGUAlbumesController implements Initializable {
 
             fxmlLoader.setController(this);
             paneAlbumes = fxmlLoader.load();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
         }

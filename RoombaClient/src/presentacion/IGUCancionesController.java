@@ -7,10 +7,13 @@ package presentacion;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,18 +22,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuButton;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import logica.Cancion;
-import presentacion.Utileria.MenuContextual;
+import logica.ListaReproduccion;
+import logica.conexion.Mensaje;
+import logica.conexion.Servidor;
+import presentacion.Utileria.Emergente;
 
 /**
  * FXML Controller class
@@ -44,13 +48,23 @@ public class IGUCancionesController implements Initializable {
     @FXML
     private TableView<Cancion> tableCanciones;
     @FXML
-    private TableColumn<?, ?> tcColumnNombre;
+    private TableColumn<Cancion, String> tcColumnNombre;
     @FXML
     private TableColumn<?, ?> tcColumnArtista;
     @FXML
     private TableColumn<?, ?> tcColumnCalificacion;
-    @FXML
-    private TableColumn<Cancion, String> tcOpciones;
+    private List<ListaReproduccion> listasReproduccion;
+    IGUListasReproduccionController controladorListas;
+    Menu menuItemAgregarALista;
+    List<MenuItem> menues = new ArrayList<>();
+
+    public void setControladorListas(IGUListasReproduccionController controladorListas) {
+        this.controladorListas = controladorListas;
+    }
+
+    public void setListasReproduccion(List<ListaReproduccion> listasReproduccion) {
+        this.listasReproduccion = listasReproduccion;
+    }
 
     public void setVisibilidad(boolean estatus) {
         paneCanciones.setVisible(estatus);
@@ -65,33 +79,129 @@ public class IGUCancionesController implements Initializable {
     }
 
     public void cargarTablaCanciones(List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
-        ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones
-        );
+        tableCanciones.refresh();
+        ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
+        
         tcColumnNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         tcColumnArtista.setCellValueFactory(new PropertyValueFactory<>("Artista"));
         tcColumnCalificacion.setCellValueFactory(new PropertyValueFactory<>("Calificacion"));
-        tcOpciones.setCellValueFactory(new PropertyValueFactory<>("op"));
-
-        Callback<TableColumn<Cancion, String>, TableCell<Cancion, String>> cellFactory = new Callback<TableColumn<Cancion, String>, TableCell<Cancion, String>>() {
-            @Override
-            public TableCell call(TableColumn param) {
-                return new MenuContextual();
-                }
-            
-        };
-        tcOpciones.setCellFactory(cellFactory);
 
         tableCanciones.setItems(obsCanciones);
-        agregarListenersTablaAlbumes(canciones, controladorBarraReproduccion);
+        agregarListenersTablaCanciones(controladorBarraReproduccion);
     }
 
-    public void agregarListenersTablaAlbumes(List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
-        tableCanciones.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                controladorBarraReproduccion.setCancion(newSelection);
-                controladorBarraReproduccion.cargarBarraReproduccion();
+    public void agregarListenersTablaCanciones(IGUBarraReproduccionController controladorBarraReproduccion) {
+        tableCanciones.setRowFactory(
+                new Callback<TableView<Cancion>, TableRow<Cancion>>() {
+            @Override
+            public TableRow<Cancion> call(TableView<Cancion> tableView) {
+                final TableRow<Cancion> row = new TableRow<>();
+
+                //MENU CONTEXTUAL
+                final ContextMenu rowMenu = new ContextMenu();
+                MenuItem menuItemAgregarCancion = new MenuItem("Agregar canción a cola");
+                MenuItem menuItemAgregarContinuacion = new MenuItem("Agregar canción a continuación");
+                MenuItem menuItemRadio = new MenuItem("Crear radio");
+                MenuItem menuItemDescargar = new MenuItem("Descargar canción");
+                MenuItem menuItemEliminarCancion = new MenuItem("Eliminar canción de biblioteca");
+                menuItemAgregarALista = new Menu("Agregar a lista de reproducción");
+
+                seleccionMenuItem(row);
+
+                rowMenu.getStyleClass().add("/presentacion/estilos/EstiloMenuContextual.css");
+                rowMenu.getItems().addAll(menuItemAgregarCancion, menuItemAgregarContinuacion, menuItemRadio, menuItemDescargar, menuItemEliminarCancion, menuItemAgregarALista);
+
+                // only display context menu for non-null items:
+                row.contextMenuProperty().bind(
+                        Bindings.when(Bindings.isNotNull(row.itemProperty()))
+                                .then(rowMenu)
+                                .otherwise((ContextMenu) null));
+
+                //SELECCIÓN DE UNA CANCIÓN
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        Cancion cancion = row.getItem();
+                        controladorBarraReproduccion.setCancion(cancion);
+                        controladorBarraReproduccion.cargarBarraReproduccion();
+                    }
+                });
+                return row;
             }
         });
+    }
+
+    public void seleccionMenuItem(TableRow<Cancion> row) {
+        //System.out.println("tamaño: + " + listasReproduccion.size());
+
+        for (int i = 0; i < listasReproduccion.size(); i++) {
+            MenuItem menuItem = new MenuItem(listasReproduccion.get(i).getNombre());
+            menues.add(menuItem);
+
+            menuItemAgregarALista.getItems().add(menuItem);
+        }
+
+        for (int i = 0; i < menuItemAgregarALista.getItems().size(); i++) {
+            ListaReproduccion lista = listasReproduccion.get(i);
+
+            menuItemAgregarALista.getItems().get(i).setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+                    agregarCancionALista(row.getItem(), lista);
+
+                }
+            });
+        }
+
+        MenuItem menuItemAgregarLista = new MenuItem("Agregar nueva lista");
+        menuItemAgregarLista.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                agregarNuevaLista();
+            }
+        });
+        menuItemAgregarALista.getItems().add(menuItemAgregarLista);
+    }
+
+    private void agregarNuevaLista() {
+        String tituloLista = Emergente.cargarTextInputDialog(null, "Introduce el nombre de la lista:", null);
+        ListaReproduccion nuevaLista = new ListaReproduccion();
+        nuevaLista.setNombre(tituloLista);
+        listasReproduccion.add(nuevaLista);
+        Mensaje mensajeAgregarLista = new Mensaje("agregarLista");
+        mensajeAgregarLista.setObjeto(nuevaLista);
+        Servidor.enviarMensaje(mensajeAgregarLista);
+    }
+
+    public void agregarCancionALista(Cancion cancion, ListaReproduccion lista) {
+        boolean duplicada = verificarDuplicada(cancion, lista);
+
+        if (!duplicada) {
+            HashMap<ListaReproduccion, Cancion> hash = new HashMap<>();
+            hash.put(lista, cancion);
+            Mensaje mensajeAgregarCancionALista = new Mensaje("agregarCancionALista");
+            mensajeAgregarCancionALista.setObjeto(hash);
+            Servidor.enviarMensaje(mensajeAgregarCancionALista);
+
+        } else {
+            Emergente.cargarEmergente("Advertencia", "La canción ya se encuentra en la lista");
+        }
+    }
+
+    private boolean verificarDuplicada(Cancion cancion, ListaReproduccion lista) {
+        boolean duplicada = false;
+
+        for (int i = 0; i < listasReproduccion.size(); i++) {
+            if (listasReproduccion.get(i).getIdListaReproduccion() == lista.getIdListaReproduccion()) {
+                for (int j = 0; j < listasReproduccion.get(i).getCanciones().size(); j++) {
+                    if (listasReproduccion.get(i).getCanciones().get(j).getNombre().equals(cancion.getNombre())) {
+                        duplicada = true;
+                    }
+                }
+            }
+        }
+        return duplicada;
     }
 
     public Pane abrirIGUCanciones() {

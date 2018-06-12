@@ -19,9 +19,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import logica.Cancion;
 
 /**
@@ -43,6 +45,11 @@ public class IGUArtistasController implements Initializable {
     private TableView<Cancion> tableCancionesArtista;
     @FXML
     private TableColumn<?, ?> tcaColumnNombre;
+    private IGUBarraReproduccionController controladorBarraReproduccion;
+
+    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+        this.controladorBarraReproduccion = controladorBarraReproduccion;
+    }
 
     public void setVisibilidad(boolean estatus) {
         paneArtistas.setVisible(estatus);
@@ -82,6 +89,27 @@ public class IGUArtistasController implements Initializable {
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(cancionesArtista);
         tcaColumnNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         tableCancionesArtista.setItems(obsCanciones);
+        agregarListenersTablaCanciones();
+    }
+    
+    public void agregarListenersTablaCanciones() {
+        tableCancionesArtista.setRowFactory(
+                new Callback<TableView<Cancion>, TableRow<Cancion>>() {
+            @Override
+            public TableRow<Cancion> call(TableView<Cancion> tableView) {
+                final TableRow<Cancion> row = new TableRow<>();
+
+                //SELECCIÓN DE UNA CANCIÓN
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        Cancion cancion = row.getItem();
+                        controladorBarraReproduccion.setCancion(cancion);
+                        controladorBarraReproduccion.cargarBarraReproduccion();
+                    }
+                });
+                return row;
+            }
+        });
     }
 
     private List<Cancion> seleccionarCancionesArtista(String artista, List<Cancion> canciones) {

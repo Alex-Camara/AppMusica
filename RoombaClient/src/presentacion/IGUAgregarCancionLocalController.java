@@ -11,6 +11,8 @@ import com.jfoenix.controls.JFXTextField;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,7 +27,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import logica.Album;
+import logica.Cancion;
 import logica.Genero;
+import presentacion.Utileria.Emergente;
 
 /**
  * FXML Controller class
@@ -49,30 +54,66 @@ public class IGUAgregarCancionLocalController implements Initializable {
     @FXML
     private JFXComboBox<Genero> comboGenero;
     @FXML
-    private ListView<?> listArchivos;
+    private ListView<Cancion> listArchivos;
     @FXML
     private JFXButton buttonAgregarListArchivos;
     @FXML
     private Label labelPaneAgregarCancionNombre;
-
-    public void setVisibilidad(boolean estatus) {
-        paneAgregarLocal.setVisible(estatus);
-    }
+    Cancion CancionASubir = new Cancion();
+    FileChooser fileChooser;
+    File file;
+    List<Cancion> listaArchivos = new ArrayList<>();
+    HashMap<Cancion, File> hashmapCanciones = new HashMap<>();
     
+
     @FXML
     void ClicSeleccionarArchivoLocal(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
+        fileChooser = new FileChooser();
         fileChooser.setTitle("Música para añadir a biblioteca");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("MP3", "*.mp3"));
-        File file = fileChooser.showOpenDialog(buttonSeleccionarArchivo.getScene().getWindow());
-        labelPaneAgregarCancionNombre.setText(file.getName());
+        file = fileChooser.showOpenDialog(buttonSeleccionarArchivo.getScene().getWindow());
+        if (file != null) {
+            labelPaneAgregarCancionNombre.setText(file.getName());
+        }
 
     }
 
     @FXML
     void clicAgregarArchivoLocal(ActionEvent event) {
+        if (!tFieldNombreArchivo.getText().trim().isEmpty() && !tFieldArtistaArchivo.getText().trim().isEmpty()
+                && !tFieldAlbumArchivo.getText().trim().isEmpty() && !comboGenero.getSelectionModel().isEmpty()
+                && file != null) {
+            
+            Cancion cancion = new Cancion();
+            Album album = new Album();
+            
+            cancion.setNombre(tFieldNombreArchivo.getText());
+            cancion.setArtista(tFieldArtistaArchivo.getText());
+            album.setNombre(tFieldAlbumArchivo.getText());
+            album.setIdGenero(comboGenero.getSelectionModel().getSelectedItem().getIdGenero());
+            cancion.setAlbum(album);
+            hashmapCanciones.put(cancion, file);
+            
+            listaArchivos.add(cancion);
+            llenarLista();
+            limpiarCampos();
+        } else {
+            Emergente.cargarEmergente("Advertencia", "Debes llenar todos los campos");
+        }
 
+    }
+
+    private void llenarLista() {
+        ObservableList<Cancion> obsArchivos = FXCollections.observableArrayList(listaArchivos);
+        listArchivos.setItems(obsArchivos);
+    }
+    
+    private void limpiarCampos(){
+        tFieldNombreArchivo.setText("");
+        tFieldAlbumArchivo.setText("");
+        tFieldArtistaArchivo.setText("");
+        comboGenero.getSelectionModel().clearSelection();
     }
 
     /**
@@ -81,13 +122,13 @@ public class IGUAgregarCancionLocalController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
     public void cargarComboGeneros(List<Genero> generos) {
         ObservableList<Genero> obsGeneros = FXCollections.observableArrayList(generos);
         comboGenero.setItems(obsGeneros);
     }
-    
+
     public Pane abrirIGUAgregarCancionLocal() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUAgregarCancionLocal.fxml"));
@@ -100,5 +141,5 @@ public class IGUAgregarCancionLocalController implements Initializable {
         }
         return paneAgregarLocal;
     }
-    
+
 }

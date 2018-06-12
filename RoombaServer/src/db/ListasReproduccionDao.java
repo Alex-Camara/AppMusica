@@ -7,6 +7,7 @@ package db;
 
 import java.sql.SQLException;
 import java.util.List;
+import logica.Cancion;
 import logica.ListaReproduccion;
 
 /**
@@ -15,4 +16,9 @@ import logica.ListaReproduccion;
  */
 public interface ListasReproduccionDao {
     List<ListaReproduccion> recuperarListas(int idBiblioteca) throws SQLException;
+    
+    public int agregarLista(ListaReproduccion nuevaLista, int idBiblioteca) throws SQLException;
+    public int editarLista(ListaReproduccion lista) throws SQLException;
+    public int eliminarLista(ListaReproduccion lista) throws SQLException;
+    public int agregarCancionALista(Cancion cancion, ListaReproduccion lista) throws SQLException;
 }

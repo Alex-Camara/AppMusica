@@ -5,6 +5,8 @@
  */
 package presentacion.Utileria;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
@@ -54,6 +56,14 @@ public class MenuContextual extends TableCell<XYChart.Data, String> {
             MenuItem menuItemRadio = new MenuItem("Crear radio");
             MenuItem menuItemDescargar = new MenuItem("Descargar canción");
             MenuItem menuItemEliminarCancion = new MenuItem("Eliminar canción de biblioteca");
+            
+            menuItemAgregarCancion.setOnAction(new EventHandler<ActionEvent>() {  
+                @Override  
+                public void handle(ActionEvent event) {  
+                    
+                }  
+            }); 
+            
             botonMenu.getStylesheets().add("/presentacion/estilos/EstiloMenuContextual.css");
             botonMenu.getItems().addAll(menuItemAgregarCancion, menuItemAgregarContinuacion, menuItemRadio, menuItemDescargar, menuItemEliminarCancion);
         }

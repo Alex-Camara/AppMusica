@@ -14,4 +14,5 @@ import logica.Album;
  */
 public interface AlbumDao {
     Album recuperarAlbumes(int idAlbum) throws SQLException;
+    
 }

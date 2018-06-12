@@ -19,9 +19,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import logica.Album;
 import logica.Cancion;
 import logica.Genero;
@@ -45,6 +47,11 @@ public class IGUGenerosController implements Initializable {
     private TableView<Cancion> tableCancionesGenero;
     @FXML
     private TableColumn<?, ?> tcgColumnNombre;
+    private IGUBarraReproduccionController controladorBarraReproduccion;
+
+    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+        this.controladorBarraReproduccion = controladorBarraReproduccion;
+    }
     
     public void setVisibilidad(boolean estatus) {
         paneGeneros.setVisible(estatus);
@@ -84,6 +91,27 @@ public class IGUGenerosController implements Initializable {
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(cancionesAlbum);
         tcgColumnNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         tableCancionesGenero.setItems(obsCanciones);
+        agregarListenersTablaCanciones();
+    }
+    
+    public void agregarListenersTablaCanciones() {
+        tableCancionesGenero.setRowFactory(
+                new Callback<TableView<Cancion>, TableRow<Cancion>>() {
+            @Override
+            public TableRow<Cancion> call(TableView<Cancion> tableView) {
+                final TableRow<Cancion> row = new TableRow<>();
+
+                //SELECCIÓN DE UNA CANCIÓN
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        Cancion cancion = row.getItem();
+                        controladorBarraReproduccion.setCancion(cancion);
+                        controladorBarraReproduccion.cargarBarraReproduccion();
+                    }
+                });
+                return row;
+            }
+        });
     }
     
     private List<Album> recuperarAlbumesDeGenero(int generoSeleccionado, List<Album> albumes) {

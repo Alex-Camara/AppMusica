@@ -28,10 +28,12 @@ public class BibliotecaBD implements BibliotecaDao {
       Biblioteca biblioteca = new Biblioteca();
       List<Cancion> canciones = new ArrayList<>();
 
-      String consulta = "SELECT * FROM cancion WHERE privada = 0;";
+      String consulta = " select idcancion, nombre, artista,album_idalbum, ruta,"
+              + " calificacion from cancion inner join cancionlocal on "
+              + "idcancionlocal=idcancion where privada = 0 and idBiblioteca = ? ;";
 
       sentencia = conexion.prepareStatement(consulta);
-        //sentencia.setInt(1, idBiblioteca);
+        sentencia.setInt(1, idBiblioteca);
         resultado = sentencia.executeQuery();
 
       while (resultado != null && resultado.next()) {
@@ -41,6 +43,7 @@ public class BibliotecaBD implements BibliotecaDao {
          cancion.setAlbum_idAlbum(resultado.getInt("Album_idAlbum"));
          cancion.setNombre(resultado.getString("nombre"));
          cancion.setRuta(resultado.getString("ruta"));
+         cancion.setCalificacion(resultado.getInt("calificacion"));
          canciones.add(cancion);
          
       }
