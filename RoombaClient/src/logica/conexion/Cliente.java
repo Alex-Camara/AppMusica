@@ -19,7 +19,7 @@ import presentacion.IGUBibliotecaController;
  *
  * @author Alex Cámara
  */
-public class Servidor {
+public class Cliente {
 
     private static InetAddress host;
     private static final int PUERTO = 1234;
@@ -55,9 +55,9 @@ public class Servidor {
 
                 salidaRed.writeObject(mensajeEnviar);
                 
-                //System.out.println("Enviado en Servidor");
+                //System.out.println("Enviado en Cliente");
             } catch (IOException ex) {
-                Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }
@@ -68,9 +68,9 @@ public class Servidor {
             salidaRed.writeObject(mensajeAEnviar);
             respuesta = entradaRed.readObject();
         } catch (IOException ex) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         return respuesta;
     }

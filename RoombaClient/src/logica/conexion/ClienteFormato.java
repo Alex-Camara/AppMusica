@@ -11,14 +11,12 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Alex Cámara
  */
-public class ServidorFormato {
+public class ClienteFormato {
 
     private static InetAddress host;
     private static final int PUERTO = 2000;
@@ -35,9 +33,7 @@ public class ServidorFormato {
         } catch (UnknownHostException ex) {
             System.out.println("\n!ID de host no encontrado¡\n");
             System.exit(1);
-        } catch (IOException ex) {
-            Logger.getLogger(ServidorFormato.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
     public static void iniciarConversacion() {

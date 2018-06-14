@@ -33,7 +33,7 @@ import javafx.util.Callback;
 import logica.Cancion;
 import logica.ListaReproduccion;
 import logica.conexion.Mensaje;
-import logica.conexion.Servidor;
+import logica.conexion.Cliente;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -171,7 +171,7 @@ public class IGUCancionesController implements Initializable {
         listasReproduccion.add(nuevaLista);
         Mensaje mensajeAgregarLista = new Mensaje("agregarLista");
         mensajeAgregarLista.setObjeto(nuevaLista);
-        Servidor.enviarMensaje(mensajeAgregarLista);
+        Cliente.enviarMensaje(mensajeAgregarLista);
     }
 
     public void agregarCancionALista(Cancion cancion, ListaReproduccion lista) {
@@ -182,7 +182,7 @@ public class IGUCancionesController implements Initializable {
             hash.put(lista, cancion);
             Mensaje mensajeAgregarCancionALista = new Mensaje("agregarCancionALista");
             mensajeAgregarCancionALista.setObjeto(hash);
-            Servidor.enviarMensaje(mensajeAgregarCancionALista);
+            Cliente.enviarMensaje(mensajeAgregarCancionALista);
 
         } else {
             Emergente.cargarEmergente("Advertencia", "La canción ya se encuentra en la lista");

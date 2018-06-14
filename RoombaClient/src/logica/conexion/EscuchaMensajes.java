@@ -29,9 +29,9 @@ public class EscuchaMensajes extends Thread {
       do {
          try {
             System.out.println("Esperando...");
-            respuesta = Servidor.entradaRed.readObject();
+            respuesta = Cliente.entradaRed.readObject();
          } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
          }
          iguBiblioteca.recibirMensaje(respuesta);
       } while (true);

@@ -32,7 +32,7 @@ import javafx.util.Callback;
 import logica.Cancion;
 import logica.ListaReproduccion;
 import logica.conexion.Mensaje;
-import logica.conexion.Servidor;
+import logica.conexion.Cliente;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -193,7 +193,7 @@ public class IGUListasReproduccionController implements Initializable {
         listasReproduccion.add(nuevaLista);
         Mensaje mensajeAgregarLista = new Mensaje("agregarLista");
         mensajeAgregarLista.setObjeto(nuevaLista);
-        Servidor.enviarMensaje(mensajeAgregarLista);
+        Cliente.enviarMensaje(mensajeAgregarLista);
         cargarTablaListas();
     }
 
@@ -204,7 +204,7 @@ public class IGUListasReproduccionController implements Initializable {
             lista.setNombre(tituloLista);
             Mensaje mensajeEditarLista = new Mensaje("editarLista");
             mensajeEditarLista.setObjeto(lista);
-            Servidor.enviarMensaje(mensajeEditarLista);
+            Cliente.enviarMensaje(mensajeEditarLista);
             for (int i = 0; i < listasReproduccion.size(); i++) {
                 if (listasReproduccion.get(i).getIdListaReproduccion() == lista.getIdListaReproduccion()) {
                     listasReproduccion.get(i).setNombre(tituloLista);
@@ -217,7 +217,7 @@ public class IGUListasReproduccionController implements Initializable {
     private void eliminarLista(ListaReproduccion lista) {
         Mensaje mensajeEliminarLista = new Mensaje("eliminarLista");
         mensajeEliminarLista.setObjeto(lista);
-        Servidor.enviarMensaje(mensajeEliminarLista);
+        Cliente.enviarMensaje(mensajeEliminarLista);
         for (int i = 0; i < listasReproduccion.size(); i++) {
             if (listasReproduccion.get(i).getIdListaReproduccion() == lista.getIdListaReproduccion()) {
                 listasReproduccion.remove(i);

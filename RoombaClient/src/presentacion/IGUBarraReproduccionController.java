@@ -24,7 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import logica.Cancion;
 import logica.conexion.Mensaje;
-import logica.conexion.Servidor;
+import logica.conexion.Cliente;
 
 /**
  * FXML Controller class
@@ -171,7 +171,7 @@ public class IGUBarraReproduccionController implements Initializable {
         
         Mensaje mensajeEnviar = new Mensaje("actualizarCalificación");
         mensajeEnviar.setObjeto(cancion);
-        Servidor.enviarMensaje(mensajeEnviar);
+        Cliente.enviarMensaje(mensajeEnviar);
     }
 
     private void iluminarEstrellas(int calificacion) {

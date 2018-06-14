@@ -13,11 +13,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 import logica.conexion.Mensaje;
-import logica.conexion.Servidor;
-import static logica.conexion.Servidor.enviarUsuario;
-import static logica.conexion.Servidor.iniciarConversacion;
+import logica.conexion.Cliente;
+import static logica.conexion.Cliente.enviarUsuario;
+import static logica.conexion.Cliente.iniciarConversacion;
 import logica.Usuario;
-import logica.conexion.ServidorFormato;
+import logica.conexion.ClienteFormato;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -32,14 +32,14 @@ public class IGUInicioSesionController implements Initializable {
     @FXML
     private JFXPasswordField tFieldClave;
 
-    Servidor server;
+    Cliente server;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //server = new Servidor();
+        //server = new Cliente();
         //ServidorFormato.abrirConexion();
         //ServidorFormato.iniciarConversacion();
     }

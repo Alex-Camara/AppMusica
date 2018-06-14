@@ -32,7 +32,7 @@ import logica.Genero;
 import logica.ListaReproduccion;
 import logica.Usuario;
 import logica.conexion.Mensaje;
-import logica.conexion.Servidor;
+import logica.conexion.Cliente;
 
 /**
  * FXML Controller class
@@ -151,7 +151,7 @@ public class IGUBibliotecaController implements Initializable {
         verificarCreador();
         /*Mensaje mensajeCanciones = new Mensaje("recuperarCanciones");
             mensajeCanciones.setObjeto(usuario);
-        Servidor.enviarMensaje(mensajeCanciones);*/
+        Cliente.enviarMensaje(mensajeCanciones);*/
 
     }
 
@@ -217,12 +217,12 @@ public class IGUBibliotecaController implements Initializable {
             Mensaje mensajeCanciones = new Mensaje("recuperarCanciones");
             mensajeCanciones.setObjeto(usuario);
             idBiblioteca = usuario.getIdBiblioteca();
-            Servidor.enviarMensaje(mensajeCanciones);
+            Cliente.enviarMensaje(mensajeCanciones);
             borderPanePrincipal.setCenter(paneCanciones);
         } else {
             //ir por canciones del servidor
             Mensaje mensajeRecuperarCanciones = new Mensaje("recuperarCancionesExternas");
-            Servidor.enviarMensaje(mensajeRecuperarCanciones);
+            Cliente.enviarMensaje(mensajeRecuperarCanciones);
             borderPanePrincipal.setCenter(paneCanciones);
         }
 
@@ -249,7 +249,7 @@ public class IGUBibliotecaController implements Initializable {
         buttonHistorial.setStyle(COLOR_TEXTO_RESALTADO);
         Mensaje mensaje = new Mensaje("recuperarHistorial");
         mensaje.setObjeto(usuario);
-        Servidor.enviarMensaje(mensaje);
+        Cliente.enviarMensaje(mensaje);
         paneCanciones.setVisible(true);
 
     }
@@ -288,7 +288,7 @@ public class IGUBibliotecaController implements Initializable {
     private void clicSubirLocal() {
         clicBiblioteca();
         ocultarSeleccion();
-        Servidor.enviarMensaje(new Mensaje("recuperarCatalogoGeneros"));
+        Cliente.enviarMensaje(new Mensaje("recuperarCatalogoGeneros"));
         ocultarSeleccion();
         buttonAgregarLocal.setStyle(COLOR_TEXTO_RESALTADO);
 
@@ -323,7 +323,7 @@ public class IGUBibliotecaController implements Initializable {
     @FXML
     private void clicSalir() {
         Mensaje mensajeSalida = new Mensaje("cerrarConexión");
-        Servidor.enviarMensaje(mensajeSalida);
+        Cliente.enviarMensaje(mensajeSalida);
     }
 
     public void ocultarSeleccion() {
@@ -352,7 +352,7 @@ public class IGUBibliotecaController implements Initializable {
             IGUBibliotecaController controlador = new IGUBibliotecaController();
             controlador.setUsuario(usuario);
             fxmlLoader.setController(controlador);
-            Servidor.iniciarEscuchaDeMensajes(controlador);
+            Cliente.iniciarEscuchaDeMensajes(controlador);
             rootPane = fxmlLoader.load();
             Scene scene = new Scene(rootPane);
             stagePrincipal.setScene(scene);
@@ -415,7 +415,7 @@ public class IGUBibliotecaController implements Initializable {
                 System.out.println("Generos " + generos.get(0).getNombre());
                 break;
             case "cerrarConexión":
-                Servidor.cerrarConexion();
+                Cliente.cerrarConexion();
                 break;
 
         }
