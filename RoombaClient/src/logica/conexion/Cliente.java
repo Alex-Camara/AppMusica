@@ -23,6 +23,7 @@ public class Cliente {
 
     private static InetAddress host;
     private static final int PUERTO = 1234;
+    private static final String DIRECCION_IP = "192.168.0.34";
     public static ObjectInputStream entradaRed;
     private static ObjectOutputStream salidaRed;
     private static Socket socket = null;
@@ -39,7 +40,7 @@ public class Cliente {
     public static void iniciarConversacion() {
 
         try {
-            socket = new Socket("192.168.0.34", PUERTO);
+            socket = new Socket(DIRECCION_IP, PUERTO);
             salidaRed = new ObjectOutputStream(socket.getOutputStream());
             entradaRed = new ObjectInputStream(socket.getInputStream());
 

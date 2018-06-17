@@ -21,7 +21,7 @@ public class GeneroBD implements GeneroDao {
       PreparedStatement sentenciaGenero = null;
       ResultSet resultadoGenero = null;
       
-      String consultaGenero = "SELECT * FROM genero WHERE idGenero = ?;";
+      String consultaGenero = "SELECT * FROM Genero WHERE idGenero = ?;";
       sentenciaGenero = conexion.prepareStatement(consultaGenero);
       sentenciaGenero.setInt(1, idGenero);
       resultadoGenero = sentenciaGenero.executeQuery();
@@ -41,7 +41,7 @@ public class GeneroBD implements GeneroDao {
       PreparedStatement sentenciaGenero = null;
       ResultSet resultadoGenero = null;
       List<Genero> generos = new ArrayList<>();
-      String consultaGenero = "SELECT * FROM genero;";
+      String consultaGenero = "SELECT * FROM Genero;";
       sentenciaGenero = conexion.prepareStatement(consultaGenero);
       resultadoGenero = sentenciaGenero.executeQuery();
       

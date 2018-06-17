@@ -25,7 +25,7 @@ public class AlbumBD implements AlbumDao {
       ResultSet resultado = null;
       Album album = new Album();
 
-      String consulta = "SELECT * FROM album WHERE idAlbum = ?;";
+      String consulta = "SELECT * FROM Album WHERE idAlbum = ?;";
 
       sentencia = conexion.prepareStatement(consulta);
       sentencia.setInt(1, idAlbum);

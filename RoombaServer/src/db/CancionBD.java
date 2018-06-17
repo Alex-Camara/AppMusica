@@ -24,7 +24,7 @@ public class CancionBD implements CancionDao {
         ResultSet resultado = null;
         List<Cancion> canciones = new ArrayList<>();
 
-        String consulta = "SELECT idCancion FROM historial WHERE idUsuario = ? ORDER BY fecha DESC LIMIT 23;";
+        String consulta = "SELECT idCancion FROM Historial WHERE idUsuario = ? ORDER BY fecha DESC LIMIT 23;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idUsuario);
         resultado = sentencia.executeQuery();
@@ -42,7 +42,7 @@ public class CancionBD implements CancionDao {
         conexion = Conexion.conectar();
         PreparedStatement sentenciaCancion = null;
         ResultSet resultadoCancion = null;
-        String consultaCancion = "SELECT * FROM cancion WHERE idCancion = ?;";
+        String consultaCancion = "SELECT * FROM Cancion WHERE idCancion = ?;";
         sentenciaCancion = conexion.prepareStatement(consultaCancion);
         sentenciaCancion.setInt(1, idCancion);
         resultadoCancion = sentenciaCancion.executeQuery();
@@ -86,7 +86,7 @@ public class CancionBD implements CancionDao {
         ResultSet resultado = null;
         List<Cancion> canciones = new ArrayList<>();
 
-        String consulta = "SELECT * FROM cancion WHERE privada = 0;";
+        String consulta = "SELECT * FROM Cancion WHERE privada = 0;";
         sentencia = conexion.prepareStatement(consulta);
         resultado = sentencia.executeQuery();
         while (resultado != null && resultado.next()) {

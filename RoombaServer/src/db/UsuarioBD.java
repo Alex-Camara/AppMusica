@@ -25,7 +25,7 @@ public class UsuarioBD implements UsuarioDao {
         ResultSet resultado = null;
         Usuario usuario = new Usuario();
 
-        String consulta = "SELECT * FROM usuario WHERE correo = ? AND clave = ?;";
+        String consulta = "SELECT * FROM Usuario WHERE correo = ? AND clave = ?;";
 
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setString(1, correo);
@@ -52,7 +52,7 @@ public class UsuarioBD implements UsuarioDao {
         int resultado = 0;
         Usuario usuarioIngresado;
 
-        String consulta = "insert into usuario (nombre, paterno, materno, correo,"
+        String consulta = "insert into Usuario (nombre, paterno, materno, correo,"
                 + " clave, tipousuario) values(?, ?, ?, ?, ?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setString(1, usuario.getNombre());
@@ -76,7 +76,7 @@ public class UsuarioBD implements UsuarioDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into biblioteca (idBiblioteca) values(?)";
+        String consulta = "insert into Biblioteca (idBiblioteca) values(?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, usuario.getIdUsuario());
         resultado = sentencia.executeUpdate();

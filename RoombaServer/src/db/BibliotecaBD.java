@@ -28,9 +28,9 @@ public class BibliotecaBD implements BibliotecaDao {
       Biblioteca biblioteca = new Biblioteca();
       List<Cancion> canciones = new ArrayList<>();
 
-      String consulta = " select idcancion, nombre, artista,album_idalbum, ruta,"
-              + " calificacion from cancion inner join cancionlocal on "
-              + "idcancionlocal=idcancion where privada = 0 and idBiblioteca = ? ;";
+      String consulta = "select idCancion, nombre, artista,Album_idAlbum, ruta,"
+              + " calificacion from Cancion inner join CancionLocal on "
+              + "idCancionLocal=idCancion where privada = 0 and idBiblioteca = ? ;";
 
       sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);

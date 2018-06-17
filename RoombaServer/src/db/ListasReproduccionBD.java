@@ -31,7 +31,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         ResultSet resultado = null;
         List<ListaReproduccion> listasReproduccion = new ArrayList<>();
 
-        String consulta = "SELECT * FROM listareproduccion WHERE idBiblioteca = ?;";
+        String consulta = "SELECT * FROM ListaReproduccion WHERE idBiblioteca = ?;";
 
         sentencia = conexion.prepareStatement(consulta);
 
@@ -61,10 +61,10 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         ResultSet resultado = null;
         List<Cancion> listasCanciones = new ArrayList<>();
 
-        String consulta = "select nombre, artista, calificacion, Album_idAlbum from cancionlocal_has_listareproduccion "
-                + "chl inner join cancionlocal cl on chl.idcancionlocal=cl.idcancionlocal inner join "
-                + "cancion on idcancion = cl.idcancionlocal and chl.idbiblioteca = ? and "
-                + "idlistareproduccion = ?;";
+        String consulta = "select nombre, artista, calificacion, Album_idAlbum from CancionLocal_has_ListaReproduccion "
+                + "chl inner join CancionLocal cl on chl.idCancionLocal=cl.idCancionLocal inner join "
+                + "Cancion on idCancion = cl.idCancionLocal and chl.idBiblioteca = ? and "
+                + "idListaReproduccion = ?;";
 
         try {
             sentencia = conexion.prepareStatement(consulta);
@@ -95,7 +95,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into listaReproduccion (nombre, idBiblioteca) values(?, ?)";
+        String consulta = "insert into ListaReproduccion (nombre, idBiblioteca) values(?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setString(1, nuevaLista.getNombre());
         sentencia.setInt(2, idBiblioteca);
@@ -110,7 +110,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "update listareproduccion set nombre = ? where idlistareproduccion = ?;";
+        String consulta = "update ListaReproduccion set nombre = ? where idListaReproduccion = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setString(1, lista.getNombre());
         sentencia.setInt(2, lista.getIdListaReproduccion());
@@ -126,7 +126,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         int resultado = 0;
         eliminarCancionesDeLista(lista.getIdListaReproduccion());
 
-        String consulta = "delete from listareproduccion where idListaReproduccion = ?";
+        String consulta = "delete from ListaReproduccion where idListaReproduccion = ?";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, lista.getIdListaReproduccion());
         resultado = sentencia.executeUpdate();
@@ -139,7 +139,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "delete from cancionlocal_has_listareproduccion where idListaReproduccion = ?;";
+        String consulta = "delete from CancionLocal_has_ListaReproduccion where idListaReproduccion = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idLista);
         resultado = sentencia.executeUpdate();
@@ -153,7 +153,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into cancionlocal_has_listareproduccion (idBiblioteca, idCancionLocal, idListaReproduccion) values(?, ?, ?)";
+        String consulta = "insert into CancionLocal_has_ListaReproduccion (idBiblioteca, idCancionLocal, idListaReproduccion) values(?, ?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, lista.getIdBiblioteca());
         sentencia.setInt(2, cancion.getIdCancion());
