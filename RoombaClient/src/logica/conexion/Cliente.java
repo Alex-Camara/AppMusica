@@ -14,6 +14,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import presentacion.IGUBibliotecaController;
+import presentacion.Utileria.Emergente;
 
 /**
  *
@@ -37,16 +38,11 @@ public class Cliente {
         }
     }
 
-    public static void iniciarConversacion() {
+    public static void iniciarConversacion() throws IOException {
 
-        try {
-            socket = new Socket(DIRECCION_IP, PUERTO);
-            salidaRed = new ObjectOutputStream(socket.getOutputStream());
-            entradaRed = new ObjectInputStream(socket.getInputStream());
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        socket = new Socket(DIRECCION_IP, PUERTO);
+        salidaRed = new ObjectOutputStream(socket.getOutputStream());
+        entradaRed = new ObjectInputStream(socket.getInputStream());
     }
 
     public static void enviarMensaje(Mensaje mensajeEnviar) {
@@ -55,7 +51,7 @@ public class Cliente {
                 //System.out.println("asuntoEnviar " + mensajeEnviar.getAsunto());
 
                 salidaRed.writeObject(mensajeEnviar);
-                
+
                 //System.out.println("Enviado en Cliente");
             } catch (IOException ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);

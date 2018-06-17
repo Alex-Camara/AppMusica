@@ -211,7 +211,6 @@ public class IGUBibliotecaController implements Initializable {
     private void clicCanciones() {
         ocultarSeleccion();
         buttonCanciones.setStyle(COLOR_TEXTO_RESALTADO);
-
         if (biblioteca) {
             //ir por canciones de biblioteca
             Mensaje mensajeCanciones = new Mensaje("recuperarCanciones");

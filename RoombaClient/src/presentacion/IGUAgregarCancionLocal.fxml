@@ -52,7 +52,7 @@
          </opaqueInsets>
       </GridPane>
       <ListView fx:id="listArchivos" layoutX="32.0" layoutY="267.0" prefHeight="119.0" prefWidth="474.0" />
-      <JFXButton fx:id="buttonAgregarListArchivos" layoutX="37.0" layoutY="425.0" style="-fx-border-color: black;" text="Agregar canciones" />
+      <JFXButton fx:id="buttonAgregarListArchivos" layoutX="37.0" layoutY="425.0" onAction="#agregarCanciones" style="-fx-border-color: black;" text="Agregar canciones" />
       <Label fx:id="labelPaneAgregarCancionNombre" layoutX="230.0" layoutY="53.0" prefHeight="18.0" prefWidth="343.0" text=" ">
          <font>
             <Font size="11.0" />

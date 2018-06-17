@@ -57,21 +57,26 @@ public class IGUInicioSesionController implements Initializable {
         if (correo.isEmpty() || correo.trim() == null || clave.isEmpty() || clave.trim() == null) {
             Emergente.cargarEmergente("Aviso", "Por favor, ingresa todos los datos");
         } else {
-            iniciarConversacion();
-            Usuario usuario = new Usuario();
-            usuario.setCorreo(correo);
-            usuario.setClave(clave);
-            Mensaje mensaje = new Mensaje();
-            mensaje.setAsunto("recuperar usuario");
-            mensaje.setObjeto(usuario);
-            Usuario usuarioRecibido = (Usuario) enviarUsuario(mensaje);
-
-            if (usuarioRecibido.getNombre() == null) {
-                Emergente.cargarEmergente("Aviso", "Datos incorrectos");
-            } else {
-                Stage mainWindow = (Stage) tFieldCorreo.getScene().getWindow();
-                IGUBibliotecaController controlador = new IGUBibliotecaController();
-                controlador.abrirIGUBiblioteca(mainWindow, usuarioRecibido);
+            try {
+                iniciarConversacion();
+                Usuario usuario = new Usuario();
+                usuario.setCorreo(correo);
+                usuario.setClave(clave);
+                Mensaje mensaje = new Mensaje();
+                mensaje.setAsunto("recuperar usuario");
+                mensaje.setObjeto(usuario);
+                Usuario usuarioRecibido = (Usuario) enviarUsuario(mensaje);
+                
+                if (usuarioRecibido.getNombre() == null) {
+                    Emergente.cargarEmergente("Aviso", "Datos incorrectos");
+                } else {
+                    Stage mainWindow = (Stage) tFieldCorreo.getScene().getWindow();
+                    IGUBibliotecaController controlador = new IGUBibliotecaController();
+                    controlador.abrirIGUBiblioteca(mainWindow, usuarioRecibido);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
+                Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde”");
             }
         }
     }

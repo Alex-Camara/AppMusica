@@ -29,6 +29,7 @@ import logica.Usuario;
 import static logica.conexion.Cliente.enviarUsuario;
 import static logica.conexion.Cliente.iniciarConversacion;
 import logica.conexion.Mensaje;
+import presentacion.Utileria.Emergente;
 
 /**
  * FXML Controller class
@@ -103,37 +104,42 @@ public class IGURegistroController implements Initializable {
 
     @FXML
     void registrar(ActionEvent event) {
-        String nombre;
-        String paterno;
-        String materno;
-        String correo;
-        String contraseña;
-        String confirmacion;
-
-        nombre = tFieldNombre.getText();
-        paterno = tFieldPaterno.getText().toLowerCase();
-        materno = tFieldMaterno.getText().toLowerCase();
-        correo = tFieldCorreo.getText();
-        contraseña = tFieldContraseña.getText();
-        confirmacion = tFieldConfirmacion.getText();
-
-        Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setNombre(nombre);
-        nuevoUsuario.setPaterno(paterno);
-        nuevoUsuario.setMaterno(materno);
-        nuevoUsuario.setCorreo(correo);
-        nuevoUsuario.setClave(contraseña);
-
-        Mensaje mensaje = new Mensaje();
-        mensaje.setAsunto("registrarUsuario");
-        mensaje.setObjeto(nuevoUsuario);
-        iniciarConversacion();
-        Usuario usuarioRecibido = (Usuario) enviarUsuario(mensaje);
-        System.out.println("usuario recibido: " + usuarioRecibido.getNombre());
-
-        Stage mainWindow = (Stage) tFieldCorreo.getScene().getWindow();
-        IGUBibliotecaController controlador = new IGUBibliotecaController();
-        controlador.abrirIGUBiblioteca(mainWindow, usuarioRecibido);
+        try {
+            String nombre;
+            String paterno;
+            String materno;
+            String correo;
+            String contraseña;
+            String confirmacion;
+            
+            nombre = tFieldNombre.getText();
+            paterno = tFieldPaterno.getText().toLowerCase();
+            materno = tFieldMaterno.getText().toLowerCase();
+            correo = tFieldCorreo.getText();
+            contraseña = tFieldContraseña.getText();
+            confirmacion = tFieldConfirmacion.getText();
+            
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre(nombre);
+            nuevoUsuario.setPaterno(paterno);
+            nuevoUsuario.setMaterno(materno);
+            nuevoUsuario.setCorreo(correo);
+            nuevoUsuario.setClave(contraseña);
+            
+            Mensaje mensaje = new Mensaje();
+            mensaje.setAsunto("registrarUsuario");
+            mensaje.setObjeto(nuevoUsuario);
+            iniciarConversacion();
+            Usuario usuarioRecibido = (Usuario) enviarUsuario(mensaje);
+            System.out.println("usuario recibido: " + usuarioRecibido.getNombre());
+            
+            Stage mainWindow = (Stage) tFieldCorreo.getScene().getWindow();
+            IGUBibliotecaController controlador = new IGUBibliotecaController();
+            controlador.abrirIGUBiblioteca(mainWindow, usuarioRecibido);
+        } catch (IOException ex) {
+            Logger.getLogger(IGURegistroController.class.getName()).log(Level.SEVERE, null, ex);
+            Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde”");
+        }
     }
 
     public boolean camposVacios(String nombre, String paterno, String correo, String contraseña, String confirmacion) {

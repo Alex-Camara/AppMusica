@@ -30,6 +30,7 @@ import javafx.stage.FileChooser;
 import logica.Album;
 import logica.Cancion;
 import logica.Genero;
+import logica.conexion.ClienteFormatos;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -64,7 +65,6 @@ public class IGUAgregarCancionLocalController implements Initializable {
     File file;
     List<Cancion> listaArchivos = new ArrayList<>();
     HashMap<Cancion, File> hashmapCanciones = new HashMap<>();
-    
 
     @FXML
     void ClicSeleccionarArchivoLocal(ActionEvent event) {
@@ -76,7 +76,6 @@ public class IGUAgregarCancionLocalController implements Initializable {
         if (file != null) {
             labelPaneAgregarCancionNombre.setText(file.getName());
         }
-
     }
 
     @FXML
@@ -84,36 +83,57 @@ public class IGUAgregarCancionLocalController implements Initializable {
         if (!tFieldNombreArchivo.getText().trim().isEmpty() && !tFieldArtistaArchivo.getText().trim().isEmpty()
                 && !tFieldAlbumArchivo.getText().trim().isEmpty() && !comboGenero.getSelectionModel().isEmpty()
                 && file != null) {
-            
+
             Cancion cancion = new Cancion();
             Album album = new Album();
-            
+
             cancion.setNombre(tFieldNombreArchivo.getText());
             cancion.setArtista(tFieldArtistaArchivo.getText());
             album.setNombre(tFieldAlbumArchivo.getText());
             album.setIdGenero(comboGenero.getSelectionModel().getSelectedItem().getIdGenero());
             cancion.setAlbum(album);
             hashmapCanciones.put(cancion, file);
-            
+
             listaArchivos.add(cancion);
             llenarLista();
             limpiarCampos();
         } else {
-            Emergente.cargarEmergente("Advertencia", "Debes llenar todos los campos");
+            Emergente.cargarEmergente("Advertencia", "Ingresa todos los datos");
         }
-
     }
 
     private void llenarLista() {
         ObservableList<Cancion> obsArchivos = FXCollections.observableArrayList(listaArchivos);
         listArchivos.setItems(obsArchivos);
     }
-    
-    private void limpiarCampos(){
+
+    private void limpiarCampos() {
         tFieldNombreArchivo.setText("");
         tFieldAlbumArchivo.setText("");
         tFieldArtistaArchivo.setText("");
         comboGenero.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    void agregarCanciones(ActionEvent event) {
+        if (!listaArchivos.isEmpty()) {
+            try {
+                ClienteFormatos.abrirConexion();
+                for (int i = 0; i < listaArchivos.size(); i++) {
+                    System.out.println("abrir conexión");
+                    Cancion cancion = listaArchivos.get(i);
+                    File archivo = hashmapCanciones.get(cancion);
+                    ClienteFormatos.enviarArchivo(cancion, archivo);
+                }
+
+            } catch (IOException ex) {
+                Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde");
+                Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            Emergente.cargarEmergente("Advertencia", "Sin canciones que agregar");
+        }
+
     }
 
     /**
@@ -141,5 +161,4 @@ public class IGUAgregarCancionLocalController implements Initializable {
         }
         return paneAgregarLocal;
     }
-
 }
