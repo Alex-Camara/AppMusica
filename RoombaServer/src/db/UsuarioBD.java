@@ -31,17 +31,71 @@ public class UsuarioBD implements UsuarioDao {
         sentencia.setString(1, correo);
         sentencia.setString(2, clave);
         resultado = sentencia.executeQuery();
-        
+
         while (resultado != null && resultado.next()) {
-         usuario.setIdUsuario(resultado.getInt("idUsuario"));
-         usuario.setNombre(resultado.getString("nombre"));
-         usuario.setPaterno(resultado.getString("paterno"));
-         usuario.setMaterno(resultado.getString("materno"));
-         usuario.setTipoUsuario(resultado.getString("nombreArtistico"));
-         usuario.setIdBiblioteca(resultado.getInt("idBiblioteca"));
-         usuario.setTipoUsuario(resultado.getString("tipoUsuario"));
-      }
+            usuario.setIdUsuario(resultado.getInt("idUsuario"));
+            usuario.setNombre(resultado.getString("nombre"));
+            usuario.setPaterno(resultado.getString("paterno"));
+            usuario.setMaterno(resultado.getString("materno"));
+            usuario.setTipoUsuario(resultado.getString("nombreArtistico"));
+            usuario.setIdBiblioteca(resultado.getInt("idBiblioteca"));
+            usuario.setTipoUsuario(resultado.getString("tipoUsuario"));
+        }
         return usuario;
+    }
+
+    @Override
+    public Usuario registrarUsuario(Usuario usuario) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+        Usuario usuarioIngresado;
+
+        String consulta = "insert into usuario (nombre, paterno, materno, correo,"
+                + " clave, tipousuario) values(?, ?, ?, ?, ?, ?)";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setString(1, usuario.getNombre());
+        sentencia.setString(2, usuario.getPaterno());
+        sentencia.setString(3, usuario.getMaterno());
+        sentencia.setString(4, usuario.getCorreo());
+        sentencia.setString(5, usuario.getClave());
+        sentencia.setString(6, "usuario");
+        resultado = sentencia.executeUpdate();
+
+        usuarioIngresado = recuperarUsuario(usuario.getCorreo(), usuario.getClave());
+        agregarBiblioteca(usuarioIngresado);
+        actualizarBiblioteca(usuarioIngresado.getIdUsuario());
+        usuarioIngresado.setIdBiblioteca(usuarioIngresado.getIdUsuario());
+        return usuarioIngresado;
+    }
+
+    public int agregarBiblioteca(Usuario usuario) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "insert into biblioteca (idBiblioteca) values(?)";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, usuario.getIdUsuario());
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    public int actualizarBiblioteca(int idUsuario) throws SQLException {
+        int resultado = 0;
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+
+        String consulta = "update Usuario SET idBiblioteca = ? where idUsuario = ?";
+
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idUsuario);
+        sentencia.setInt(2, idUsuario);
+        resultado = sentencia.executeUpdate();
+        return resultado;
     }
 
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="527.0" prefWidth="439.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111">
+   <children>
+      <ImageView layoutX="169.0" layoutY="28.0">
+         <image>
+            <Image url="@recursos/iconos/avatar.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="133.0" layoutY="146.0" text="Ingresa tus datos:">
+         <font>
+            <Font name="Proxima Nova Alt Rg Regular" size="22.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="tFieldNombre" focusColor="#e0def5" labelFloat="true" layoutX="55.0" layoutY="203.0" onKeyReleased="#verificarCampos" prefHeight="25.0" prefWidth="330.0" promptText="Nombres" />
+      <JFXTextField fx:id="tFieldPaterno" focusColor="#e0def5" labelFloat="true" layoutX="54.0" layoutY="251.0" onKeyReleased="#verificarCampos" prefHeight="25.0" prefWidth="159.0" promptText="Paterno" />
+      <JFXTextField fx:id="tFieldMaterno" focusColor="#e0def5" labelFloat="true" layoutX="234.0" layoutY="251.0" onKeyReleased="#verificarCampos" prefHeight="25.0" prefWidth="152.0" promptText="Materno" />
+      <JFXTextField fx:id="tFieldCorreo" focusColor="#e0def5" labelFloat="true" layoutX="55.0" layoutY="294.0" onKeyReleased="#verificarCampos" prefHeight="25.0" prefWidth="330.0" promptText="Correo electrónico" />
+      <JFXButton fx:id="butttonRegistrar" disable="true" layoutX="55.0" layoutY="436.0" onAction="#registrar" prefHeight="25.0" prefWidth="330.0" style="-fx-background-color: #E0DEF5;" stylesheets="@estilos/EstiloBoton.css" text="Registrarme" />
+      <Label layoutX="109.0" layoutY="485.0" text="¿Ya estas registrado?">
+         <font>
+            <Font name="Proxima Nova Alt Rg Regular" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="235.0" layoutY="485.0" onMouseClicked="#iniciarSesion" text="Inicia sesión" textFill="#1c19e8">
+         <font>
+            <Font name="Proxima Nova Alt Rg Regular" size="13.0" />
+         </font>
+      </Label>
+      <JFXPasswordField fx:id="tFieldContraseña" focusColor="#e0def5" labelFloat="true" layoutX="54.0" layoutY="339.0" onKeyReleased="#verificarCampos" prefHeight="25.0" prefWidth="330.0" promptText="Contraseña" />
+      <JFXPasswordField fx:id="tFieldConfirmacion" focusColor="#e0def5" labelFloat="true" layoutX="54.0" layoutY="385.0" onKeyReleased="#verificarCampos" prefHeight="25.0" prefWidth="330.0" promptText="Confirma tu contraseña" />
+   </children>
+</AnchorPane>

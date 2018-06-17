@@ -382,7 +382,7 @@ public class IGUBibliotecaController implements Initializable {
                 break;
             case "generos":
                 generos = (List<Genero>) mensaje.getObjeto();
-                System.out.println("Generos " + generos.get(0).getNombre());
+                //System.out.println("Generos " + generos.get(0).getNombre());
                 break;
             case "historial":
                 List<Cancion> cancionesHistorial = (List<Cancion>) mensaje.getObjeto();
@@ -412,7 +412,7 @@ public class IGUBibliotecaController implements Initializable {
                 break;
             case "generosExternos":
                 generosExternos = (List<Genero>) mensaje.getObjeto();
-                System.out.println("Generos " + generos.get(0).getNombre());
+                //System.out.println("Generos " + generos.get(0).getNombre());
                 break;
             case "cerrarConexión":
                 Cliente.cerrarConexion();

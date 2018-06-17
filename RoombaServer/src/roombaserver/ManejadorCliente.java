@@ -91,6 +91,14 @@ public class ManejadorCliente extends Thread {
                     Usuario usuarioObtenido = usuarioServidor.recuperarUsuario(usuarioRecibido.getCorreo(), usuarioRecibido.getClave());
                     salida.writeObject(usuarioObtenido);
                     break;
+                case "registrarUsuario":
+                    usuarioRecibido = (Usuario) mensajeRecibido.getObjeto();
+                    usuarioServidor = new UsuarioBD();
+                    
+                    usuarioObtenido = usuarioServidor.registrarUsuario(usuarioRecibido);
+   
+                    salida.writeObject(usuarioObtenido);
+                    break;
                 case "recuperarCanciones":
                     Usuario usuarioRecibido2 = (Usuario) mensajeRecibido.getObjeto();
                     BibliotecaDao biblioteca = new BibliotecaBD();

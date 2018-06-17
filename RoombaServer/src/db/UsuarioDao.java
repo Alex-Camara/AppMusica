@@ -14,4 +14,5 @@ import logica.Usuario;
  */
 public interface UsuarioDao {
     public Usuario recuperarUsuario(String correo, String clave) throws SQLException;
+    public Usuario registrarUsuario(Usuario usuario) throws SQLException;
 }

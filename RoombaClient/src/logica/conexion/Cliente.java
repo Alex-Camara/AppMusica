@@ -39,7 +39,7 @@ public class Cliente {
     public static void iniciarConversacion() {
 
         try {
-            socket = new Socket(host, PUERTO);
+            socket = new Socket("192.168.0.34", PUERTO);
             salidaRed = new ObjectOutputStream(socket.getOutputStream());
             entradaRed = new ObjectInputStream(socket.getInputStream());
 
