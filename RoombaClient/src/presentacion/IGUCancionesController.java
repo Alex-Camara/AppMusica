@@ -121,9 +121,22 @@ public class IGUCancionesController implements Initializable {
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         Cancion cancion = row.getItem();
-                        controladorBarraReproduccion.setCancion(cancion);
-                        controladorBarraReproduccion.cargarBarraReproduccion();
+                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion, false);
+                        controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }
+                });
+                //Eventos
+                menuItemDescargar.setOnAction((ActionEvent) ->{
+                   Cancion cancion = row.getItem();
+                   IGUBarraReproduccionController.obtenerCancion(cancion, true);
+                });
+                menuItemAgregarCancion.setOnAction( (ActionEvent event) ->{
+                   Cancion cancion = row.getItem();
+                   controladorBarraReproduccion.reajustarDatosColaReproduccion(cancion, true);
+                 });
+                menuItemAgregarContinuacion.setOnAction( (ActionEvent) ->{
+                   Cancion cancion = row.getItem();
+                   controladorBarraReproduccion.reajustarDatosColaReproduccion(cancion, false);
                 });
                 return row;
             }

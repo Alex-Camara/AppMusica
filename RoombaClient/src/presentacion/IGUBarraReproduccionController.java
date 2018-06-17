@@ -5,11 +5,17 @@
  */
 package presentacion;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -17,14 +23,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import logica.Cancion;
+import logica.CancionIntermediaria;
+import logica.Usuario;
 import logica.conexion.Mensaje;
 import logica.conexion.Cliente;
+import logica.conexion.ClienteStreaming;
+import logica.reproductor.ColaReproduccion;
+import logica.reproductor.Reproductor;
+import presentacion.Utileria.Emergente;
 
 /**
  * FXML Controller class
@@ -33,173 +47,376 @@ import logica.conexion.Cliente;
  */
 public class IGUBarraReproduccionController implements Initializable {
 
-    @FXML
-    private Pane paneBarraReproduccion;
-    @FXML
-    private Label labelTituloCancion;
-    @FXML
-    private Button buttonConfiguracion;
-    @FXML
-    private ImageView imageEngrane;
-    @FXML
-    private Button buttonSiguiente;
-    @FXML
-    private ImageView imageSiguiente;
-    @FXML
-    private Button buttonAnterior;
-    @FXML
-    private ImageView imageAnterior;
-    @FXML
-    private Button buttonReproducir;
-    @FXML
-    private ImageView imageReproducir;
-    @FXML
-    private Label labelCalificacion;
-    @FXML
-    private ImageView imageEstrella1;
-    @FXML
-    private ImageView imageEstrella2;
-    @FXML
-    private ImageView imageEstrella3;
-    @FXML
-    private ImageView imageEstrella4;
-    @FXML
-    private ImageView imageEstrella5;
-    @FXML
-    private Label labelArtista;
-    @FXML
-    private Label labelTituloArtista;
+   @FXML
+   private Pane paneBarraReproduccion;
+   @FXML
+   private Label labelTituloCancion;
+   @FXML
+   private Button buttonConfiguracion;
+   @FXML
+   private ImageView imageEngrane;
+   @FXML
+   private Button buttonSiguiente;
+   @FXML
+   private ImageView imageSiguiente;
+   @FXML
+   private Button buttonAnterior;
+   @FXML
+   private ImageView imageAnterior;
+   @FXML
+   private Button buttonReproducir;
+   @FXML
+   private ImageView imageReproducir;
+   @FXML
+   private Button buttonRepetir;
+   @FXML
+   private ImageView imageRepetir;
+   @FXML
+   private Label labelCalificacion;
+   @FXML
+   private ImageView imageEstrella1;
+   @FXML
+   private ImageView imageEstrella2;
+   @FXML
+   private ImageView imageEstrella3;
+   @FXML
+   private ImageView imageEstrella4;
+   @FXML
+   private ImageView imageEstrella5;
+   @FXML
+   private Label labelArtista;
+   @FXML
+   private Label labelTituloArtista;
 
-    List<ImageView> estrellas = new ArrayList<>();
-    private Cancion cancion;
+   List<ImageView> estrellas = new ArrayList<>();
+   private Cancion cancion;
+   private static int calidad = 2;
+   private boolean reproduciendo = false;
+   private Usuario usuario = null;
+   private boolean repeticion = false;
 
-    public void setCancion(Cancion cancion) {
-        this.cancion = cancion;
-    }
+   public void setCancion(Cancion cancion) {
+      this.cancion = cancion;
+   }
 
-    @FXML
-    void resaltarEstrella(MouseEvent event) {
-        ImageView imagen = (ImageView) (event.getSource());
-        imagen.setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
-    }
+   @FXML
+   void resaltarEstrella(MouseEvent event) {
+      ImageView imagen = (ImageView) (event.getSource());
+      imagen.setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
+   }
 
-    @FXML
-    void resetEstrella(MouseEvent event) {
-        ImageView imagen = (ImageView) (event.getSource());
-        imagen.setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
-    }
+   @FXML
+   void resetEstrella(MouseEvent event) {
+      ImageView imagen = (ImageView) (event.getSource());
+      imagen.setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
+   }
 
-    @FXML
-    void resaltarAnterior(MouseEvent event) {
-        imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewindSeleccionado.png"));
-    }
+   @FXML
+   void resaltarAnterior(MouseEvent event) {
+      imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewindSeleccionado.png"));
+   }
 
-    @FXML
-    void resaltarEngrane(MouseEvent event) {
-        imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settingsSeleccionado.png"));
-    }
+   @FXML
+   void resaltarEngrane(MouseEvent event) {
+      imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settingsSeleccionado.png"));
+   }
 
-    @FXML
-    void resaltarReproducir(MouseEvent event) {
-        imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducirSeleccionado.png"));
-    }
+   @FXML
+   void resaltarReproducir(MouseEvent event) {
+      if (reproduciendo) {
+         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausaSeleccionado.png"));
+      } else {
+         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducirSeleccionado.png"));
+      }
+   }
 
-    @FXML
-    void resaltarSiguiente(MouseEvent event) {
-        imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forwardSeleccionado.png"));
-    }
+   @FXML
+   void resaltarSiguiente(MouseEvent event) {
+      imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forwardSeleccionado.png"));
+   }
 
-    @FXML
-    void resetAnterior(MouseEvent event) {
-        imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewind.png"));
-    }
+   @FXML
+   void resaltarRepetir(MouseEvent event) {
+      if (repeticion) {
+         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
+      } else {
+         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
+      }
+   }
 
-    @FXML
-    void resetEngrane(MouseEvent event) {
-        imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settings.png"));
-    }
+   @FXML
+   void resetAnterior(MouseEvent event) {
+      imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewind.png"));
+   }
 
-    @FXML
-    void resetReprouducir(MouseEvent event) {
-        imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
-    }
+   @FXML
+   void resetEngrane(MouseEvent event) {
+      imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settings.png"));
+   }
 
-    @FXML
-    void resetSiguiente(MouseEvent event) {
-        imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forward.png"));
-    }
+   @FXML
+   void resetReproducir(MouseEvent event) {
+      if (reproduciendo) {
+         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
+      } else {
+         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
+      }
+   }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        estrellas.add(imageEstrella1);
-        estrellas.add(imageEstrella2);
-        estrellas.add(imageEstrella3);
-        estrellas.add(imageEstrella4);
-        estrellas.add(imageEstrella5);
-    }
+   @FXML
+   void resetSiguiente(MouseEvent event) {
+      imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forward.png"));
+   }
 
-    public void cargarBarraReproduccion() {
-        labelTituloCancion.setText(cancion.getNombre());
-        labelTituloArtista.setText(cancion.getArtista());
+   @FXML
+   void resetRepetir(MouseEvent event) {
+      if (repeticion) {
+         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
+      } else {
+         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
+      }
 
-        labelTituloCancion.setVisible(true);
-        labelCalificacion.setVisible(true);
-        labelArtista.setVisible(true);
-        labelTituloArtista.setVisible(true);
+   }
 
-        imageEstrella1.setVisible(true);
-        imageEstrella2.setVisible(true);
-        imageEstrella3.setVisible(true);
-        imageEstrella4.setVisible(true);
-        imageEstrella5.setVisible(true);
+   /**
+    * Initializes the controller class.
+    */
+   @Override
+   public void initialize(URL url, ResourceBundle rb) {
+      estrellas.add(imageEstrella1);
+      estrellas.add(imageEstrella2);
+      estrellas.add(imageEstrella3);
+      estrellas.add(imageEstrella4);
+      estrellas.add(imageEstrella5);
+   }
 
-        iluminarEstrellas(cancion.getCalificacion());
-    }
+   public void cargarBarraReproduccion(Cancion cancionLocal) {
+      labelTituloCancion.setText(cancionLocal.getNombre());
+      labelTituloArtista.setText(cancionLocal.getArtista());
 
-    @FXML
-    void calificarCancion(MouseEvent event) {
-        ImageView imagen = (ImageView) (event.getSource());
-        String idImagen = imagen.getId();
-        String stringCalificacion = idImagen.substring(idImagen.length() - 1);
-        int calificacion = Integer.valueOf(stringCalificacion);
-        System.out.println("calificacion: " + calificacion);
-        cancion.setCalificacion(calificacion);
-        iluminarEstrellas(calificacion);
-        
-        Mensaje mensajeEnviar = new Mensaje("actualizarCalificación");
-        mensajeEnviar.setObjeto(cancion);
-        Cliente.enviarMensaje(mensajeEnviar);
-    }
+      labelTituloCancion.setVisible(true);
+      labelCalificacion.setVisible(true);
+      labelArtista.setVisible(true);
+      labelTituloArtista.setVisible(true);
 
-    private void iluminarEstrellas(int calificacion) {
-        for (int i = 0; i < estrellas.size(); i++) {
-            if (i < calificacion) {
-                estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
-            } else {
-                estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
+      imageEstrella1.setVisible(true);
+      imageEstrella2.setVisible(true);
+      imageEstrella3.setVisible(true);
+      imageEstrella4.setVisible(true);
+      imageEstrella5.setVisible(true);
+
+      iluminarEstrellas(cancionLocal.getCalificacion());
+      cancion = cancionLocal;
+   }
+
+   @FXML
+   private void clicReproducir() {
+      boolean pausa = Reproductor.pausaReanudar();
+      reproduciendo = !pausa;
+      if (reproduciendo) {
+         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
+      } else {
+         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
+      }
+   }
+
+   @FXML
+   private void clicRepetir() {
+      repeticion = !repeticion;
+      Reproductor.repetir(repeticion);
+      if (repeticion) {
+         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
+      } else {
+         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
+      }
+   }
+
+   @FXML
+   private void clicAdelante() {
+      if (reproduciendo) {
+         List<CancionIntermediaria> colaTemporal = ColaReproduccion.getCola();
+         if (colaTemporal.size() == 1) {
+            Reproductor.rebobinar();
+         } else {
+            if (ColaReproduccion.getPosicionActual() < colaTemporal.size()) {
+               CancionIntermediaria cancionTemp = colaTemporal.get(ColaReproduccion.getPosicionActual()+1);
+               cargarBarraReproduccion(cancionTemp.getCancion());
+               Reproductor.reproducir(cancionTemp.getCancion(),
+                   cancionTemp.isLocal(), cancionTemp.getCalidad());
             }
 
-        }
-    }
+         }
+      }
+   }
 
-    @FXML
-    void clicConfigurar(ActionEvent event) {
+   @FXML
+   private void clicAtras() {
+      if (reproduciendo) {
+         List<CancionIntermediaria> colaTemporal = ColaReproduccion.getCola();
+         if (colaTemporal.size() == 1) {
+            Reproductor.rebobinar();
+         } else {
+            CancionIntermediaria cancionTemp = colaTemporal.get(ColaReproduccion.getPosicionActual() - 1);
+            cargarBarraReproduccion(cancionTemp.getCancion());
+            Reproductor.reproducir(cancionTemp.getCancion(),
+                cancionTemp.isLocal(), cancionTemp.getCalidad());
 
-    }
+         }
+      }
+   }
 
-    public Pane abrirIGUBarraReproduccion() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUBarraReproduccion.fxml"));
+   @FXML
+   void calificarCancion(MouseEvent event) {
+      ImageView imagen = (ImageView) (event.getSource());
+      String idImagen = imagen.getId();
+      String stringCalificacion = idImagen.substring(idImagen.length() - 1);
+      int calificacion = Integer.valueOf(stringCalificacion);
+      System.out.println("calificacion: " + calificacion);
+      cancion.setCalificacion(calificacion);
+      iluminarEstrellas(calificacion);
+      Mensaje mensajeEnviar = new Mensaje("actualizarCalificación");
+      mensajeEnviar.setObjeto(cancion);
+      Cliente.enviarMensaje(mensajeEnviar);
+   }
 
-            fxmlLoader.setController(this);
-            paneBarraReproduccion = fxmlLoader.load();
+   private void iluminarEstrellas(int calificacion) {
+      for (int i = 0; i < estrellas.size(); i++) {
+         if (i < calificacion) {
+            estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
+         } else {
+            estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
+         }
 
-        } catch (IOException ex) {
-            Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return paneBarraReproduccion;
-    }
+      }
+   }
+
+   @FXML
+   void clicConfigurar(ActionEvent event) {
+      final String[] data = {"Automática", "Alta", "Media", "Baja"};
+      List<String> listICalidades = Arrays.asList(data);
+      ChoiceDialog choiceCalidad = new ChoiceDialog(listICalidades.get(0), listICalidades);
+      choiceCalidad.setHeaderText("Calidad del audio");
+      choiceCalidad.setContentText("Selecciona la calidad del audio");
+      Optional<ButtonType> eleccion = choiceCalidad.showAndWait();
+      if (eleccion.isPresent()) {
+         String selected = choiceCalidad.getResult().toString();
+         switch (selected) {
+            case "Alta":
+               calidad = 2;
+               break;
+            case "Media":
+               calidad = 1;
+               break;
+            case "Baja":
+               calidad = 0;
+               break;
+         }
+      }
+      calidad = 2;
+   }
+
+   public void recuperarCancionYReproducir(Cancion cancion, boolean local) {
+      if (!checkExistencia(cancion.getRuta(), local)) {
+         try {
+            Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
+            ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
+            while (!futureTask.isDone()) {
+
+            }
+            if (futureTask.get() == 1) {
+               cargarBarraReproduccion(cancion);
+               Reproductor.reproducir(cancion, local, calidad);
+               agregarCancionHistorial(cancion);
+               restaurarCola(new CancionIntermediaria(cancion, local, calidad));
+               setReproduciendo();
+            } else {
+               Emergente.cargarEmergente("Error", "Imposible recuperar la canción, intenta más tarde.");
+            }
+         } catch (IOException | InterruptedException | ExecutionException ex) {
+            Logger.getLogger(IGUBarraReproduccionController.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      } else {
+         cargarBarraReproduccion(cancion);
+         Reproductor.reproducir(cancion, local, calidad);
+         agregarCancionHistorial(cancion);
+         restaurarCola(new CancionIntermediaria(cancion, local, calidad));
+         setReproduciendo();
+      }
+
+   }
+
+   public Pane abrirIGUBarraReproduccion(Usuario usuario) {
+      try {
+         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUBarraReproduccion.fxml"));
+
+         fxmlLoader.setController(this);
+         paneBarraReproduccion = fxmlLoader.load();
+         this.usuario = usuario;
+
+      } catch (IOException ex) {
+         Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      return paneBarraReproduccion;
+   }
+
+   private static boolean checkExistencia(String ruta, boolean local) {
+      String rutaCompleta;
+      String userHome = System.getProperty("user.home");
+      if (local) {
+         rutaCompleta = userHome + "/RombaFiles/local/" + ruta + "/" + calidad + ".mp3";
+      } else {
+         rutaCompleta = userHome + "/RombaFiles/cache/" + ruta + "/" + calidad + ".mp3";
+      }
+      File fileCheck = new File(rutaCompleta);
+      return fileCheck.exists();
+   }
+
+   private void agregarCancionHistorial(Cancion cancion) {
+      HashMap<Usuario, Cancion> hash = new HashMap<>();
+      hash.put(usuario, cancion);
+      Mensaje mensajeAgregarHistorial = new Mensaje("insertarEnHistorial");
+      mensajeAgregarHistorial.setObjeto(hash);
+      Cliente.enviarMensaje(mensajeAgregarHistorial);
+   }
+
+   private void restaurarCola(CancionIntermediaria cancion) {
+      ColaReproduccion.vaciarCola();
+      ColaReproduccion.agregarACola(cancion);
+   }
+
+   private void setReproduciendo() {
+      reproduciendo = true;
+      imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
+   }
+
+   void reajustarDatosColaReproduccion(Cancion cancion, boolean vaACola) {
+      if (vaACola) {
+         ColaReproduccion.agregarACola(new CancionIntermediaria(cancion, false, calidad));
+      } else {
+         ColaReproduccion.agregarAContinuacion(new CancionIntermediaria(cancion, false, calidad));
+      }
+
+   }
+
+   public static boolean obtenerCancion(Cancion cancion, boolean local) {
+      if (!checkExistencia(cancion.getRuta(), local)) {
+         try {
+            Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
+            ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
+            while (!futureTask.isDone()) {
+
+            }
+            if (futureTask.get() == 1) {
+               return true;
+            } else {
+               Emergente.cargarEmergente("Error", "Imposible recuperar la canción, intenta más tarde.");
+            }
+         } catch (IOException | InterruptedException | ExecutionException ex) {
+            Logger.getLogger(IGUBarraReproduccionController.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      } else {
+         return true;
+      }
+      return false;
+   }
 }

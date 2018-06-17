@@ -14,7 +14,6 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import presentacion.IGUBibliotecaController;
-import presentacion.Utileria.Emergente;
 
 /**
  *
@@ -24,7 +23,7 @@ public class Cliente {
 
     private static InetAddress host;
     private static final int PUERTO = 1234;
-    private static final String DIRECCION_IP = "192.168.0.34";
+    private static final String DIRECCION_IP = "127.0.0.1";
     public static ObjectInputStream entradaRed;
     private static ObjectOutputStream salidaRed;
     private static Socket socket = null;
@@ -32,6 +31,7 @@ public class Cliente {
     public static void abrirConexion() {
         try {
             host = InetAddress.getLocalHost();
+            System.out.println("Conexión establecida con servidor de BD");
         } catch (UnknownHostException ex) {
             System.out.println("\n!ID de host no encontrado¡\n");
             System.exit(1);

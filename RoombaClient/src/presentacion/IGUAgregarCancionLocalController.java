@@ -152,7 +152,6 @@ public class IGUAgregarCancionLocalController implements Initializable {
     public Pane abrirIGUAgregarCancionLocal() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUAgregarCancionLocal.fxml"));
-
             fxmlLoader.setController(this);
             paneAgregarLocal = fxmlLoader.load();
 

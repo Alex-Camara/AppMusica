@@ -13,7 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import static logica.conexion.Cliente.abrirConexion;
+import logica.conexion.Cliente;
+import logica.conexion.ClienteStreaming;
 
 /**
  *
@@ -51,7 +52,7 @@ public class RoombaClient extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        abrirConexion();
+        Cliente.abrirConexion();
         launch(args);
     }
 

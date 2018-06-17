@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static jdk.nashorn.internal.objects.NativeArray.map;
 import logica.Album;
 import logica.Biblioteca;
 import logica.Cancion;
@@ -127,6 +126,11 @@ public class ManejadorCliente extends Thread {
                     //System.out.println("biblioteca: " + bibliotecaServidor.getIdBiblioteca());
                     salida.writeObject(mensaje);
                     break;
+                case "buscarCancion":
+                   String nombre = (String) mensajeRecibido.getObjeto();
+                   CancionDao cancionServidor2 = new CancionBD();
+                   List<Cancion> cancionesEncontradas = cancionServidor2.buscarCancion(nombre);
+                   break;
                 case "recuperarHistorial":
                     Usuario usuarioHistorial = (Usuario) mensajeRecibido.getObjeto();
                     CancionDao cancionesServidor = new CancionBD();
@@ -136,6 +140,12 @@ public class ManejadorCliente extends Thread {
                     mensaje.setObjeto(cancionesHistorial);
                     salida.writeObject(mensaje);
                     break;
+                case "insertarEnHistorial":
+                   HashMap<Usuario, Cancion> hashHistorial = new HashMap<>();
+                    hashHistorial = (HashMap<Usuario, Cancion>) mensajeRecibido.getObjeto();
+                   CancionDao cancionesServidorHistorial = new CancionBD();
+                   cancionesServidorHistorial.actualizarHistorial(hashHistorial);
+                   break;
                 case "recuperarCatalogoGeneros":
                     GeneroDao generoServidor = new GeneroBD();
                     List<Genero> generos = generoServidor.recuperarCatalogo();

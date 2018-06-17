@@ -105,8 +105,8 @@ public class IGUGenerosController implements Initializable {
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         Cancion cancion = row.getItem();
-                        controladorBarraReproduccion.setCancion(cancion);
-                        controladorBarraReproduccion.cargarBarraReproduccion();
+                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion, false);
+                        controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }
                 });
                 return row;

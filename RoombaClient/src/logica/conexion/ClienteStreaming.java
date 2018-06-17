@@ -1,103 +1,145 @@
 package logica.conexion;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
+/**
+ *
+ * @author javr
+ */
+public class ClienteStreaming {
 
-public class ClienteStreaming implements Runnable {
-   
-   //Este es un caso en el cual se utiliza bajo un hilo
+   private static final String HOST = "127.0.0.1";
+   private static final int PUERTO = 1235;
+   private static Socket cliente;
+   private static PrintWriter salida;
 
-   private static InetAddress host;
-   private int port;
-   private SourceDataLine sLine;
-   private AudioFormat audioFormat;
-   /*Esto me ha dado muchas vueltas. He leído en algunos lados que 2200 debería ser lo mejor porque 
-   el tamaño del buffer no es tan grande ni pequeño. En otro lados dicen que debería ser mejor usar 
-   un buffer de 4096 para que tenga la suficiente información el buffer para reproducir y otro dicen
-   que debería ser mejor uno de 1024 porque en caso de ser un archivo pequeño podría tardar en llenar
-   un buffer grande. He probado las 3 y no he escuchado diferencias :l
-   */
-   private static byte[] buffer = new byte[2200];
-   private static DatagramPacket packet;
-
-   ClienteStreaming(String host, int port) throws UnknownHostException {
-      this.host = InetAddress.getByName(host);
-      this.port = port;
-      init();
-      
-   }
-   //Se encarga de inicializar las variables para la salida del audio
-   public void init() {
-      audioFormat = new AudioFormat(16000, 16, 2, true, false);
-      DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
-
+   /**
+    * Método para establecer la conexión con el servidor. Establece host, puerto para un socket.
+    */
+   public static void abrirConexion() {
       try {
-         System.out.println(info);
-         sLine = (SourceDataLine) AudioSystem.getLine(info);
-         System.out.println(sLine.getLineInfo() + " - sample rate : " + audioFormat.getSampleRate());
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-   }
-   
-   public void run() {
-      //Inicia el cliente. Abre la linea del audio
-      System.out.println("Client started");
-      try {
-         sLine.open(audioFormat);
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-      sLine.start();
-      System.out.println("Line started");
-      //Envía la ruta de la canción. Esta deberá ser pasada como parámetro pero por ahora es fija
-      try {
-         String ruta = "Yeah Yeah Yeahs/Fever/maps.mp3";
-         DatagramSocket client = new DatagramSocket();
-         DatagramPacket paqueteSalida = new DatagramPacket(ruta.getBytes(), ruta.length(), host, port);
-         //Envía un datagrama con la ruta de la canción
-         client.send(paqueteSalida);
-         do {
-            try {
-               //Espera el flujo de información 
-               packet = new DatagramPacket(buffer, buffer.length);
-               client.receive(packet);
-               //Pasa la información cruda (bytes[]) a un buffer
-               buffer = packet.getData();
-               System.out.println("obtuvo");
-
-               
-               //Toma la información del buffer y la reproduce
-               sLine.write(buffer, 0, buffer.length);
-            } catch (UnknownHostException e) {
-               e.printStackTrace();
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
-         } while(packet != null);
-
-      } catch (SocketException e) {
-         e.printStackTrace();
+         InetAddress inetAddress = InetAddress.getByName(HOST);
+         cliente = new Socket(inetAddress, PUERTO);
+         System.out.println("Conexión establecida con servidor de streaming");
+      } catch (UnknownHostException ex) {
+         System.out.println("\n!ID de host no encontrado¡\n");
+         System.exit(1);
       } catch (IOException ex) {
+         System.out.println("Imposible establecer la conexión");
          Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
       }
-
    }
 
-   public static void main(String[] args) throws UnknownHostException {
-      //Inicia la ejecución del hilo
-      Thread task = new Thread(new ClienteStreaming("127.0.0.1", 1234));
-      task.run();
+   /**
+    * Método para solicitar los datos de una canción.
+    *
+    * @param ruta String de la ruta del archivo de la canción. Por ejemplo: Grupo/Album/Cancion
+    * @param calidad int de la calidad del audio deseado
+    */
+   public static void solicitarCancion(String ruta, int calidad) {
+      abrirConexion();
+      new Thread(() -> {
+         try {
+            final String rutaCompleta = ruta + "/" + calidad + ".mp3";
+            salida = new PrintWriter(cliente.getOutputStream(), true);
+            salida.print(rutaCompleta);
+            salida.flush(); //Necesario para no añadir un salto en la direccón
+            System.out.println("Canción solicitada");
+         } catch (SocketException ex) {
+            Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (IOException ex) {
+            Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }).start();
+   }
+
+   /**
+    * Método para solicitar los datos de una canción. Predefinida la calidad más alta.
+    *
+    * @param ruta String de la ruta del archivo de la canción
+    */
+   public static void solicitarCancion(String ruta) {
+      new Thread(() -> {
+         try {
+            final String rutaCompleta = ruta + "/2.mp3";
+            salida = new PrintWriter(cliente.getOutputStream(), true);
+            salida.print(rutaCompleta);
+            salida.flush(); //Necesario para no añadir un salto en la direccón
+            System.out.println("Canción solicitada");
+         } catch (SocketException ex) {
+            abrirConexion();
+            Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (IOException ex) {
+            abrirConexion();
+            Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }).start();
+   }
+
+   /**
+    * Método para recuperar los datos de la canción por medio de la conexión del socket antes
+    * establecida.
+    *
+    * @param ruta String de la ruta del archivo. Utilizada para guardarla
+    * @param local Boolean para determinar si es un archivo caché o una descarga a archivo local
+    * @return Future<Integer> para validar la disponibilidad de la información de la canción
+    * @throws IOException
+    */
+   public static Future<Integer> recuperarCancion(String ruta, boolean local, int calidad) throws IOException {
+      return Executors.newSingleThreadExecutor().submit(() -> {
+         try {
+            byte[] paquete = new byte[4096];
+            byte[] bufferTotal = new byte[0];
+            String userHome = System.getProperty("user.home");
+            File fileCancion;
+            if (local) {
+               fileCancion = new File(userHome + "/RombaFiles/local/" + ruta);
+            } else {
+               fileCancion = new File(userHome + "/RombaFiles/cache/" + ruta);
+            }
+            fileCancion.mkdirs();
+            FileOutputStream fos = new FileOutputStream(fileCancion + "/" + calidad + ".mp3");
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            InputStream is = cliente.getInputStream();
+            int bytesRead = 0;
+            while ((bytesRead = is.read(paquete)) != -1) {
+               bos.write(paquete, 0, bytesRead);
+            }
+            bos.flush();
+            cerrarConexion();
+            return 1;
+         } catch (IOException ex) {
+            abrirConexion();
+            Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+         }
+      });
+   }
+
+   /**
+    * Método para cerrar la conexión con el servidor de Streaming
+    */
+   public static void cerrarConexion() {
+      if (cliente != null) {
+         try {
+            System.out.println("\nCerrando la conexión...");
+            cliente.close();
+         } catch (IOException ex) {
+            Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
    }
 }

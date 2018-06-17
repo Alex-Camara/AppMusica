@@ -77,7 +77,6 @@ public class IGUArtistasController implements Initializable {
     }
 
     public void cargarTablaArtistas(List<Cancion> canciones) {
-        System.out.println("lista canciones: " + canciones);
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
         taColumnArtista.setCellValueFactory(new PropertyValueFactory<>("Artista"));
         tableArtistas.setItems(obsCanciones);
@@ -103,8 +102,8 @@ public class IGUArtistasController implements Initializable {
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         Cancion cancion = row.getItem();
-                        controladorBarraReproduccion.setCancion(cancion);
-                        controladorBarraReproduccion.cargarBarraReproduccion();
+                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion, false);
+                        controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }
                 });
                 return row;
@@ -126,10 +125,8 @@ public class IGUArtistasController implements Initializable {
     public Pane abrirIGUArtistas() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUArtistas.fxml"));
-
             fxmlLoader.setController(this);
             paneArtistas = fxmlLoader.load();
-
         } catch (IOException ex) {
             Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
         }
