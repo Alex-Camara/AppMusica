@@ -30,7 +30,9 @@ import javafx.stage.FileChooser;
 import logica.Album;
 import logica.Cancion;
 import logica.Genero;
+import logica.conexion.Cliente;
 import logica.conexion.ClienteFormatos;
+import logica.conexion.Mensaje;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -117,23 +119,42 @@ public class IGUAgregarCancionLocalController implements Initializable {
     @FXML
     void agregarCanciones(ActionEvent event) {
         if (!listaArchivos.isEmpty()) {
-            try {
-                ClienteFormatos.abrirConexion();
-                for (int i = 0; i < listaArchivos.size(); i++) {
-                    System.out.println("abrir conexión");
-                    Cancion cancion = listaArchivos.get(i);
-                    File archivo = hashmapCanciones.get(cancion);
-                    ClienteFormatos.enviarArchivo(cancion, archivo);
-                }
 
-            } catch (IOException ex) {
-                Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde");
+            Thread recibir = new Thread() {
+                public void run() {
+                    try {
+
+                        for (int i = 0; i < listaArchivos.size(); i++) {
+                            ClienteFormatos.abrirConexion();
+                            System.out.println("abrir conexión");
+                            Cancion cancion = listaArchivos.get(i);
+                            File archivo = hashmapCanciones.get(cancion);
+                            ClienteFormatos.enviarArchivo(cancion, archivo);
+                            ClienteFormatos.cerrarConexion();
+                        }
+                    } catch (IOException ex) {
+                        Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde");
+                        Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+            
+            try {
+                recibir.join();
+                Emergente.cargarEmergente("Aviso", "Canciones subidas");
+            } catch (InterruptedException ex) {
                 Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            guardarCanciones();
         } else {
             Emergente.cargarEmergente("Advertencia", "Sin canciones que agregar");
         }
-
+    }
+    
+    public void guardarCanciones(){
+        Mensaje mensaje = new Mensaje("guardarCanciones");
+        mensaje.setObjeto(listaArchivos);
+        Cliente.enviarMensaje(mensaje);
     }
 
     /**
@@ -148,7 +169,7 @@ public class IGUAgregarCancionLocalController implements Initializable {
         ObservableList<Genero> obsGeneros = FXCollections.observableArrayList(generos);
         comboGenero.setItems(obsGeneros);
     }
-
+    
     public Pane abrirIGUAgregarCancionLocal() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUAgregarCancionLocal.fxml"));

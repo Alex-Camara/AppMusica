@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logica.Biblioteca;
 import logica.Cancion;
 import logica.ListaReproduccion;
 
@@ -94,7 +95,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into ListaReproduccion (nombre, idBiblioteca) values(?, ?);";
+        String consulta = "insert into ListaReproduccion (nombre, idBiblioteca) values(?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setString(1, nuevaLista.getNombre());
         sentencia.setInt(2, idBiblioteca);
@@ -125,7 +126,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         int resultado = 0;
         eliminarCancionesDeLista(lista.getIdListaReproduccion());
 
-        String consulta = "delete from ListaReproduccion where idListaReproduccion = ?;";
+        String consulta = "delete from ListaReproduccion where idListaReproduccion = ?";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, lista.getIdListaReproduccion());
         resultado = sentencia.executeUpdate();
@@ -152,7 +153,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into CancionLocal_has_ListaReproduccion (idBiblioteca, idCancionLocal, idListaReproduccion) values(?, ?, ?);";
+        String consulta = "insert into CancionLocal_has_ListaReproduccion (idBiblioteca, idCancionLocal, idListaReproduccion) values(?, ?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, lista.getIdBiblioteca());
         sentencia.setInt(2, cancion.getIdCancion());

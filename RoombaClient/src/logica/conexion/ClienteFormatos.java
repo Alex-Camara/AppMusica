@@ -26,57 +26,58 @@ public class ClienteFormatos {
     }
 
     public static void enviarArchivo(Cancion cancion, File archivo) {
-        new Thread(() -> {
-            FileInputStream fis = null;
-            OutputStream os = null;
-            BufferedInputStream bis = null;
-            DataInputStream in = null;
 
-            try {
+        FileInputStream fis = null;
+        OutputStream os = null;
+        BufferedInputStream bis = null;
+        DataInputStream in = null;
 
-                //leer el archivo que quiere recuperar el cliente
-                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        try {
 
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            //leer el archivo que quiere recuperar el cliente
+            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
-                String directorioAGuardar = "/libreriaMusica/" + cancion.getArtista()
-                        + "/" + cancion.getAlbum() + "/" + cancion.getNombre() + "/";
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-                int longitudArchivo = (int) archivo.length();
+            int longitudArchivo = (int) archivo.length();
 
-                System.out.println("archivo: " + archivo);
-                System.out.println("longitud archivo: " + longitudArchivo);
+            System.out.println("archivo: " + archivo);
+            System.out.println("longitud archivo: " + longitudArchivo);
 
-                //El servidor envia al cliente el directorio del archivo
-                out.println(directorioAGuardar + "\n");
-                out.flush();
+            //El servidor envia al cliente el directorio del archivo
+            out.println(cancion.getRuta() + "\n");
+            out.flush();
 
-                //El servidor envia al cliente el nombre del archivo
-                out.println(archivo.getName());
-                out.flush();
+            //El servidor envia al cliente el nombre del archivo
+            out.println(archivo.getName());
+            out.flush();
 
-                //El servidor envia al cliente el archivo
-                byte[] buffer = new byte[(int) longitudArchivo];
-                System.out.println("buffer = " + Arrays.toString(buffer));
+            //El servidor envia al cliente el archivo
+            byte[] buffer = new byte[(int) longitudArchivo];
+            System.out.println("buffer = " + Arrays.toString(buffer));
 
-                fis = new FileInputStream(archivo);
+            fis = new FileInputStream(archivo);
 
-                bis = new BufferedInputStream(fis);
-                bis.read(buffer, 0, buffer.length);
-                os = socket.getOutputStream();
-                System.out.println("enviando archivo " + archivo + "(" + buffer.length + " bytes)");
-                os.write(buffer, 0, buffer.length);
-                os.flush();
+            bis = new BufferedInputStream(fis);
+            bis.read(buffer, 0, buffer.length);
+            os = socket.getOutputStream();
+            System.out.println("enviando archivo " + archivo + "(" + buffer.length + " bytes)");
+            os.write(buffer, 0, buffer.length);
+            os.flush();
 
-            } catch (IOException ex) {
-                Logger.getLogger(ClienteFormatos.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    socket.close();
-                } catch (IOException ex) {
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteFormatos.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
 
-                }
-            }
-        }).start();
+        }
+    }
+
+    public static void cerrarConexion() {
+        try {
+            socket.close();
+        } catch (IOException ex) {
+
+        }
+
     }
 }

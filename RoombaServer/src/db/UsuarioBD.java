@@ -97,5 +97,20 @@ public class UsuarioBD implements UsuarioDao {
         resultado = sentencia.executeUpdate();
         return resultado;
     }
+    
+    public int actualizarUsuario(int idUsuario, String nombreArtistico) throws SQLException {
+        int resultado = 0;
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+
+        String consulta = "update Usuario SET tipoUsuario = 'Creador', nombreArtistico = ? where idUsuario = ?;";
+
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setString(1, nombreArtistico);
+        sentencia.setInt(2, idUsuario);
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
 
 }

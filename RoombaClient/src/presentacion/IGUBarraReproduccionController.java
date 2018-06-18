@@ -286,7 +286,6 @@ public class IGUBarraReproduccionController implements Initializable {
          } else {
             estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
          }
-
       }
    }
 
@@ -318,8 +317,9 @@ public class IGUBarraReproduccionController implements Initializable {
    public void recuperarCancionYReproducir(Cancion cancion, boolean local) {
       if (!checkExistencia(cancion.getRuta(), local)) {
          try {
-            Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
+            
             ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
+            Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
             while (!futureTask.isDone()) {
 
             }

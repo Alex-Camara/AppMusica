@@ -6,10 +6,8 @@
 package db;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import logica.Cancion;
-import logica.Usuario;
 
 /**
  *
@@ -20,8 +18,6 @@ public interface CancionDao {
    public Cancion recuperarCancion(int idCancion) throws SQLException;
    public int actualizarCalificacion(int idCancion, int calificacion) throws SQLException;
    public List<Cancion> recuperarCancionesExternas() throws SQLException;
-   public void actualizarHistorial(HashMap<Usuario, Cancion> hash) throws SQLException;
-   public List<Cancion> buscarCancion(String nombre)throws SQLException;
-
+   public int guardarCancion(Cancion cancion) throws SQLException;
    
 }

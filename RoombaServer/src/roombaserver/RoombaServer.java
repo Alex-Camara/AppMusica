@@ -23,9 +23,12 @@ public class RoombaServer {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {   
+    public static void main(String[] args) throws IOException {
+       
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        
          try {
+
             socketServer = new ServerSocket(PUERTO);
             System.out.println("Servidor arriba");
         } catch (IOException ex) {
