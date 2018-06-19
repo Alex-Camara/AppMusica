@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package roombaserver;
 
 import java.io.IOException;
@@ -12,8 +8,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- *
- * @author Alex Cámara
+ * Clase del servidor para la administración de la información en la base de datos.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class RoombaServer {
 

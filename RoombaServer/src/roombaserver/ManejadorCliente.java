@@ -31,14 +31,10 @@ import logica.ListaReproduccion;
 import logica.conexion.Mensaje;
 import logica.Usuario;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author Alex Cámara
+ * Clase para interactuar con el cliente de base de datos. Esto es lanzado con cada conexión.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class ManejadorCliente extends Thread {
 
@@ -75,7 +71,13 @@ public class ManejadorCliente extends Thread {
         }
     }
 
-    public boolean escucharMensajes() throws SQLException {
+   /**
+    * Método para escuhar las solicitudes del cliente. Recibe un objeto Mensaje con la información 
+    * del tipo de solicitud  y en caso de ser necesario con el objeto a utilizar.
+    * @return Boolean en caso de no recibir un mensaje de cierre de conexión
+    * @throws SQLException En caso de encontrar un fallo en la base de datos
+    */
+   public boolean escucharMensajes() throws SQLException {
         boolean continuar = true;
 
         try {
@@ -122,8 +124,6 @@ public class ManejadorCliente extends Thread {
                     listasReproduccion = listaServidor.recuperarListas(bibliotecaServidor.getIdBiblioteca());
                     mensaje = new Mensaje("listasReproduccion");
                     mensaje.setObjeto(listasReproduccion);
-                    //System.out.println("listas recuepradas: " + listasReproduccion);
-                    //System.out.println("biblioteca: " + bibliotecaServidor.getIdBiblioteca());
                     salida.writeObject(mensaje);
                     break;
                 case "recuperarHistorial":
@@ -233,7 +233,11 @@ public class ManejadorCliente extends Thread {
         return continuar;
     }
 
-    public void cerrarConexión() throws IOException {
+   /**
+    * Método para cerrar la conexión con el cliente.
+    * @throws IOException En caso de no poder hacerlo
+    */
+   public void cerrarConexión() throws IOException {
         System.out.println("Cerrando la conexión con el RoombaClient ...");
         Mensaje mensajeSalida = new Mensaje("cerrarConexión");
         salida.writeObject(mensajeSalida);
@@ -292,14 +296,12 @@ public class ManejadorCliente extends Thread {
         return generos;
     }
 
-    public void guardarCanciones(List<Cancion> cancionesAGuardar) throws SQLException {
+    private void guardarCanciones(List<Cancion> cancionesAGuardar) throws SQLException {
         for (int i = 0; i < cancionesAGuardar.size(); i++) {
             Cancion cancion = cancionesAGuardar.get(i);
 
             AlbumDao albumServidor = new AlbumBD();
             Album albumGuardado = albumServidor.guardarAlbum(cancion.getAlbum());
-            System.out.println("album id: " + albumGuardado.getIdAlbum());
-            //album.setIdAlbum(albumGuardado.getIdAlbum());
             cancion.setAlbum_idAlbum(albumGuardado.getIdAlbum());
 
             CancionDao cancionServidor = new CancionBD();

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import com.jfoenix.controls.JFXPasswordField;
@@ -17,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import logica.conexion.Mensaje;
 import logica.conexion.Cliente;
@@ -27,10 +22,10 @@ import logica.Usuario;
 import presentacion.Utileria.Emergente;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
- */
+ * Clase del controlador para Iniciar sesión.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ * */
 public class IGUInicioSesionController implements Initializable {
 
     @FXML
@@ -45,9 +40,6 @@ public class IGUInicioSesionController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //server = new Cliente();
-        //ServidorFormato.abrirConexion();
-        //ServidorFormato.iniciarConversacion();
     }
 
     @FXML
@@ -89,7 +81,11 @@ public class IGUInicioSesionController implements Initializable {
         controlador.abrirIGURegistro(mainWindow);
     }
 
-    public void abrirIGUInicioSesion(Stage stageActual) {
+   /**
+    * Método para abrir la ventana de la clase actual
+    * @param stageActual Stage del cual ha sido solicitado
+    */
+   public void abrirIGUInicioSesion(Stage stageActual) {
         try {
             AnchorPane rootPane;
             Stage stagePrincipal = new Stage();

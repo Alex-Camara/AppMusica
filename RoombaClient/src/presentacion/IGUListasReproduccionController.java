@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package presentacion;
 
 import com.jfoenix.controls.JFXButton;
@@ -21,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -36,10 +30,10 @@ import logica.conexion.Cliente;
 import presentacion.Utileria.Emergente;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
- */
+ * Clase del controlador para administrar una lista de reproducción.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ * */
 public class IGUListasReproduccionController implements Initializable {
 
     @FXML
@@ -63,15 +57,27 @@ public class IGUListasReproduccionController implements Initializable {
     private List<ListaReproduccion> listasReproduccion;
     private IGUBarraReproduccionController controladorBarraReproduccion;
 
-    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método para asignar el controlado de la barra de reproducción. 
+    * @param controladorBarraReproduccion IGUBarraReproduccionController creado para asignar
+    */
+   public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
         this.controladorBarraReproduccion = controladorBarraReproduccion;
     }
 
-    public void setListasReproduccion(List<ListaReproduccion> listasReproduccion) {
+   /**
+    * Método para asignar la lista de elementos de ListaReproduccion
+    * @param listasReproduccion List<ListaReproduccion>  con elementos para asignar
+    */
+   public void setListasReproduccion(List<ListaReproduccion> listasReproduccion) {
         this.listasReproduccion = listasReproduccion;
     }
 
-    public void setVisibilidad(boolean estatus) {
+   /**
+    * Método par asignar el estatus del pane del controller
+    * @param estatus Boolean del estatus
+    */
+   public void setVisibilidad(boolean estatus) {
         paneListas.setVisible(estatus);
     }
 
@@ -83,7 +89,10 @@ public class IGUListasReproduccionController implements Initializable {
         // TODO
     }
 
-    public void cargarTablaListas() {
+   /**
+    * Método para cargar la tabla de las listas
+    */
+   public void cargarTablaListas() {
 
         ObservableList<ListaReproduccion> obsListasReproduccion = FXCollections.observableArrayList(listasReproduccion
         );
@@ -136,16 +145,24 @@ public class IGUListasReproduccionController implements Initializable {
         });
     }
 
-    public void habilitarCanciones(ListaReproduccion listaSeleccionadata) {
+   /**
+    * Método para mostrar los elementos de la lista
+    * @param listaSeleccionadata ListaReproduccion seleccionada
+    */
+   public void habilitarCanciones(ListaReproduccion listaSeleccionadata) {
 
         tableListas.setVisible(false);
         tableCanciones.setVisible(true);
         buttonRegresar.setVisible(true);
         buttonAgregarLista.setVisible(false);
-        cargarTablaCanciones(listaSeleccionadata.getCanciones(), controladorBarraReproduccion);
+        cargarTablaCanciones(listaSeleccionadata.getCanciones());
     }
 
-    public void cargarTablaCanciones(List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método para cargar las canciones en la tabla
+    * @param canciones List<Cancion> para asignar en la tabla
+    */
+   public void cargarTablaCanciones(List<Cancion> canciones) {
         if (canciones != null) {
             ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
             tcNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
@@ -157,13 +174,15 @@ public class IGUListasReproduccionController implements Initializable {
         }
     }
 
-    public void agregarListenersTablaCanciones() {
+   /**
+    * Método para asginar los listeners a la tabla de canciones.
+    */
+   public void agregarListenersTablaCanciones() {
         tableCanciones.setRowFactory(
                 new Callback<TableView<Cancion>, TableRow<Cancion>>() {
             @Override
             public TableRow<Cancion> call(TableView<Cancion> tableView) {
                 final TableRow<Cancion> row = new TableRow<>();
-
                 //SELECCIÓN DE UNA CANCIÓN
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
@@ -226,7 +245,11 @@ public class IGUListasReproduccionController implements Initializable {
         cargarTablaListas();
     }
 
-    public Pane abrirIGUListasReproduccion() {
+   /**
+    * Método para abrir el pane de la clase y asignar el controller
+    * @return Pane con las asginaciones
+    */
+   public Pane abrirIGUListasReproduccion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUListasReproduccion.fxml"));
 

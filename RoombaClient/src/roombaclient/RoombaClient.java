@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package roombaclient;
 
 import java.io.IOException;
@@ -14,11 +10,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import logica.conexion.Cliente;
-import logica.conexion.ClienteStreaming;
 
 /**
- *
- * @author Alex Cámara
+ * Clase de cliente de la aplicación de música en streaming Roomba.
+ * Esta aplicación permite la administración de música pública conservada en un servidor de área loca,
+ * además de poder guardar canciones locales en diferentes calidades en dicho servidor.
+ * 25/06/2018
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class RoombaClient extends Application {
 
@@ -31,7 +30,7 @@ public class RoombaClient extends Application {
     }
 
     /**
-     * Muestra la ventana principal del sistema
+     * Método para mostrar la ventana principal del sistema.
      */
     public void showMainWindows() {
         AnchorPane rootPane = new AnchorPane();

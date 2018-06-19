@@ -1,8 +1,10 @@
 package logica;
 
 /**
- *
- * @author javr
+ * Clase CanciónIntermediaria con los atributos de la clase hómologa de la base de datos con
+ * información extra local necesaria.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class CancionIntermediaria {
    private Cancion cancion;

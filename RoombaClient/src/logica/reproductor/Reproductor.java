@@ -5,27 +5,31 @@ import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
 import logica.Cancion;
 import logica.CancionIntermediaria;
-import static logica.reproductor.ColaReproduccion.getPosicionActual;
 import presentacion.IGUBarraReproduccionController;
 
 /**
- *
- * @author javr
+ * Clase del sobre los elementos que se utilizan para la reproducción de una pista.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class Reproductor {
 
-   private final JFXPanel fxPanel = new JFXPanel();
    private static File fileSound;
    private static Media sound;
    private static MediaPlayer mediaPlayer;
    
+   /**
+    * Método para reproducir una canción
+    * @param cancion Cancion a reproducir
+    * @param local Boolean para identificar si puede encontrar en un archivo local
+    * @param calidad int de la calidad deseada
+    */
    public static void reproducir(Cancion cancion, boolean local, int calidad) {
       String ruta = cancion.getRuta();
       String userHome = System.getProperty("user.home");
@@ -66,6 +70,11 @@ public class Reproductor {
       }
    }
 
+   /**
+    * Método para pausar o reanudar la reproducción
+    * @return Boolean para determinar si hizo una pausa o reanudó. Determinado por el estado del
+    * reproductor
+    */
    public static boolean pausaReanudar() {
       boolean playing = mediaPlayer.getStatus().equals(Status.PLAYING);
       if (playing) {
@@ -76,11 +85,19 @@ public class Reproductor {
          return false;
       }
    }
+   
+   /**
+    * Métod para regresar la reprocción actual al punto inicial
+    */
    public static void rebobinar(){
       mediaPlayer.seek(Duration.ZERO);
       mediaPlayer.play();
    }
 
+   /**
+    * Método para repetir de manera indefinida la reproducción actual
+    * @param repetir
+    */
    public static void repetir(boolean repetir) {
       if (mediaPlayer != null) {
          if (repetir) {

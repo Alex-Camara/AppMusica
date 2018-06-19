@@ -13,12 +13,18 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.StageStyle;
 
 /**
- *
- * @author javr
- */
+ * Clase para mostrar mensajes emergentes.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ * */
 public class Emergente {
 
-    public static void cargarEmergente(String titulo, String mensaje) {
+   /**
+    * Método para cargar un mensaje emergente.
+    * @param titulo String del título de la ventana
+    * @param mensaje String del mensaje del aviso emergente
+    */
+   public static void cargarEmergente(String titulo, String mensaje) {
         Alert confirmacion = new Alert(Alert.AlertType.INFORMATION);
         confirmacion.setTitle(titulo);
         confirmacion.setHeaderText(null);
@@ -28,7 +34,14 @@ public class Emergente {
         confirmacion.showAndWait();
     }
 
-    public static String cargarTextInputDialog(String titulo, String mensaje, String mensajeDefault) {
+   /**
+    * Método para cargar una ventana emergente para ingresar texto.
+    * @param titulo String del título de la ventana
+    * @param mensaje String del mensaje a mostrar en el cuerpo
+    * @param mensajeDefault Strinf del mensaje de ingreso de información
+    * @return
+    */
+   public static String cargarTextInputDialog(String titulo, String mensaje, String mensajeDefault) {
         String resultado = null;
         TextInputDialog dialog = new TextInputDialog(mensajeDefault);
         dialog.initStyle(StageStyle.UNDECORATED);

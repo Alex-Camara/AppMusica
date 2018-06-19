@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import com.jfoenix.controls.JFXButton;
@@ -32,10 +28,10 @@ import logica.conexion.Mensaje;
 import presentacion.Utileria.Emergente;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
- */
+ * Clase del controlador para registrar un nuevo usuario.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ * */
 public class IGURegistroController implements Initializable {
 
     @FXML
@@ -66,8 +62,7 @@ public class IGURegistroController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-//        
+    public void initialize(URL url, ResourceBundle rb) {        
     }
 
     @FXML
@@ -142,7 +137,16 @@ public class IGURegistroController implements Initializable {
         }
     }
 
-    public boolean camposVacios(String nombre, String paterno, String correo, String contraseña, String confirmacion) {
+   /**
+    * Método para verificar que no sean variables vacías.
+    * @param nombre String del nombre del usuario
+    * @param paterno String del apellido del usuario
+    * @param correo String del correo del usuario
+    * @param contraseña String de la contraseña del usuario
+    * @param confirmacion String de la confirmación de la contraseña del usuario
+    * @return Boolean de la completud
+    */
+   public boolean camposVacios(String nombre, String paterno, String correo, String contraseña, String confirmacion) {
         boolean isEmpty = true;
         if (!nombre.trim().isEmpty() && !paterno.trim().isEmpty() && !correo.trim().isEmpty()
                 && !contraseña.trim().isEmpty() && !confirmacion.trim().isEmpty()) {
@@ -151,7 +155,13 @@ public class IGURegistroController implements Initializable {
         return isEmpty;
     }
 
-    public boolean nombreCorrecto(String name) {
+   /**
+    * Método para verificar que el nombre tenga una longitud sufiente, no tenga caracteres especiales
+    * o mostrar el fallo
+    * @param name String del nombre
+    * @return Boolean del cumpliento de las reglas
+    */
+   public boolean nombreCorrecto(String name) {
         boolean nameIsReady = false;
         String result = verificarCadena(name);
 
@@ -169,7 +179,12 @@ public class IGURegistroController implements Initializable {
         }
         return nameIsReady;
     }
-
+    /**
+    * Método para verificar que el nombre tenga una longitud sufiente, no tenga caracteres especiales
+    * o mostrar el fallo
+    * @param paterno String del apellido paterno
+    * @return Boolean del cumpliento de las reglas
+    */
     public boolean paternoCorrecto(String paterno) {
         boolean nameIsReady = false;
         String result = verificarCadena(paterno);
@@ -188,7 +203,12 @@ public class IGURegistroController implements Initializable {
         }
         return nameIsReady;
     }
-
+    /**
+    * Método para verificar que el nombre tenga una longitud sufiente, no tenga caracteres especiales
+    * o mostrar el fallo
+    * @param materno String del apellido materno
+    * @return Boolean del cumpliento de las reglas
+    */
     public boolean maternoCorrecto(String materno) {
         boolean nameIsReady = false;
         String result = verificarCadena(materno);
@@ -205,7 +225,12 @@ public class IGURegistroController implements Initializable {
         return nameIsReady;
     }
 
-    public String verificarCadena(String cadena) {
+   /**
+    * Método para verificar que la cadena de texto no contena caracteres especiales.
+    * @param cadena String de la cadena a verificar
+    * @return Boolean de la ausencia de caracteres especiales
+    */
+   public String verificarCadena(String cadena) {
         String estatus = NO_ERROR;
         boolean hasNameSpecialCharacters = aplicarExpresionRegular(cadena, "^[\\p{L} .'-]+$");
         if (!hasNameSpecialCharacters) {
@@ -218,7 +243,12 @@ public class IGURegistroController implements Initializable {
         return estatus;
     }
 
-    public boolean correoCorrecto(String email) {
+   /**
+    * Método para verificar que el correo electrónico mantenga un formato correcto o mostrar el fallo
+    * @param email String del correo electrónico
+    * @return Boolean del cumplimiento del formato
+    */
+   public boolean correoCorrecto(String email) {
         boolean emailIsReady = false;
 
         String result = verificarCorreo(email);
@@ -231,12 +261,6 @@ public class IGURegistroController implements Initializable {
                 showTextFieldMessage("Correo (Longitud inválida)", tFieldCorreo);
                 break;
             default:
-                /*isEmailDuplicate(tfEmail);
-                if (!emailDuplicated) {
-                    String intStringPromtEmail = rb.getString("promptEmail");
-                    resetTextFieldMessage(intStringPromtEmail, tfEmail, imEmailRedCross);
-                    emailIsReady = true;
-                }*/
                 resetTextFieldMessage("Correo", tFieldCorreo);
                 emailIsReady = true;
                 break;
@@ -244,7 +268,12 @@ public class IGURegistroController implements Initializable {
         return emailIsReady;
     }
 
-    public boolean contraseñaCorrecta(String contraseña) {
+   /**
+    * Método para verificar que la contraseña cumpla con longitud correcta o mostrar el fallo
+    * @param contraseña String de la contraseña
+    * @return Boolean del cumpliento de la longitud
+    */
+   public boolean contraseñaCorrecta(String contraseña) {
         boolean passwordIsReady = false;
 
         String result = verificarCadena(contraseña);
@@ -261,13 +290,18 @@ public class IGURegistroController implements Initializable {
         return passwordIsReady;
     }
 
-    public boolean confirmacionContraseñaCorrecta(String contraseña, String confirmacion) {
+   /**
+    * Método para verificar que la confirmación de la contraseña sea correcta o mostrar el fallo
+    * @param contraseña String de la contraseña
+    * @param confirmacion String de la confirmación de la contraseña
+    * @return Boolean del cumplimiento de la conincidencia
+    */
+   public boolean confirmacionContraseñaCorrecta(String contraseña, String confirmacion) {
         boolean estatusConfirmacion = false;
 
         if (contraseña.equals(confirmacion)) {
             estatusConfirmacion = true;
         }
-
         if (estatusConfirmacion) {
             resetPasswordMessage("Confirma tu contraseña", tFieldConfirmacion);
         } else {
@@ -276,7 +310,12 @@ public class IGURegistroController implements Initializable {
         return estatusConfirmacion;
     }
 
-    public String verificarCorreo(String email) {
+   /**
+    * Método para verificar que el correo electrónico cumpla con la longitud y formato
+    * @param email
+    * @return Boolean del cumplimiento de las reglas
+    */
+   public String verificarCorreo(String email) {
         String estatusCorreo = NO_ERROR;
 
         boolean formatIsOk = ValidarFormatoCorreo(email);
@@ -291,7 +330,14 @@ public class IGURegistroController implements Initializable {
         return estatusCorreo;
     }
 
-    public static boolean verificarLongitud(String field, int minimo, int maximo) {
+   /**
+    * Método para verificar la longitud de un arreglo de caracteres.
+    * @param field String a verificar
+    * @param minimo int del mínimo que debe cumplir
+    * @param maximo int del máximo permitido
+    * @return
+    */
+   public static boolean verificarLongitud(String field, int minimo, int maximo) {
         boolean isLenghtOk = false;
         int lenght = field.length();
         if (lenght <= maximo && lenght >= minimo) {
@@ -300,14 +346,25 @@ public class IGURegistroController implements Initializable {
         return isLenghtOk;
     }
 
-    public boolean ValidarFormatoCorreo(String emailField) {
+   /**
+    * Método apra verificar que el correo electrónico cumpla con el formato
+    * @param emailField String del correo electrónico
+    * @return Boolean del cumplimiento
+    */
+   public boolean ValidarFormatoCorreo(String emailField) {
         Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
         Matcher matcher = pattern.matcher(emailField);
         return matcher.find();
     }
 
-    public static boolean aplicarExpresionRegular(String field, String regex) {
+   /**
+    * Método para aplicar un regex a un String
+    * @param field String a verificar
+    * @param regex String del Regex a aplicar
+    * @return
+    */
+   public static boolean aplicarExpresionRegular(String field, String regex) {
         boolean flag;
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(field);
@@ -316,27 +373,45 @@ public class IGURegistroController implements Initializable {
         return flag;
     }
 
-    public void showTextFieldMessage(String message, JFXTextField textField) {
+   /**
+    * Método para mostrar un aviso en un TextField
+    * @param message String mensaje a mostrar
+    * @param textField JFXTextField para mostrar el mensaje y el enfoque
+    */
+   public void showTextFieldMessage(String message, JFXTextField textField) {
         textField.setFocusColor(Paint.valueOf(FOCUS_COLOR));
         textField.setUnFocusColor(Paint.valueOf(FOCUS_COLOR));
         textField.setPromptText(message);
         textField.setStyle(WRONG_FIELD_STYLE);
     }
 
-    public void resetTextFieldMessage(String message, JFXTextField textField) {
+   /**
+    * Método para el ajustar el mensaje y focus en un JFXTextField
+    * @param message String del mensaje a mostar
+    * @param textField JFXTextField parar mostrar el mensaje y enfoque
+    */
+   public void resetTextFieldMessage(String message, JFXTextField textField) {
         textField.setFocusColor(Paint.valueOf(PASSWORD_FIELD_FOCUS));
         textField.setUnFocusColor(Paint.valueOf(UNFOCUS_COLOR));
         textField.setPromptText(message);
         textField.setStyle(DEFAULT_PASSWORD_STYLE);
     }
-
+   /**
+    * Método para mostrar un aviso en un JFXPasswordField
+    * @param message String mensaje a mostrar
+    * @param passwordField JFXPasswordField para mostrar el mensaje y el enfoque
+    */
     public void showPasswordMessage(String message, JFXPasswordField passwordField) {
         passwordField.setFocusColor(Paint.valueOf(FOCUS_COLOR));
         passwordField.setUnFocusColor(Paint.valueOf(FOCUS_COLOR));
         passwordField.setPromptText(message);
         passwordField.setStyle(WRONG_FIELD_STYLE);
     }
-
+   /**
+    * Método para el ajustar el mensaje y focus en un JFXTextField
+    * @param message String del mensaje a mostar
+    * @param passwordField JFXPasswordField parar mostrar el mensaje y enfoque
+    */
     public void resetPasswordMessage(String message, JFXPasswordField passwordField) {
         passwordField.setFocusColor(Paint.valueOf(PASSWORD_FIELD_FOCUS));
         passwordField.setUnFocusColor(Paint.valueOf("#17a589"));
@@ -351,7 +426,11 @@ public class IGURegistroController implements Initializable {
         controlador.abrirIGUInicioSesion(mainWindow);
     }
 
-    public void abrirIGURegistro(Stage stageActual) {
+   /**
+    * Método para abrir la ventana del controlador con sus elementos.
+    * @param stageActual Stage del cual ha sido solicitado
+    */
+   public void abrirIGURegistro(Stage stageActual) {
         try {
             AnchorPane rootPane;
             Stage stagePrincipal = new Stage();

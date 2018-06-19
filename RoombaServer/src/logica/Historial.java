@@ -1,8 +1,9 @@
 package logica;
 
 /**
- *
- * @author javr
+ * Clase Historial con los atributos homólogos de la base de datos.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class Historial {
    int idUsuario;

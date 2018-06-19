@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import java.io.IOException;
@@ -28,9 +24,9 @@ import logica.Album;
 import logica.Cancion;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
+ * Clase del controlador para mostrar las canciones por álbumes
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class IGUAlbumesController implements Initializable {
 
@@ -50,26 +46,49 @@ public class IGUAlbumesController implements Initializable {
     private List<Album> albumes;
     private IGUBarraReproduccionController controladorBarraReproduccion;
 
-    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método apra asignar el controlador de la barra de reproducción
+    * @param controladorBarraReproduccion IGUBarraReproduccionController inicializado
+    */
+   public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
         this.controladorBarraReproduccion = controladorBarraReproduccion;
     }
 
-    public List<Cancion> getCanciones() {
+   /**
+    * Método para recuperar la lista de Canciones.
+    * @return Lista de Cancion
+    */
+   public List<Cancion> getCanciones() {
         return canciones;
     }
 
-    public void setCanciones(List<Cancion> canciones) {
+   /**
+    * Método para asignar la lista de canciones
+    * @param canciones lista de Cancion
+    */
+   public void setCanciones(List<Cancion> canciones) {
         this.canciones = canciones;
     }
 
-    public List<Album> getAlbumes() {
+   /**
+    * Método para recuperar los álbumes
+    * @return lista de Álbum
+    */
+   public List<Album> getAlbumes() {
         return albumes;
     }
 
-    public void setAlbumes(List<Album> albumes) {
+   /**
+    * Método para asignar la lista de Album
+    * @param albumes
+    */
+   public void setAlbumes(List<Album> albumes) {
         this.albumes = albumes;
     }
-
+    /**
+    * Método par asignar el estatus del pane del controller
+    * @param estatus Boolean del estatus
+    */
     public void setVisibilidad(boolean estatus) {
         paneAlbumes.setVisible(estatus);
     }
@@ -82,7 +101,11 @@ public class IGUAlbumesController implements Initializable {
 
     }
 
-    public void agregarListenersTablaAlbumes(List<Cancion> canciones) {
+   /**
+    * Método para agregar los listener a eventos en la tabla de albumes
+    * @param canciones lista de Cancion
+    */
+   public void agregarListenersTablaAlbumes(List<Cancion> canciones) {
         tableAlbumes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 labelPaneAlbumNombre.setText(newSelection.getNombre());
@@ -92,7 +115,13 @@ public class IGUAlbumesController implements Initializable {
         });
     }
 
-    public List<Cancion> recuperarCancionesPorAlbum(int idAlbum, List<Cancion> canciones) {
+   /**
+    * Método para recuperar las canciones por álbum
+    * @param idAlbum int del identificador del Album
+    * @param canciones lista de Cancion
+    * @return lista de Cancion que coindicen con el Album
+    */
+   public List<Cancion> recuperarCancionesPorAlbum(int idAlbum, List<Cancion> canciones) {
         List<Cancion> cancionesAlbum = new ArrayList<>();
         for (int i = 0; i < canciones.size(); i++) {
             if (canciones.get(i).getAlbum_idAlbum() == idAlbum) {
@@ -110,7 +139,10 @@ public class IGUAlbumesController implements Initializable {
         agregarListenersTablaCanciones();
     }
 
-    public void agregarListenersTablaCanciones() {
+   /**
+    * Método para agregar los listeners a los eventos de la tabla de canciones
+    */
+   public void agregarListenersTablaCanciones() {
         tableCancionesAlbum.setRowFactory(
                 new Callback<TableView<Cancion>, TableRow<Cancion>>() {
             @Override
@@ -130,17 +162,24 @@ public class IGUAlbumesController implements Initializable {
         });
     }
 
-    public void cargarTablaAlbumes(List<Album> albumes, List<Cancion> canciones) {
+   /**
+    * Métod para cargar la tabla de albumes
+    * @param albumes Lista de album
+    * @param canciones Lista de Cancion que se encuentran en albumes
+    */
+   public void cargarTablaAlbumes(List<Album> albumes, List<Cancion> canciones) {
         labelPaneAlbumNombre.setText(albumes.get(0).getNombre());
         ObservableList<Album> obsAlbumes = FXCollections.observableArrayList(albumes);
         talColumnAlbum.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         tableAlbumes.setItems(obsAlbumes);
         agregarListenersTablaAlbumes(canciones);
-        //List<Cancion> cancionesSeleccionadas = recuperarCancionesPorAlbum(albumes.get(0).getIdAlbum(), canciones);
-        //cargarTablaCancionesAlbum(cancionesSeleccionadas);
     }
 
-    public Pane abrirIGUAlbumes() {
+   /**
+    * Método para recuperar la ventana y asignar el controller
+    * @return Pane con el Controller asignado
+    */
+   public Pane abrirIGUAlbumes() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUAlbumes.fxml"));
 

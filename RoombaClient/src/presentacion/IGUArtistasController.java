@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import java.io.IOException;
@@ -27,9 +23,9 @@ import javafx.util.Callback;
 import logica.Cancion;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
+ * Clase del controlador para mostrar las canciones por artista
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class IGUArtistasController implements Initializable {
 
@@ -47,11 +43,19 @@ public class IGUArtistasController implements Initializable {
     private TableColumn<?, ?> tcaColumnNombre;
     private IGUBarraReproduccionController controladorBarraReproduccion;
 
-    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método para asignar el controlador de la barra de reproducción
+    * @param controladorBarraReproduccion IGUBarraReproduccionController inicializado en clase ajena
+    */
+   public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
         this.controladorBarraReproduccion = controladorBarraReproduccion;
     }
 
-    public void setVisibilidad(boolean estatus) {
+   /**
+    * Método par asignar el estatus del pane del controller
+    * @param estatus Boolean del estatus
+    */
+   public void setVisibilidad(boolean estatus) {
         paneArtistas.setVisible(estatus);
     }
 
@@ -64,7 +68,7 @@ public class IGUArtistasController implements Initializable {
     }
 
     /**
-     * Agrega los eventos ante los cuales respondera la tabla.
+     * Agrega los listener de los eventos de la tabla de artistas.
      */
     public void agregarListenersTablaArtistas(List<Cancion> canciones) {
         tableArtistas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -76,7 +80,11 @@ public class IGUArtistasController implements Initializable {
         });
     }
 
-    public void cargarTablaArtistas(List<Cancion> canciones) {
+   /**
+    * Método para cargar la tabla de artistas.
+    * @param canciones Lista de Cancion que se encuentran vinculadas a un artísta
+    */
+   public void cargarTablaArtistas(List<Cancion> canciones) {
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
         taColumnArtista.setCellValueFactory(new PropertyValueFactory<>("Artista"));
         tableArtistas.setItems(obsCanciones);
@@ -91,7 +99,10 @@ public class IGUArtistasController implements Initializable {
         agregarListenersTablaCanciones();
     }
     
-    public void agregarListenersTablaCanciones() {
+   /**
+    * Método para agregar los listener de la tabla de canciones.
+    */
+   public void agregarListenersTablaCanciones() {
         tableCancionesArtista.setRowFactory(
                 new Callback<TableView<Cancion>, TableRow<Cancion>>() {
             @Override
@@ -122,7 +133,11 @@ public class IGUArtistasController implements Initializable {
         return cancionesSeleccionadas;
     }
 
-    public Pane abrirIGUArtistas() {
+   /**
+    * Método para cargar el controller de la clase.
+    * @return Pane con la asignación del controller
+    */
+   public Pane abrirIGUArtistas() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUArtistas.fxml"));
             fxmlLoader.setController(this);

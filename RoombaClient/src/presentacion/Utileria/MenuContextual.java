@@ -13,15 +13,14 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import logica.Cancion;
 
 /**
- *
- * @author Alex Cámara
- */
+ * Clase para mostrar un menú contextual en las tablas.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ * */
 public class MenuContextual extends TableCell<XYChart.Data, String> {
 
     final MenuButton botonMenu = new MenuButton();

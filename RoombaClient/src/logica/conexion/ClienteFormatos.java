@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package logica.conexion;
 
 import java.io.*;
@@ -11,21 +7,34 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logica.Cancion;
-
+/**
+ * Clase cliente para interactuar con el servidor de formato de archivos.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ */
 public class ClienteFormatos {
 
     static Socket socket;
     static int PORT = 9999;
     private static final String DIRECCION_IP = "192.168.0.34";
 
-    public static void abrirConexion() throws IOException {
+   /**
+    * Método para establecer la conexión con el servidor
+    * @throws IOException en caso de no encontrar disponible el servidor
+    */
+   public static void abrirConexion() throws IOException {
         System.out.println("Abriendo puerto\n");
 
         socket = new Socket(DIRECCION_IP, PORT);
 
     }
 
-    public static void enviarArchivo(Cancion cancion, File archivo) {
+   /**
+    * Método para enviar el archivo de la canción
+    * @param cancion Canción con la información del archivo
+    * @param archivo File con el contenido de los datos de la canción
+    */
+   public static void enviarArchivo(Cancion cancion, File archivo) {
 
         FileInputStream fis = null;
         OutputStream os = null;
@@ -72,7 +81,10 @@ public class ClienteFormatos {
         }
     }
 
-    public static void cerrarConexion() {
+   /**
+    * Método para cerra la conexión con el servidor
+    */
+   public static void cerrarConexion() {
         try {
             socket.close();
         } catch (IOException ex) {

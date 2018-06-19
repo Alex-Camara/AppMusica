@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import java.io.IOException;
@@ -36,10 +32,11 @@ import logica.conexion.Mensaje;
 import logica.conexion.Cliente;
 import presentacion.Utileria.Emergente;
 
+
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
+ * Clase del controlador para mostrar los géneros de las canciones.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class IGUCancionesController implements Initializable {
 
@@ -58,14 +55,24 @@ public class IGUCancionesController implements Initializable {
     Menu menuItemAgregarALista;
     List<MenuItem> menues = new ArrayList<>();
 
-    public void setControladorListas(IGUListasReproduccionController controladorListas) {
+   /**
+    * Método para asignar el controlador de las listas de reproducción
+    * @param controladorListas IGUListasReproduccionController inicializado  
+    */
+   public void setControladorListas(IGUListasReproduccionController controladorListas) {
         this.controladorListas = controladorListas;
     }
-
+   /**
+    * Método para asignar la lista de elementos de ListaReproduccion
+    * @param listasReproduccion List<ListaReproduccion>  con elementos para asignar
+    */
     public void setListasReproduccion(List<ListaReproduccion> listasReproduccion) {
         this.listasReproduccion = listasReproduccion;
     }
-
+    /**
+    * Método par asignar el estatus del pane del controller
+    * @param estatus Boolean del estatus
+    */
     public void setVisibilidad(boolean estatus) {
         paneCanciones.setVisible(estatus);
     }

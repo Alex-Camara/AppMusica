@@ -8,8 +8,9 @@ package logica;
 import java.io.Serializable;
 
 /**
- *
- * @author Alex Cámara
+ * Clase Genero con los atributos homólogos de la base de datos.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class Genero implements Serializable{
     private int idGenero;

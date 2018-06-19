@@ -18,9 +18,10 @@ import javafx.util.Pair;
 import logica.Cancion;
 
 /**
- *
- * @author Alex Cámara
- */
+ * Clase para mostrar la lista de de opciones en un menú contextual.
+ * @author José Valdivia
+ * @author AlejandroAlejandro Cámara
+ * */
 public class MenuContextualListas extends TableCell<Pair<String, Object>, Object> {
 
     final MenuButton botonMenu = new MenuButton();

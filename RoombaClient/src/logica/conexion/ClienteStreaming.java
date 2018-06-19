@@ -16,8 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author javr
+ * Clase de Mensaje como objeto para interactuar con el servidor de base de datos
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class ClienteStreaming {
 

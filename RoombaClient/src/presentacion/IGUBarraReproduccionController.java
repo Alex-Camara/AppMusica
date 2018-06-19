@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import java.io.File;
@@ -22,7 +18,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
@@ -41,10 +36,10 @@ import logica.reproductor.Reproductor;
 import presentacion.Utileria.Emergente;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
- */
+ * Clase del controlador para mostrar la barra de reproducción.
+ * @author José Valdivia
+ * @author Alejandro Cámara
+ * */
 public class IGUBarraReproduccionController implements Initializable {
 
    @FXML
@@ -52,23 +47,13 @@ public class IGUBarraReproduccionController implements Initializable {
    @FXML
    private Label labelTituloCancion;
    @FXML
-   private Button buttonConfiguracion;
-   @FXML
    private ImageView imageEngrane;
-   @FXML
-   private Button buttonSiguiente;
    @FXML
    private ImageView imageSiguiente;
    @FXML
-   private Button buttonAnterior;
-   @FXML
    private ImageView imageAnterior;
    @FXML
-   private Button buttonReproducir;
-   @FXML
    private ImageView imageReproducir;
-   @FXML
-   private Button buttonRepetir;
    @FXML
    private ImageView imageRepetir;
    @FXML
@@ -95,6 +80,10 @@ public class IGUBarraReproduccionController implements Initializable {
    private Usuario usuario = null;
    private boolean repeticion = false;
 
+   /**
+    * Método para asignar una canción que actualmente se reproduce
+    * @param cancion Cancion reproduciendo
+    */
    public void setCancion(Cancion cancion) {
       this.cancion = cancion;
    }
@@ -190,6 +179,11 @@ public class IGUBarraReproduccionController implements Initializable {
       estrellas.add(imageEstrella5);
    }
 
+   /**
+    * Método para cargar la barra de reproducción con sus elementos y la asignación de la canción a
+    * reproducir
+    * @param cancionLocal Canción a reproducir
+    */
    public void cargarBarraReproduccion(Cancion cancionLocal) {
       labelTituloCancion.setText(cancionLocal.getNombre());
       labelTituloArtista.setText(cancionLocal.getArtista());
@@ -314,6 +308,11 @@ public class IGUBarraReproduccionController implements Initializable {
       calidad = 2;
    }
 
+   /**
+    * Método para recuperar la canción y reproducirla
+    * @param cancion Canción a reproducir
+    * @param local Boolean para definir si la canción se podría encontrar en un directorio local
+    */
    public void recuperarCancionYReproducir(Cancion cancion, boolean local) {
       if (!checkExistencia(cancion.getRuta(), local)) {
          try {
@@ -345,6 +344,11 @@ public class IGUBarraReproduccionController implements Initializable {
 
    }
 
+   /**
+    * Método para cargar el controller de la ventana
+    * @param usuario Usuario que ha ingresado al sistema
+    * @return Pane con la asignación del controller
+    */
    public Pane abrirIGUBarraReproduccion(Usuario usuario) {
       try {
          FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUBarraReproduccion.fxml"));
@@ -398,6 +402,12 @@ public class IGUBarraReproduccionController implements Initializable {
 
    }
 
+   /**
+    * Método para descargar una canción a un directorio local
+    * @param cancion Canción a descargar
+    * @param local Boolean en caso de encontrarse en un directorio local
+    * @return Boolean del estatus de éxito
+    */
    public static boolean obtenerCancion(Cancion cancion, boolean local) {
       if (!checkExistencia(cancion.getRuta(), local)) {
          try {

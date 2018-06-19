@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import com.jfoenix.controls.JFXButton;
@@ -36,9 +32,9 @@ import logica.conexion.Mensaje;
 import presentacion.Utileria.Emergente;
 
 /**
- * FXML Controller class
- *
- * @author Alex Cámara
+ * Clase del controlador para mostrar las canciones por álbumes
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class IGUAgregarCancionLocalController implements Initializable {
 
@@ -53,13 +49,9 @@ public class IGUAgregarCancionLocalController implements Initializable {
     @FXML
     private JFXTextField tFieldAlbumArchivo;
     @FXML
-    private JFXButton buttonAgregarArchivo;
-    @FXML
     private JFXComboBox<Genero> comboGenero;
     @FXML
     private ListView<Cancion> listArchivos;
-    @FXML
-    private JFXButton buttonAgregarListArchivos;
     @FXML
     private Label labelPaneAgregarCancionNombre;
     Cancion CancionASubir = new Cancion();
@@ -151,7 +143,10 @@ public class IGUAgregarCancionLocalController implements Initializable {
         }
     }
     
-    public void guardarCanciones(){
+   /**
+    * Métod para agregar las canciones seleccionadas al servidor
+    */
+   public void guardarCanciones(){
         Mensaje mensaje = new Mensaje("guardarCanciones");
         mensaje.setObjeto(listaArchivos);
         Cliente.enviarMensaje(mensaje);
@@ -162,15 +157,23 @@ public class IGUAgregarCancionLocalController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
     }
 
-    public void cargarComboGeneros(List<Genero> generos) {
+   /**
+    * Método para cargar el combo de géneros con los elementos recuperados de la base de datos
+    * @param generos Lista de Genero recuperados
+    */
+   public void cargarComboGeneros(List<Genero> generos) {
         ObservableList<Genero> obsGeneros = FXCollections.observableArrayList(generos);
         comboGenero.setItems(obsGeneros);
     }
     
-    public Pane abrirIGUAgregarCancionLocal() {
+   /**
+    * Método para abrir el FXML y asignar el controller
+    * @return Pane con las asignaciones
+    */
+   public Pane abrirIGUAgregarCancionLocal() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUAgregarCancionLocal.fxml"));
             fxmlLoader.setController(this);

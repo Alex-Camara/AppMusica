@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package logica.conexion;
 
 import java.io.IOException;
@@ -11,13 +6,18 @@ import java.util.logging.Logger;
 import presentacion.IGUBibliotecaController;
 
 /**
- *
- * @author javr
+ * Clase para recibir las respuestas del servidor de base de datos
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class EscuchaMensajes extends Thread {
 
    IGUBibliotecaController iguBiblioteca;
 
+   /**
+    * Método para asignar el controllado con el cual se comunicará la clase
+    * @param iguBiblioteca
+    */
    public EscuchaMensajes(IGUBibliotecaController iguBiblioteca) {
       this.iguBiblioteca = iguBiblioteca;
    }

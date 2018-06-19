@@ -16,8 +16,9 @@ import java.util.logging.Logger;
 import presentacion.IGUBibliotecaController;
 
 /**
- *
- * @author Alex Cámara
+ * Clase cliente para interactuar con el servidor de base de datos
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class Cliente {
 
@@ -28,7 +29,10 @@ public class Cliente {
     private static ObjectOutputStream salidaRed;
     private static Socket socket = null;
 
-    public static void abrirConexion() {
+   /**
+    * Método para abrir la conexión con el servidor.
+    */
+   public static void abrirConexion() {
         try {
             host = InetAddress.getLocalHost();
             System.out.println("Conexión establecida con servidor de BD");
@@ -38,28 +42,37 @@ public class Cliente {
         }
     }
 
-    public static void iniciarConversacion() throws IOException {
+   /**
+    * Método para iniciar la recepción y envio de datos con el servidor.
+    * @throws IOException
+    */
+   public static void iniciarConversacion() throws IOException {
 
         socket = new Socket(DIRECCION_IP, PUERTO);
         salidaRed = new ObjectOutputStream(socket.getOutputStream());
         entradaRed = new ObjectInputStream(socket.getInputStream());
     }
 
-    public static void enviarMensaje(Mensaje mensajeEnviar) {
+   /**
+    * Método para envía un mensaje al servidor.
+    * @param mensajeEnviar Mensaje con la información del tipo de solicitud y el contenido
+    */
+   public static void enviarMensaje(Mensaje mensajeEnviar) {
         new Thread(() -> {
             try {
-                //System.out.println("asuntoEnviar " + mensajeEnviar.getAsunto());
-
                 salidaRed.writeObject(mensajeEnviar);
-
-                //System.out.println("Enviado en Cliente");
             } catch (IOException ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }
 
-    public static Object enviarUsuario(Mensaje mensajeAEnviar) {
+   /**
+    * Método para validar a un usuario.
+    * @param mensajeAEnviar Mensaja con la información del usuario
+    * @return Objeto para castear después a Usuario
+    */
+   public static Object enviarUsuario(Mensaje mensajeAEnviar) {
         Object respuesta = null;
         try {
             salidaRed.writeObject(mensajeAEnviar);
@@ -72,13 +85,20 @@ public class Cliente {
         return respuesta;
     }
 
-    public static void iniciarEscuchaDeMensajes(IGUBibliotecaController bibliotecaController) {
+   /**
+    * Método para iniciar la recepción atenta del servidor
+    * @param bibliotecaController
+    */
+   public static void iniciarEscuchaDeMensajes(IGUBibliotecaController bibliotecaController) {
 
         EscuchaMensajes hiloEscuchaMensajes = new EscuchaMensajes(bibliotecaController);
         hiloEscuchaMensajes.start();
     }
 
-    public static void cerrarConexion() {
+   /**
+    * Método para cerrar la conexión con el servidor.
+    */
+   public static void cerrarConexion() {
         try {
             System.out.println("\nCerrando la conexión");
             socket.close();

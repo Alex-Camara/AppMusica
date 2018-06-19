@@ -9,8 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- *
- * @author Alex Cámara
+ * Clase ListaReproduccion con los atributos homólogos de la base de datos.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class ListaReproduccion implements Serializable {
     private int idListaReproduccion;

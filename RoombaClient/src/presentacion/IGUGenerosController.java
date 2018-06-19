@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package presentacion;
 
 import java.io.IOException;
@@ -29,10 +25,10 @@ import logica.Cancion;
 import logica.Genero;
 
 /**
- * FXML Controller class
- *
+ * Clase del controlador para mostrar los géneros de las canciones.
+ * @author José Valdivia
  * @author Alex Cámara
- */
+ * */
 public class IGUGenerosController implements Initializable {
 
     @FXML
@@ -49,10 +45,17 @@ public class IGUGenerosController implements Initializable {
     private TableColumn<?, ?> tcgColumnNombre;
     private IGUBarraReproduccionController controladorBarraReproduccion;
 
-    public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método para asignar el controlado de la barra de reproducción. 
+    * @param controladorBarraReproduccion IGUBarraReproduccionController creado para asignar
+    */
+   public void setControladorBarraReproduccion(IGUBarraReproduccionController controladorBarraReproduccion) {
         this.controladorBarraReproduccion = controladorBarraReproduccion;
     }
-    
+    /**
+    * Método par asignar el estatus del pane del controller
+    * @param estatus Boolean del estatus
+    */
     public void setVisibilidad(boolean estatus) {
         paneGeneros.setVisible(estatus);
     }
@@ -65,7 +68,12 @@ public class IGUGenerosController implements Initializable {
         
     }    
     
-    public void agregarListenersTablaGeneros(List<Cancion> canciones, List<Album> albumes) {
+   /**
+    * Método para agregar los listener de la tabla de géneros
+    * @param canciones Lista de Cancion para recuperar géneros
+    * @param albumes Lista de Album de las canciones
+    */
+   public void agregarListenersTablaGeneros(List<Cancion> canciones, List<Album> albumes) {
         tableGeneros.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 labelPaneGeneroNombre.setText(newSelection.getNombre());
@@ -76,15 +84,18 @@ public class IGUGenerosController implements Initializable {
         });
     }
     
-    public void cargarTablaGeneros(List<Genero> generos, List<Album> albumes, List<Cancion> canciones) {
+   /**
+    * Método para cargar la tabla de géneros con sus elementos
+    * @param generos lista de Genero de las canciones
+    * @param albumes lista de Album de las canciones
+    * @param canciones lista de Cancion
+    */
+   public void cargarTablaGeneros(List<Genero> generos, List<Album> albumes, List<Cancion> canciones) {
         labelPaneGeneroNombre.setText(generos.get(0).getNombre());
         ObservableList<Genero> obsGeneros = FXCollections.observableArrayList(generos);
         tgColumnGenero.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         tableGeneros.setItems(obsGeneros);
         agregarListenersTablaGeneros(canciones, albumes);
-        //List<Album> albumesDeGenero = recuperarAlbumesDeGenero(albumes.get(0).getIdGenero(), albumes);
-        //List<Cancion> cancionesSeleccionadas = recuperarCancionesPorAlbum(albumesDeGenero, canciones);
-        //cargarTablaCancionesGenero(cancionesSeleccionadas);
     }
 
     private void cargarTablaCancionesGenero(List<Cancion> cancionesAlbum) {
@@ -94,7 +105,10 @@ public class IGUGenerosController implements Initializable {
         agregarListenersTablaCanciones();
     }
     
-    public void agregarListenersTablaCanciones() {
+   /**
+    * Método para agregar los listener de la tabla de las canciones.
+    */
+   public void agregarListenersTablaCanciones() {
         tableCancionesGenero.setRowFactory(
                 new Callback<TableView<Cancion>, TableRow<Cancion>>() {
             @Override
@@ -136,7 +150,11 @@ public class IGUGenerosController implements Initializable {
         return cancionesAlbum;
     }
     
-    public Pane abrirIGUGeneros() {
+   /**
+    * Método para abrir la ventana de la clase.
+    * @return Pane de la clase
+    */
+   public Pane abrirIGUGeneros() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUGeneros.fxml"));
 
