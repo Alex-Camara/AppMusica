@@ -10,8 +10,10 @@ import java.util.List;
 import logica.Genero;
 
 /**
- *
- * @author javr
+ * Clase que declara las interfaces a utilizar para interactuar con la base de datos especialmente
+ * con la clase identificada.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public interface GeneroDao {
     Genero recuperarGenero(int idGenero) throws SQLException;

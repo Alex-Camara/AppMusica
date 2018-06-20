@@ -15,6 +15,7 @@ import logica.conexion.Cliente;
  * Clase de cliente de la aplicación de música en streaming Roomba.
  * Esta aplicación permite la administración de música pública conservada en un servidor de área loca,
  * además de poder guardar canciones locales en diferentes calidades en dicho servidor.
+ * La mayoría de los recursos de los icono fueron gracias a Freepik from www.flaticon.com 
  * 25/06/2018
  * @author José Valdivia
  * @author Alejandro Cámara

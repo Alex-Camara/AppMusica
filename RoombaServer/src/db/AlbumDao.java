@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import logica.Album;
 
 /**
- *
- * @author Alex Cámara
+ * Clase que declara las interfaces a utilizar para interactuar con la base de datos especialmente
+ * con la clase identificada.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public interface AlbumDao {
     Album recuperarAlbumes(int idAlbum) throws SQLException;

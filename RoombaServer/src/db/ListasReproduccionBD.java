@@ -13,13 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logica.Biblioteca;
 import logica.Cancion;
 import logica.ListaReproduccion;
 
 /**
- *
- * @author Alex Cámara
+ * Clase que implementa las interfaces declaradas en el DAO homólogo. 
+ * Esta permite la interacción con la base de datos con la clase correspondiente.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class ListasReproduccionBD implements ListasReproduccionDao {
 

@@ -195,7 +195,7 @@ public class IGUCancionesController implements Initializable {
     }
 
     public void agregarCancionALista(Cancion cancion, ListaReproduccion lista) {
-        boolean duplicada = verificarDuplicada(cancion, lista);
+        boolean duplicada = verificarDuplicada(cancion, lista, listasReproduccion);
 
         if (!duplicada) {
             HashMap<ListaReproduccion, Cancion> hash = new HashMap<>();
@@ -209,7 +209,16 @@ public class IGUCancionesController implements Initializable {
         }
     }
 
-    private boolean verificarDuplicada(Cancion cancion, ListaReproduccion lista) {
+   /**
+    * Método para verificar que la canción que se encuentra en una lista de reproducción no se
+    * encuentre en las listas de reproducción
+    * @param cancion Canción a agregar
+    * @param lista Lista de reproducción a agregar la canción
+    * @param listas Listas de reproducción ya guardadas
+    * @return Boolean de la existencia de la canción
+    */
+   public boolean verificarDuplicada(Cancion cancion, ListaReproduccion lista, List<ListaReproduccion>
+        listas ) {
         boolean duplicada = false;
 
         for (int i = 0; i < listasReproduccion.size(); i++) {

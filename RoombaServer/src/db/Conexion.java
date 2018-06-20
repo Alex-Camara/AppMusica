@@ -12,8 +12,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Alex Cámara
+ * Clase con los menesteres para establecer la conexión con la base de datos Mysql.
+ * Permite establecerla y cerrarla.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class Conexion {
 

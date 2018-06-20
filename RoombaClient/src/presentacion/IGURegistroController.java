@@ -142,14 +142,14 @@ public class IGURegistroController implements Initializable {
     * @param nombre String del nombre del usuario
     * @param paterno String del apellido del usuario
     * @param correo String del correo del usuario
-    * @param contraseña String de la contraseña del usuario
+    * @param clave String de la contraseña del usuario
     * @param confirmacion String de la confirmación de la contraseña del usuario
     * @return Boolean de la completud
     */
-   public boolean camposVacios(String nombre, String paterno, String correo, String contraseña, String confirmacion) {
+   public boolean camposVacios(String nombre, String paterno, String correo, String clave, String confirmacion) {
         boolean isEmpty = true;
         if (!nombre.trim().isEmpty() && !paterno.trim().isEmpty() && !correo.trim().isEmpty()
-                && !contraseña.trim().isEmpty() && !confirmacion.trim().isEmpty()) {
+                && !clave.trim().isEmpty() && !confirmacion.trim().isEmpty()) {
             isEmpty = false;
         }
         return isEmpty;
@@ -318,7 +318,7 @@ public class IGURegistroController implements Initializable {
    public String verificarCorreo(String email) {
         String estatusCorreo = NO_ERROR;
 
-        boolean formatIsOk = ValidarFormatoCorreo(email);
+        boolean formatIsOk = validarFormatoCorreo(email);
         if (!formatIsOk) {
             estatusCorreo = "invalidFormat";
         }
@@ -351,7 +351,7 @@ public class IGURegistroController implements Initializable {
     * @param emailField String del correo electrónico
     * @return Boolean del cumplimiento
     */
-   public boolean ValidarFormatoCorreo(String emailField) {
+   public boolean validarFormatoCorreo(String emailField) {
         Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
         Matcher matcher = pattern.matcher(emailField);

@@ -11,8 +11,10 @@ import logica.Cancion;
 import logica.ListaReproduccion;
 
 /**
- *
- * @author Alex Cámara
+ * Clase que declara las interfaces a utilizar para interactuar con la base de datos especialmente
+ * con la clase identificada.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public interface ListasReproduccionDao {
     List<ListaReproduccion> recuperarListas(int idBiblioteca) throws SQLException;

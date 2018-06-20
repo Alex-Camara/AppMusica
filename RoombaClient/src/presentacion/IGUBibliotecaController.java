@@ -71,6 +71,8 @@ public class IGUBibliotecaController implements Initializable {
     private JFXTextField tFieldBuscar;
     @FXML
     private ImageView imageSalir;
+    @FXML
+    private ImageView imageCancelarBusqueda;
 
     private static final String RESALTADO = "-fx-background-color:#FFD7B4;";
     private static final String COLOR_TOGGLEBUTTON_NORMAL = "-fx-background-color: #F0EFF7;";
@@ -290,11 +292,10 @@ public class IGUBibliotecaController implements Initializable {
             String nombre = tFieldBuscar.getText();
             if (!nombre.isEmpty()) {
                 ocultarSeleccion();
-                Mensaje mensaje = new Mensaje("buscarCancion");
-                mensaje.setObjeto(nombre);
-                Cliente.enviarMensaje(mensaje);
+                List<Cancion> coincidencias = buscarCoindicencias(nombre);
+                controladorCanciones.cargarTablaCanciones(coincidencias, controladorBarraReproduccion);
+                imageCancelarBusqueda.setVisible(true);
                 borderPanePrincipal.setCenter(paneCanciones);
-                //Falta añadir cuando se limpia la consulta y entonces vuelves a buscar las otras canciones
             }
         }
     }
@@ -310,6 +311,14 @@ public class IGUBibliotecaController implements Initializable {
         File file = new File(finalPath);
         limpiarCache(file);
 
+    }
+    @FXML
+    private void limpiarBusqueda(){
+       tFieldBuscar.clear();
+       ocultarSeleccion();
+       controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
+       imageCancelarBusqueda.setVisible(false);
+       borderPanePrincipal.setCenter(paneCanciones);
     }
 
     private void ocultarSeleccion() {
@@ -419,12 +428,6 @@ public class IGUBibliotecaController implements Initializable {
             case "generosExternos":
                 generosExternos = (List<Genero>) mensaje.getObjeto();
                 break;
-            case "cancionEncontrada":
-                List<Cancion> cancionesEncontradas = (List<Cancion>) mensaje.getObjeto();
-                canciones = cancionesEncontradas;
-                controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
-                //No sé si con esto basta o es necesario también recargar álbumes
-                break;
             case "cerrarConexión":
                 Cliente.cerrarConexion();
                 break;
@@ -447,5 +450,15 @@ public class IGUBibliotecaController implements Initializable {
             Logger.getLogger(IGUBibliotecaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+   private List<Cancion> buscarCoindicencias(String nombre) {
+      List<Cancion> coincidencias = new ArrayList<>();
+      for (int i = 0; i < canciones.size(); i++) {
+         if (canciones.get(i).getNombre().toLowerCase().contains(nombre.toLowerCase())) {
+            coincidencias.add(canciones.get(i));
+         }
+      }
+      return coincidencias;
+   }
 
 }

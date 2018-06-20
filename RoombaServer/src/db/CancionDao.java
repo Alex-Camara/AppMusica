@@ -10,8 +10,10 @@ import java.util.List;
 import logica.Cancion;
 
 /**
- *
- * @author javr
+ * Clase que declara las interfaces a utilizar para interactuar con la base de datos especialmente
+ * con la clase identificada.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public interface CancionDao {
    public List<Cancion> recuperarCancionesHistorial(int idUsuario) throws SQLException;

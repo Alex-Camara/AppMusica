@@ -10,8 +10,10 @@ import logica.Biblioteca;
 import logica.Cancion;
 
 /**
- *
- * @author javr
+ * Clase que implementa las interfaces declaradas en el DAO homólogo. 
+ * Esta permite la interacción con la base de datos con la clase correspondiente.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class BibliotecaBD implements BibliotecaDao {
 

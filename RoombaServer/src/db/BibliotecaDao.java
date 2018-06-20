@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import logica.Biblioteca;
 
 /**
- *
- * @author javr
+ * Clase que declara las interfaces a utilizar para interactuar con la base de datos especialmente
+ * con la clase identificada.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public interface BibliotecaDao {
    public Biblioteca recuperarBiblioteca(int idBiblioteca) throws SQLException;

@@ -289,8 +289,9 @@ public class ManejadorCliente extends Thread {
             if (!listaIdGeneros.contains(idGenero)) {
                 GeneroDao genero = new GeneroBD();
                 Genero generoServ = genero.recuperarGenero(idGenero);
-                generos.add(generoServ);
-                listaIdGeneros.add(idGenero);
+                  generos.add(generoServ);
+                  listaIdGeneros.add(idGenero);
+                  
             }
         }
         return generos;

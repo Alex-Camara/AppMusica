@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import logica.Album;
 
 /**
- *
- * @author Alex Cámara
+ * Clase que implementa las interfaces declaradas en el DAO homólogo. 
+ * Esta permite la interacción con la base de datos con la clase correspondiente.
+ * @author José Valdivia
+ * @author Alejandro Cámara
  */
 public class AlbumBD implements AlbumDao {
 
