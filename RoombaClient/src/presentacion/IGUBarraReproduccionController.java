@@ -399,7 +399,6 @@ public class IGUBarraReproduccionController implements Initializable {
       } else {
          ColaReproduccion.agregarAContinuacion(new CancionIntermediaria(cancion, false, calidad));
       }
-
    }
 
    /**

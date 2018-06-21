@@ -32,7 +32,9 @@ import logica.conexion.Mensaje;
 import logica.Usuario;
 
 /**
- * Clase para interactuar con el cliente de base de datos. Esto es lanzado con cada conexión.
+ * Clase para interactuar con el cliente de base de datos. Esto es lanzado con
+ * cada conexión.
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
  */
@@ -71,13 +73,15 @@ public class ManejadorCliente extends Thread {
         }
     }
 
-   /**
-    * Método para escuhar las solicitudes del cliente. Recibe un objeto Mensaje con la información 
-    * del tipo de solicitud  y en caso de ser necesario con el objeto a utilizar.
-    * @return Boolean en caso de no recibir un mensaje de cierre de conexión
-    * @throws SQLException En caso de encontrar un fallo en la base de datos
-    */
-   public boolean escucharMensajes() throws SQLException {
+    /**
+     * Método para escuhar las solicitudes del cliente. Recibe un objeto Mensaje
+     * con la información del tipo de solicitud y en caso de ser necesario con
+     * el objeto a utilizar.
+     *
+     * @return Boolean en caso de no recibir un mensaje de cierre de conexión
+     * @throws SQLException En caso de encontrar un fallo en la base de datos
+     */
+    public boolean escucharMensajes() throws SQLException {
         boolean continuar = true;
 
         try {
@@ -91,6 +95,7 @@ public class ManejadorCliente extends Thread {
                     UsuarioDao usuarioServidor = new UsuarioBD();
                     Usuario usuarioObtenido = usuarioServidor.recuperarUsuario(usuarioRecibido.getCorreo(), usuarioRecibido.getClave());
                     salida.writeObject(usuarioObtenido);
+                    salida.flush();
                     break;
                 case "registrarUsuario":
                     usuarioRecibido = (Usuario) mensajeRecibido.getObjeto();
@@ -99,6 +104,7 @@ public class ManejadorCliente extends Thread {
                     usuarioObtenido = usuarioServidor.registrarUsuario(usuarioRecibido);
 
                     salida.writeObject(usuarioObtenido);
+                    salida.flush();
                     break;
                 case "recuperarCanciones":
                     Usuario usuarioRecibido2 = (Usuario) mensajeRecibido.getObjeto();
@@ -107,24 +113,28 @@ public class ManejadorCliente extends Thread {
                     Mensaje mensaje = new Mensaje("canciones");
                     mensaje.setObjeto(bibliotecaServidor);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     idBiblioteca = usuarioRecibido2.getIdBiblioteca();
 
                     List<Album> albumesCanciones = recuperarAlbumes(bibliotecaServidor);
                     mensaje = new Mensaje("albumes");
                     mensaje.setObjeto(albumesCanciones);
                     salida.writeObject(mensaje);
+                    salida.flush();
 
                     List<Genero> generoCanciones = recuperarGeneros(albumesCanciones);
                     mensaje = new Mensaje("generos");
                     mensaje.setObjeto(generoCanciones);
                     salida.writeObject(mensaje);
-
+                    salida.flush();
+                    
                     List<ListaReproduccion> listasReproduccion = new ArrayList<>();
                     ListasReproduccionDao listaServidor = new ListasReproduccionBD();
                     listasReproduccion = listaServidor.recuperarListas(bibliotecaServidor.getIdBiblioteca());
                     mensaje = new Mensaje("listasReproduccion");
                     mensaje.setObjeto(listasReproduccion);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "recuperarHistorial":
                     Usuario usuarioHistorial = (Usuario) mensajeRecibido.getObjeto();
@@ -134,6 +144,7 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("historial");
                     mensaje.setObjeto(cancionesHistorial);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "recuperarCatalogoGeneros":
                     GeneroDao generoServidor = new GeneroBD();
@@ -142,6 +153,7 @@ public class ManejadorCliente extends Thread {
                     System.out.println("generos: " + generos);
                     mensaje.setObjeto(generos);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "actualizarCalificación":
                     Cancion cancion = (Cancion) mensajeRecibido.getObjeto();
@@ -157,6 +169,7 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("listasReproduccion");
                     mensaje.setObjeto(listasReproduccion);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "editarLista":
                     lista = (ListaReproduccion) mensajeRecibido.getObjeto();
@@ -166,6 +179,7 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("listasReproduccion");
                     mensaje.setObjeto(listasReproduccion);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "eliminarLista":
                     lista = (ListaReproduccion) mensajeRecibido.getObjeto();
@@ -175,6 +189,7 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("listasReproduccion");
                     mensaje.setObjeto(listasReproduccion);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "agregarCancionALista":
                     ListaReproduccion lista2 = null;
@@ -189,6 +204,7 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("listasReproduccion");
                     mensaje.setObjeto(listasReproduccion);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     lista2 = null;
                     break;
                 case "recuperarCancionesExternas":
@@ -197,16 +213,19 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("cancionesExternas");
                     mensaje.setObjeto(cancionesExternas);
                     salida.writeObject(mensaje);
+                    salida.flush();
 
                     albumesCanciones = recuperarAlbumes(cancionesExternas);
                     mensaje = new Mensaje("albumesExternos");
                     mensaje.setObjeto(albumesCanciones);
                     salida.writeObject(mensaje);
+                    salida.flush();
 
                     generoCanciones = recuperarGeneros(albumesCanciones);
                     mensaje = new Mensaje("generosExternos");
                     mensaje.setObjeto(generoCanciones);
                     salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "guardarCanciones":
                     List<Cancion> cancionesAGuardar = (List<Cancion>) mensajeRecibido.getObjeto();
@@ -224,6 +243,20 @@ public class ManejadorCliente extends Thread {
                 case "cerrarConexión":
                     continuar = false;
                     break;
+                case "agregarABiblioteca":
+                    cancion = (Cancion) mensajeRecibido.getObjeto();
+                    cancionesServidor = new CancionBD();
+                    cancionesServidor.agregarCancionABiblioteca(idBiblioteca, cancion);
+                    mensaje = new Mensaje("cancionAgregadaABiblioteca");
+                    salida.writeObject(mensaje);
+                    salida.flush();
+                    break;
+                case "eliminarCancion":
+                    int idCancion = (Integer) mensajeRecibido.getObjeto();
+                    cancionesServidor = new CancionBD();
+                    cancionesServidor.eliminarCancionLocal(idBiblioteca, idCancion);
+                    //mensaje = new Mensaje("cancionEliminada");
+                    //salida.writeObject(mensaje);
                 default:
                     break;
             }
@@ -233,11 +266,12 @@ public class ManejadorCliente extends Thread {
         return continuar;
     }
 
-   /**
-    * Método para cerrar la conexión con el cliente.
-    * @throws IOException En caso de no poder hacerlo
-    */
-   public void cerrarConexión() throws IOException {
+    /**
+     * Método para cerrar la conexión con el cliente.
+     *
+     * @throws IOException En caso de no poder hacerlo
+     */
+    public void cerrarConexión() throws IOException {
         System.out.println("Cerrando la conexión con el RoombaClient ...");
         Mensaje mensajeSalida = new Mensaje("cerrarConexión");
         salida.writeObject(mensajeSalida);
@@ -289,9 +323,9 @@ public class ManejadorCliente extends Thread {
             if (!listaIdGeneros.contains(idGenero)) {
                 GeneroDao genero = new GeneroBD();
                 Genero generoServ = genero.recuperarGenero(idGenero);
-                  generos.add(generoServ);
-                  listaIdGeneros.add(idGenero);
-                  
+                generos.add(generoServ);
+                listaIdGeneros.add(idGenero);
+
             }
         }
         return generos;

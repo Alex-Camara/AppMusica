@@ -1,4 +1,3 @@
-
 package presentacion;
 
 import com.jfoenix.controls.JFXButton;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,8 +36,9 @@ import org.apache.commons.io.FileUtils;
 import presentacion.Utileria.Emergente;
 
 /**
- * Clase del controlador principal administra la visibilidad de los pane que alberga y de la función
- * principal.
+ * Clase del controlador principal administra la visibilidad de los pane que
+ * alberga y de la función principal.
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
  */
@@ -122,10 +123,12 @@ public class IGUBibliotecaController implements Initializable {
         crearDirectorio();
 
     }
-   /**
-    * Método para asignar el usuario que ha ingresado al sistema
-    * @param usuario Usuario que ha ingreado al sistema
-    */
+
+    /**
+     * Método para asignar el usuario que ha ingresado al sistema
+     *
+     * @param usuario Usuario que ha ingreado al sistema
+     */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
@@ -182,10 +185,12 @@ public class IGUBibliotecaController implements Initializable {
             mensajeCanciones.setObjeto(usuario);
             idBiblioteca = usuario.getIdBiblioteca();
             Cliente.enviarMensaje(mensajeCanciones);
+            controladorCanciones.setBiblioteca(biblioteca);
             borderPanePrincipal.setCenter(paneCanciones);
         } else {
             Mensaje mensajeRecuperarCanciones = new Mensaje("recuperarCancionesExternas");
             Cliente.enviarMensaje(mensajeRecuperarCanciones);
+            controladorCanciones.setBiblioteca(biblioteca);
             borderPanePrincipal.setCenter(paneCanciones);
         }
 
@@ -312,13 +317,14 @@ public class IGUBibliotecaController implements Initializable {
         limpiarCache(file);
 
     }
+
     @FXML
-    private void limpiarBusqueda(){
-       tFieldBuscar.clear();
-       ocultarSeleccion();
-       controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
-       imageCancelarBusqueda.setVisible(false);
-       borderPanePrincipal.setCenter(paneCanciones);
+    private void limpiarBusqueda() {
+        tFieldBuscar.clear();
+        ocultarSeleccion();
+        controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
+        imageCancelarBusqueda.setVisible(false);
+        borderPanePrincipal.setCenter(paneCanciones);
     }
 
     private void ocultarSeleccion() {
@@ -360,12 +366,13 @@ public class IGUBibliotecaController implements Initializable {
         }
     }
 
-   /**
-    * Método parar abrir la ventana de la clase.
-    * @param stageActual Stage del cual ha sido solicitado
-    * @param usuario Usuario que ha ingresado al sistema
-    */
-   public void abrirIGUBiblioteca(Stage stageActual, Usuario usuario) {
+    /**
+     * Método parar abrir la ventana de la clase.
+     *
+     * @param stageActual Stage del cual ha sido solicitado
+     * @param usuario Usuario que ha ingresado al sistema
+     */
+    public void abrirIGUBiblioteca(Stage stageActual, Usuario usuario) {
         try {
             BorderPane rootPane;
             Stage stagePrincipal = new Stage();
@@ -387,11 +394,14 @@ public class IGUBibliotecaController implements Initializable {
         }
     }
 
-   /**
-    * Método para esperar asignaciones ante eventos que son recibidos en por el hilo del cliente.
-    * @param respuesta Objeto posteriormente casteado a Mensaje que contiene la información recibida
-    */
-   public void recibirMensaje(Object respuesta) {
+    /**
+     * Método para esperar asignaciones ante eventos que son recibidos en por el
+     * hilo del cliente.
+     *
+     * @param respuesta Objeto posteriormente casteado a Mensaje que contiene la
+     * información recibida
+     */
+    public void recibirMensaje(Object respuesta) {
         Mensaje mensaje = (Mensaje) respuesta;
         String asunto = mensaje.getAsunto();
         switch (asunto) {
@@ -428,10 +438,17 @@ public class IGUBibliotecaController implements Initializable {
             case "generosExternos":
                 generosExternos = (List<Genero>) mensaje.getObjeto();
                 break;
+            case "cancionAgregadaABiblioteca":
+                Platform.runLater(() -> {
+                    Emergente.cargarEmergente("Aviso", "Canción agregada a tu biblioteca local");
+                });
+                break;
+            case "cancionEliminada":
+                
+                break;
             case "cerrarConexión":
                 Cliente.cerrarConexion();
                 break;
-
         }
 
     }
@@ -451,14 +468,14 @@ public class IGUBibliotecaController implements Initializable {
         }
     }
 
-   private List<Cancion> buscarCoindicencias(String nombre) {
-      List<Cancion> coincidencias = new ArrayList<>();
-      for (int i = 0; i < canciones.size(); i++) {
-         if (canciones.get(i).getNombre().toLowerCase().contains(nombre.toLowerCase())) {
-            coincidencias.add(canciones.get(i));
-         }
-      }
-      return coincidencias;
-   }
+    private List<Cancion> buscarCoindicencias(String nombre) {
+        List<Cancion> coincidencias = new ArrayList<>();
+        for (int i = 0; i < canciones.size(); i++) {
+            if (canciones.get(i).getNombre().toLowerCase().contains(nombre.toLowerCase())) {
+                coincidencias.add(canciones.get(i));
+            }
+        }
+        return coincidencias;
+    }
 
 }

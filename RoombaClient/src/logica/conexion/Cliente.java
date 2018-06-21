@@ -61,6 +61,7 @@ public class Cliente {
         new Thread(() -> {
             try {
                 salidaRed.writeObject(mensajeEnviar);
+                salidaRed.flush();
             } catch (IOException ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }

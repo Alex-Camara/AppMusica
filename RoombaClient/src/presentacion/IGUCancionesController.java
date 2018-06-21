@@ -1,4 +1,3 @@
-
 package presentacion;
 
 import java.io.IOException;
@@ -32,9 +31,9 @@ import logica.conexion.Mensaje;
 import logica.conexion.Cliente;
 import presentacion.Utileria.Emergente;
 
-
 /**
  * Clase del controlador para mostrar los géneros de las canciones.
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
  */
@@ -54,25 +53,36 @@ public class IGUCancionesController implements Initializable {
     IGUListasReproduccionController controladorListas;
     Menu menuItemAgregarALista;
     List<MenuItem> menues = new ArrayList<>();
+    boolean biblioteca;
 
-   /**
-    * Método para asignar el controlador de las listas de reproducción
-    * @param controladorListas IGUListasReproduccionController inicializado  
-    */
-   public void setControladorListas(IGUListasReproduccionController controladorListas) {
+    public void setBiblioteca(boolean biblioteca) {
+        this.biblioteca = biblioteca;
+    }
+
+    /**
+     * Método para asignar el controlador de las listas de reproducción
+     *
+     * @param controladorListas IGUListasReproduccionController inicializado
+     */
+    public void setControladorListas(IGUListasReproduccionController controladorListas) {
         this.controladorListas = controladorListas;
     }
-   /**
-    * Método para asignar la lista de elementos de ListaReproduccion
-    * @param listasReproduccion List<ListaReproduccion>  con elementos para asignar
-    */
+
+    /**
+     * Método para asignar la lista de elementos de ListaReproduccion.
+     *
+     * @param listasReproduccion List<ListaReproduccion> con elementos para
+     * asignar
+     */
     public void setListasReproduccion(List<ListaReproduccion> listasReproduccion) {
         this.listasReproduccion = listasReproduccion;
     }
+
     /**
-    * Método par asignar el estatus del pane del controller
-    * @param estatus Boolean del estatus
-    */
+     * Método par asignar el estatus del pane del controller.
+     *
+     * @param estatus Boolean del estatus
+     */
     public void setVisibilidad(boolean estatus) {
         paneCanciones.setVisible(estatus);
     }
@@ -88,7 +98,7 @@ public class IGUCancionesController implements Initializable {
     public void cargarTablaCanciones(List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
         tableCanciones.refresh();
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
-        
+
         tcColumnNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         tcColumnArtista.setCellValueFactory(new PropertyValueFactory<>("Artista"));
         tcColumnCalificacion.setCellValueFactory(new PropertyValueFactory<>("Calificacion"));
@@ -108,15 +118,39 @@ public class IGUCancionesController implements Initializable {
                 final ContextMenu rowMenu = new ContextMenu();
                 MenuItem menuItemAgregarCancion = new MenuItem("Agregar canción a cola");
                 MenuItem menuItemAgregarContinuacion = new MenuItem("Agregar canción a continuación");
-                MenuItem menuItemRadio = new MenuItem("Crear radio");
-                MenuItem menuItemDescargar = new MenuItem("Descargar canción");
-                MenuItem menuItemEliminarCancion = new MenuItem("Eliminar canción de biblioteca");
-                menuItemAgregarALista = new Menu("Agregar a lista de reproducción");
 
-                seleccionMenuItem(row);
+                if (biblioteca) {
 
-                rowMenu.getStyleClass().add("/presentacion/estilos/EstiloMenuContextual.css");
-                rowMenu.getItems().addAll(menuItemAgregarCancion, menuItemAgregarContinuacion, menuItemRadio, menuItemDescargar, menuItemEliminarCancion, menuItemAgregarALista);
+                    MenuItem menuItemRadio = new MenuItem("Crear radio");
+                    MenuItem menuItemDescargar = new MenuItem("Descargar canción");
+                    MenuItem menuItemEliminarCancion = new MenuItem("Eliminar canción de biblioteca");
+                    menuItemAgregarALista = new Menu("Agregar a lista de reproducción");
+
+                    seleccionMenuItem(row);
+
+                    rowMenu.getStyleClass().add("/presentacion/estilos/EstiloMenuContextual.css");
+                    rowMenu.getItems().addAll(menuItemAgregarCancion, menuItemAgregarContinuacion, menuItemRadio, menuItemDescargar, menuItemEliminarCancion, menuItemAgregarALista);
+
+                    //Eventos
+                    menuItemDescargar.setOnAction((ActionEvent) -> {
+                        Cancion cancion = row.getItem();
+                        IGUBarraReproduccionController.obtenerCancion(cancion, true);
+                    });
+                    menuItemEliminarCancion.setOnAction((ActionEvent) -> {
+                        Cancion cancion = row.getItem();
+                        eliminarCancionDeBiblioteca(cancion.getIdCancion());
+                    });
+
+                } else {
+                    MenuItem menuItemAgregarABiblioteca = new MenuItem("Agregar canción a biblioteca");
+                    rowMenu.getItems().addAll(menuItemAgregarABiblioteca, menuItemAgregarCancion, menuItemAgregarContinuacion);
+                    
+                    //Eventos
+                    menuItemAgregarABiblioteca.setOnAction((ActionEvent) -> {
+                        Cancion cancion = row.getItem();
+                        agregarABiblioteca(row.getItem());
+                    });
+                }
 
                 // only display context menu for non-null items:
                 row.contextMenuProperty().bind(
@@ -132,18 +166,14 @@ public class IGUCancionesController implements Initializable {
                         controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }
                 });
-                //Eventos
-                menuItemDescargar.setOnAction((ActionEvent) ->{
-                   Cancion cancion = row.getItem();
-                   IGUBarraReproduccionController.obtenerCancion(cancion, true);
+
+                menuItemAgregarCancion.setOnAction((ActionEvent event) -> {
+                    Cancion cancion = row.getItem();
+                    controladorBarraReproduccion.reajustarDatosColaReproduccion(cancion, true);
                 });
-                menuItemAgregarCancion.setOnAction( (ActionEvent event) ->{
-                   Cancion cancion = row.getItem();
-                   controladorBarraReproduccion.reajustarDatosColaReproduccion(cancion, true);
-                 });
-                menuItemAgregarContinuacion.setOnAction( (ActionEvent) ->{
-                   Cancion cancion = row.getItem();
-                   controladorBarraReproduccion.reajustarDatosColaReproduccion(cancion, false);
+                menuItemAgregarContinuacion.setOnAction((ActionEvent) -> {
+                    Cancion cancion = row.getItem();
+                    controladorBarraReproduccion.reajustarDatosColaReproduccion(cancion, false);
                 });
                 return row;
             }
@@ -168,7 +198,6 @@ public class IGUCancionesController implements Initializable {
                 @Override
                 public void handle(ActionEvent event) {
                     agregarCancionALista(row.getItem(), lista);
-
                 }
             });
         }
@@ -209,16 +238,16 @@ public class IGUCancionesController implements Initializable {
         }
     }
 
-   /**
-    * Método para verificar que la canción que se encuentra en una lista de reproducción no se
-    * encuentre en las listas de reproducción
-    * @param cancion Canción a agregar
-    * @param lista Lista de reproducción a agregar la canción
-    * @param listas Listas de reproducción ya guardadas
-    * @return Boolean de la existencia de la canción
-    */
-   public boolean verificarDuplicada(Cancion cancion, ListaReproduccion lista, List<ListaReproduccion>
-        listas ) {
+    /**
+     * Método para verificar que la canción que se encuentra en una lista de
+     * reproducción no se encuentre en las listas de reproducción
+     *
+     * @param cancion Canción a agregar
+     * @param lista Lista de reproducción a agregar la canción
+     * @param listas Listas de reproducción ya guardadas
+     * @return Boolean de la existencia de la canción
+     */
+    public boolean verificarDuplicada(Cancion cancion, ListaReproduccion lista, List<ListaReproduccion> listas) {
         boolean duplicada = false;
 
         for (int i = 0; i < listasReproduccion.size(); i++) {
@@ -231,6 +260,21 @@ public class IGUCancionesController implements Initializable {
             }
         }
         return duplicada;
+    }
+    
+    public void agregarABiblioteca(Cancion cancion){
+        Mensaje mensaje = new Mensaje("agregarABiblioteca");
+        mensaje.setObjeto(cancion);
+        Cliente.enviarMensaje(mensaje);
+    }
+    
+    public void eliminarCancionDeBiblioteca(Integer idCancion){
+        boolean eliminar = Emergente.cargarEmergenteConOpciones("Eliminar canción", "¿Estás seguro de eliminar esta canción de tu biblioteca?");
+        System.out.println("respuesta: " + eliminar);
+        Mensaje mensaje = new Mensaje("eliminarCancion");
+        System.out.println("id cancion: " + idCancion);
+        mensaje.setObjeto(idCancion);
+        Cliente.enviarMensaje(mensaje);
     }
 
     public Pane abrirIGUCanciones() {

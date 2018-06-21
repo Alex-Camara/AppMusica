@@ -7,6 +7,7 @@ package presentacion.Utileria;
 
 import java.util.Optional;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
@@ -14,17 +15,20 @@ import javafx.stage.StageStyle;
 
 /**
  * Clase para mostrar mensajes emergentes.
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
- * */
+ *
+ */
 public class Emergente {
 
-   /**
-    * Método para cargar un mensaje emergente.
-    * @param titulo String del título de la ventana
-    * @param mensaje String del mensaje del aviso emergente
-    */
-   public static void cargarEmergente(String titulo, String mensaje) {
+    /**
+     * Método para cargar un mensaje emergente.
+     *
+     * @param titulo String del título de la ventana
+     * @param mensaje String del mensaje del aviso emergente
+     */
+    public static void cargarEmergente(String titulo, String mensaje) {
         Alert confirmacion = new Alert(Alert.AlertType.INFORMATION);
         confirmacion.setTitle(titulo);
         confirmacion.setHeaderText(null);
@@ -34,14 +38,15 @@ public class Emergente {
         confirmacion.showAndWait();
     }
 
-   /**
-    * Método para cargar una ventana emergente para ingresar texto.
-    * @param titulo String del título de la ventana
-    * @param mensaje String del mensaje a mostrar en el cuerpo
-    * @param mensajeDefault Strinf del mensaje de ingreso de información
-    * @return
-    */
-   public static String cargarTextInputDialog(String titulo, String mensaje, String mensajeDefault) {
+    /**
+     * Método para cargar una ventana emergente para ingresar texto.
+     *
+     * @param titulo String del título de la ventana
+     * @param mensaje String del mensaje a mostrar en el cuerpo
+     * @param mensajeDefault Strinf del mensaje de ingreso de información
+     * @return
+     */
+    public static String cargarTextInputDialog(String titulo, String mensaje, String mensajeDefault) {
         String resultado = null;
         TextInputDialog dialog = new TextInputDialog(mensajeDefault);
         dialog.initStyle(StageStyle.UNDECORATED);
@@ -52,8 +57,30 @@ public class Emergente {
 
         if (result.isPresent()) {
             resultado = result.get();
-        } 
+        }
         return resultado;
+    }
+
+    /**
+     * Método para cargar un mensaje emergente.
+     *
+     * @param titulo String del título de la ventana
+     * @param mensaje String del mensaje del aviso emergente
+     */
+    public static boolean cargarEmergenteConOpciones(String titulo, String mensaje) {
+        boolean respuesta;
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            respuesta = true;
+        } else {
+            respuesta = false;
+        }
+        return respuesta;
     }
 
 }

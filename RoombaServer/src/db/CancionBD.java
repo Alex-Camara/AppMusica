@@ -11,8 +11,9 @@ import java.util.logging.Logger;
 import logica.Cancion;
 
 /**
- * Clase que implementa las interfaces declaradas en el DAO homólogo. 
- * Esta permite la interacción con la base de datos con la clase correspondiente.
+ * Clase que implementa las interfaces declaradas en el DAO homólogo. Esta
+ * permite la interacción con la base de datos con la clase correspondiente.
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
  */
@@ -33,7 +34,6 @@ public class CancionBD implements CancionDao {
         while (resultado != null && resultado.next()) {
             Cancion cancionRecuperada = recuperarCancion(resultado.getInt("idCancion"));
             canciones.add(cancionRecuperada);
-
         }
         return canciones;
     }
@@ -113,7 +113,38 @@ public class CancionBD implements CancionDao {
         sentencia.setInt(3, cancion.getAlbum_idAlbum());
         sentencia.setString(4, cancion.getRuta());
         sentencia.setBoolean(5, false);
-        
+
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    @Override
+    public int agregarCancionABiblioteca(int idBiblioteca, Cancion cancion) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "insert into CancionLocal (idBiblioteca, idCancionLocal) values(?, ?)";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idBiblioteca);
+        sentencia.setInt(2, cancion.getIdCancion());
+
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    public int eliminarCancionLocal(int idBiblioteca, int idCancion) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "delete from CancionLocal where idBiblioteca = ? and idCancionLocal = ?;";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idBiblioteca);
+        sentencia.setInt(2, idCancion);
+
         resultado = sentencia.executeUpdate();
         return resultado;
     }
