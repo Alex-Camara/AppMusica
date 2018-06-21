@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="paneCanciones" prefHeight="538.0" prefWidth="698.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tableCanciones" prefHeight="517.0" prefWidth="683.0" style="-fx-background-color: transparent;" stylesheets="@estilos/EstiloTabla.css">
+         <columns>
+            <TableColumn fx:id="tcColumnNombre" minWidth="0.0" prefWidth="410.0" text="Nombre" />
+            <TableColumn fx:id="tcColumnArtista" minWidth="0.0" prefWidth="272.0" text="Artista" />
+         </columns>
+      </TableView>
+   </children>
+</Pane>

@@ -25,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
+import logica.Album;
 import logica.Cancion;
 import logica.ListaReproduccion;
 import logica.conexion.Mensaje;
@@ -53,7 +54,13 @@ public class IGUCancionesController implements Initializable {
     IGUListasReproduccionController controladorListas;
     Menu menuItemAgregarALista;
     List<MenuItem> menues = new ArrayList<>();
+    private List<Cancion> cancionesLocales;
+    List<Album> albumes = new ArrayList<>();
     boolean biblioteca;
+
+    public void setCanciones(List<Cancion> cancionesLocales) {
+        this.cancionesLocales = cancionesLocales;
+    }
 
     public void setBiblioteca(boolean biblioteca) {
         this.biblioteca = biblioteca;
@@ -95,7 +102,8 @@ public class IGUCancionesController implements Initializable {
         // TODO
     }
 
-    public void cargarTablaCanciones(List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
+    public void cargarTablaCanciones(List<Album> albumes, List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
+        this.albumes = albumes;
         tableCanciones.refresh();
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
 
@@ -121,7 +129,7 @@ public class IGUCancionesController implements Initializable {
 
                 if (biblioteca) {
 
-                    MenuItem menuItemRadio = new MenuItem("Crear radio");
+                    MenuItem menuItemRadio = new MenuItem("Crear radio personalizada");
                     MenuItem menuItemDescargar = new MenuItem("Descargar canción");
                     MenuItem menuItemEliminarCancion = new MenuItem("Eliminar canción de biblioteca");
                     menuItemAgregarALista = new Menu("Agregar a lista de reproducción");
@@ -132,6 +140,10 @@ public class IGUCancionesController implements Initializable {
                     rowMenu.getItems().addAll(menuItemAgregarCancion, menuItemAgregarContinuacion, menuItemRadio, menuItemDescargar, menuItemEliminarCancion, menuItemAgregarALista);
 
                     //Eventos
+                    menuItemRadio.setOnAction((ActionEvent) -> {
+                        Cancion cancion = row.getItem();
+                        crearRadio(cancion.getIdCancion());
+                    });
                     menuItemDescargar.setOnAction((ActionEvent) -> {
                         Cancion cancion = row.getItem();
                         IGUBarraReproduccionController.obtenerCancion(cancion, true);
@@ -144,7 +156,7 @@ public class IGUCancionesController implements Initializable {
                 } else {
                     MenuItem menuItemAgregarABiblioteca = new MenuItem("Agregar canción a biblioteca");
                     rowMenu.getItems().addAll(menuItemAgregarABiblioteca, menuItemAgregarCancion, menuItemAgregarContinuacion);
-                    
+
                     //Eventos
                     menuItemAgregarABiblioteca.setOnAction((ActionEvent) -> {
                         Cancion cancion = row.getItem();
@@ -181,8 +193,6 @@ public class IGUCancionesController implements Initializable {
     }
 
     public void seleccionMenuItem(TableRow<Cancion> row) {
-        //System.out.println("tamaño: + " + listasReproduccion.size());
-
         for (int i = 0; i < listasReproduccion.size(); i++) {
             MenuItem menuItem = new MenuItem(listasReproduccion.get(i).getNombre());
             menues.add(menuItem);
@@ -261,20 +271,48 @@ public class IGUCancionesController implements Initializable {
         }
         return duplicada;
     }
-    
-    public void agregarABiblioteca(Cancion cancion){
-        Mensaje mensaje = new Mensaje("agregarABiblioteca");
-        mensaje.setObjeto(cancion);
-        Cliente.enviarMensaje(mensaje);
+
+    public void agregarABiblioteca(Cancion cancion) {
+        boolean repetida = false;
+
+        for (int i = 0; i < cancionesLocales.size(); i++) {
+            if (cancion.getIdCancion() == cancionesLocales.get(i).getIdCancion()) {
+                repetida = true;
+            }
+        }
+        if (repetida) {
+            Emergente.cargarEmergente("Aviso", "La canción ya se encuentra en tu biblioteca");
+        } else {
+            Mensaje mensaje = new Mensaje("agregarABiblioteca");
+            mensaje.setObjeto(cancion);
+            Cliente.enviarMensaje(mensaje);
+        }
     }
-    
-    public void eliminarCancionDeBiblioteca(Integer idCancion){
+
+    public void eliminarCancionDeBiblioteca(Integer idCancion) {
         boolean eliminar = Emergente.cargarEmergenteConOpciones("Eliminar canción", "¿Estás seguro de eliminar esta canción de tu biblioteca?");
         System.out.println("respuesta: " + eliminar);
         Mensaje mensaje = new Mensaje("eliminarCancion");
         System.out.println("id cancion: " + idCancion);
         mensaje.setObjeto(idCancion);
         Cliente.enviarMensaje(mensaje);
+    }
+
+    public void crearRadio(int idCancion) {
+        int idGenero = recuperarGenero(idCancion);
+        Mensaje mensaje = new Mensaje("crearRadio");
+        mensaje.setObjeto(idGenero);
+        Cliente.enviarMensaje(mensaje);
+    }
+
+    public int recuperarGenero(int idCancion) {
+        int idGenero = 0;
+        for (int i = 0; i < albumes.size(); i++) {
+            if (idCancion == albumes.get(i).getIdGenero()) {
+                idGenero = albumes.get(i).getIdGenero();
+            }
+        }
+        return idGenero;
     }
 
     public Pane abrirIGUCanciones() {

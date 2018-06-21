@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import logica.Album;
 
 /**
@@ -83,6 +85,29 @@ public class AlbumBD implements AlbumDao {
             album.setIdAlbum(resultado.getInt("idAlbum"));
         }
         return album;
+    }
+
+    @Override
+    public List<Album> recuperarAlbumGenero(int idGenero) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        Album album = new Album();
+        List<Album> albumes = new ArrayList<>();
+
+        String consulta = "SELECT * FROM Album WHERE idGenero = ?;";
+
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idGenero);
+        resultado = sentencia.executeQuery();
+
+        while (resultado != null && resultado.next()) {
+            album.setIdAlbum(resultado.getInt("idAlbum"));
+            album.setIdGenero(resultado.getInt("idGenero"));
+            albumes.add(album);
+        }
+        return albumes;
     }
 
 }

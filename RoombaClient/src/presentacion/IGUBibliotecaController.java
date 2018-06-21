@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -74,6 +75,8 @@ public class IGUBibliotecaController implements Initializable {
     private ImageView imageSalir;
     @FXML
     private ImageView imageCancelarBusqueda;
+    @FXML
+    private JFXButton buttonRadio;
 
     private static final String RESALTADO = "-fx-background-color:#FFD7B4;";
     private static final String COLOR_TOGGLEBUTTON_NORMAL = "-fx-background-color: #F0EFF7;";
@@ -88,6 +91,7 @@ public class IGUBibliotecaController implements Initializable {
     List<Cancion> canciones = new ArrayList<>();
     List<Album> albumes = new ArrayList<>();
     List<Genero> generos = new ArrayList<>();
+    List<Cancion> cancionesRadio = new ArrayList<>();
     List<ListaReproduccion> listasReproduccion = new ArrayList<>();
 
     private Pane paneAlbumes;
@@ -96,6 +100,7 @@ public class IGUBibliotecaController implements Initializable {
     private Pane paneAgregarLocal;
     private Pane paneCanciones;
     private Pane paneListasReproduccion;
+    private Pane paneRadio;
 
     IGUAlbumesController controladorAlbumes;
     IGUArtistasController controladorArtistas;
@@ -104,6 +109,7 @@ public class IGUBibliotecaController implements Initializable {
     IGUCancionesController controladorCanciones;
     IGUBarraReproduccionController controladorBarraReproduccion;
     IGUListasReproduccionController controladorListas;
+    IGURadioController controladorRadio;
 
     @FXML
     void resetSalida(MouseEvent event) {
@@ -122,6 +128,11 @@ public class IGUBibliotecaController implements Initializable {
         verificarCreador();
         crearDirectorio();
 
+        if (cancionesRadio.isEmpty()) {
+            buttonRadio.setDisable(true);
+        } else {
+            buttonRadio.setDisable(false);
+        }
     }
 
     /**
@@ -152,6 +163,9 @@ public class IGUBibliotecaController implements Initializable {
         controladorListas = new IGUListasReproduccionController();
         paneListasReproduccion = controladorListas.abrirIGUListasReproduccion();
 
+        controladorRadio = new IGURadioController();
+        paneRadio = controladorRadio.abrirIGURadio();
+
         controladorBarraReproduccion = new IGUBarraReproduccionController();
         paneBarraReproduccion = controladorBarraReproduccion.abrirIGUBarraReproduccion(usuario);
         borderPanePrincipal.setBottom(paneBarraReproduccion);
@@ -162,9 +176,7 @@ public class IGUBibliotecaController implements Initializable {
         biblioteca = false;
         buttonExplorar.setStyle(RESALTADO);
         buttonBiblioteca.setStyle(COLOR_TOGGLEBUTTON_NORMAL);
-
         clicCanciones();
-
     }
 
     @FXML
@@ -185,6 +197,7 @@ public class IGUBibliotecaController implements Initializable {
             mensajeCanciones.setObjeto(usuario);
             idBiblioteca = usuario.getIdBiblioteca();
             Cliente.enviarMensaje(mensajeCanciones);
+            controladorCanciones.setCanciones(canciones);
             controladorCanciones.setBiblioteca(biblioteca);
             borderPanePrincipal.setCenter(paneCanciones);
         } else {
@@ -193,7 +206,6 @@ public class IGUBibliotecaController implements Initializable {
             controladorCanciones.setBiblioteca(biblioteca);
             borderPanePrincipal.setCenter(paneCanciones);
         }
-
     }
 
     @FXML
@@ -234,7 +246,6 @@ public class IGUBibliotecaController implements Initializable {
         } else {
             controladorAlbumes.cargarTablaAlbumes(albumes, cancionesExternas);
         }
-
     }
 
     @FXML
@@ -278,7 +289,8 @@ public class IGUBibliotecaController implements Initializable {
         ocultarSeleccion();
         buttonContenido.setStyle(COLOR_TEXTO_RESALTADO);
         if (usuario.getTipoUsuario().equals("Creador")) {
-            System.out.println("es creador");
+            System.out.println("es creador");+
+                    
         } else {
             String nombreArtistico = Emergente.cargarTextInputDialog("Hazte creador", "Ingresa tu nombre artistico", null);
             Mensaje mensaje = new Mensaje("hacerCreador");
@@ -298,7 +310,7 @@ public class IGUBibliotecaController implements Initializable {
             if (!nombre.isEmpty()) {
                 ocultarSeleccion();
                 List<Cancion> coincidencias = buscarCoindicencias(nombre);
-                controladorCanciones.cargarTablaCanciones(coincidencias, controladorBarraReproduccion);
+                controladorCanciones.cargarTablaCanciones(albumes, coincidencias, controladorBarraReproduccion);
                 imageCancelarBusqueda.setVisible(true);
                 borderPanePrincipal.setCenter(paneCanciones);
             }
@@ -310,21 +322,34 @@ public class IGUBibliotecaController implements Initializable {
         Mensaje mensajeSalida = new Mensaje("cerrarConexión");
         Cliente.enviarMensaje(mensajeSalida);
         ClienteStreaming.cerrarConexion();
-        Cliente.cerrarConexion();
         String userHome = System.getProperty("user.home");
         String finalPath = userHome + "RombaFiles/cache/";
         File file = new File(finalPath);
         limpiarCache(file);
-
     }
 
     @FXML
     private void limpiarBusqueda() {
         tFieldBuscar.clear();
         ocultarSeleccion();
-        controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
+        controladorCanciones.cargarTablaCanciones(albumes, canciones, controladorBarraReproduccion);
         imageCancelarBusqueda.setVisible(false);
         borderPanePrincipal.setCenter(paneCanciones);
+    }
+
+    @FXML
+    void clicRadio() {
+        if (cancionesRadio.isEmpty()) {
+            Platform.runLater(() -> {
+                Emergente.cargarEmergente("Aviso", "No hay canciones en tu radio");
+            });
+
+        } else {
+            ocultarSeleccion();
+            buttonRadio.setStyle(COLOR_TEXTO_RESALTADO);
+            controladorRadio.cargarTablaCanciones(cancionesRadio, controladorBarraReproduccion);
+            borderPanePrincipal.setCenter(paneRadio);
+        }
     }
 
     private void ocultarSeleccion() {
@@ -336,13 +361,14 @@ public class IGUBibliotecaController implements Initializable {
         buttonAgregarLocal.setStyle(COLOR_TEXTO_NORMAL);
         buttonListas.setStyle(COLOR_TEXTO_NORMAL);
         buttonContenido.setStyle(COLOR_TEXTO_NORMAL);
+        buttonRadio.setStyle(COLOR_TEXTO_NORMAL);
     }
 
     private void verificarCreador() {
         if (usuario.getTipoUsuario().equals("Creador")) {
-            buttonContenido.setText("Subir contenido");
+            buttonContenido.setText("       Subir contenido");
         } else {
-            buttonContenido.setText("Hazte creador");
+            buttonContenido.setText("       Hazte creador");
         }
     }
 
@@ -408,6 +434,8 @@ public class IGUBibliotecaController implements Initializable {
             case "canciones":
                 Biblioteca bibliotecaServ = (Biblioteca) mensaje.getObjeto();
                 canciones = bibliotecaServ.getCanciones();
+                controladorCanciones.setCanciones(canciones);
+                controladorCanciones.cargarTablaCanciones(albumes, canciones, controladorBarraReproduccion);
                 break;
             case "albumes":
                 albumes = (List<Album>) mensaje.getObjeto();
@@ -417,7 +445,7 @@ public class IGUBibliotecaController implements Initializable {
                 break;
             case "historial":
                 List<Cancion> cancionesHistorial = (List<Cancion>) mensaje.getObjeto();
-                controladorCanciones.cargarTablaCanciones(cancionesHistorial, controladorBarraReproduccion);
+                controladorCanciones.cargarTablaCanciones(albumes, cancionesHistorial, controladorBarraReproduccion);
                 break;
             case "catalogoGeneros":
                 List<Genero> catalogoGeneros = (List<Genero>) mensaje.getObjeto();
@@ -426,11 +454,11 @@ public class IGUBibliotecaController implements Initializable {
             case "listasReproduccion":
                 listasReproduccion = (List<ListaReproduccion>) mensaje.getObjeto();
                 controladorCanciones.setListasReproduccion(listasReproduccion);
-                controladorCanciones.cargarTablaCanciones(canciones, controladorBarraReproduccion);
+                controladorCanciones.cargarTablaCanciones(albumes, canciones, controladorBarraReproduccion);
                 break;
             case "cancionesExternas":
                 cancionesExternas = (List<Cancion>) mensaje.getObjeto();
-                controladorCanciones.cargarTablaCanciones(cancionesExternas, controladorBarraReproduccion);
+                controladorCanciones.cargarTablaCanciones(albumes, cancionesExternas, controladorBarraReproduccion);
                 break;
             case "albumesExternos":
                 albumesExternos = (List<Album>) mensaje.getObjeto();
@@ -444,7 +472,20 @@ public class IGUBibliotecaController implements Initializable {
                 });
                 break;
             case "cancionEliminada":
-                
+                clicCanciones();
+                break;
+            case "calificacionGuardada":
+                clicCanciones();
+                break;
+            case "cancionesRadio":
+                cancionesRadio = (List<Cancion>) mensaje.getObjeto();
+                if (cancionesRadio.isEmpty()) {
+                    Platform.runLater(() -> {
+                        Emergente.cargarEmergente("Aviso", "Lo sentimos, no cuentas con suficientes canciones para hacer una estación de radio");
+                    });
+                } else {
+                    clicRadio();
+                }
                 break;
             case "cerrarConexión":
                 Cliente.cerrarConexion();

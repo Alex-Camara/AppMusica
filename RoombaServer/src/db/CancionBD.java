@@ -134,12 +134,15 @@ public class CancionBD implements CancionDao {
         return resultado;
     }
 
+    @Override
     public int eliminarCancionLocal(int idBiblioteca, int idCancion) throws SQLException {
         Connection conexion = null;
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
         int resultado = 0;
 
+        eliminarCancionDeListas(idBiblioteca, idCancion);
+        
         String consulta = "delete from CancionLocal where idBiblioteca = ? and idCancionLocal = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);
@@ -147,6 +150,45 @@ public class CancionBD implements CancionDao {
 
         resultado = sentencia.executeUpdate();
         return resultado;
+    }
+    
+    public int eliminarCancionDeListas(int idBiblioteca, int idCancion) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        int resultado = 0;
+
+        String consulta = "delete from cancionlocal_has_listareproduccion where idBiblioteca = ? and idCancionLocal = ?;";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idBiblioteca);
+        sentencia.setInt(2, idCancion);
+
+        resultado = sentencia.executeUpdate();
+        return resultado;
+    }
+
+    @Override
+    public List<Cancion> recuperarCancionesAlbum(int idAlbum) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        List<Cancion> canciones = new ArrayList<>();
+
+        String consulta = "SELECT * FROM Cancion WHERE privada = 0 and idAlbum = ?;";
+        sentencia = conexion.prepareStatement(consulta);
+        sentencia.setInt(1, idAlbum);
+        resultado = sentencia.executeQuery();
+        while (resultado != null && resultado.next()) {
+            Cancion cancion = new Cancion();
+            cancion.setIdCancion(resultado.getInt("idCancion"));
+            cancion.setArtista(resultado.getString("artista"));
+            cancion.setAlbum_idAlbum(resultado.getInt("Album_idAlbum"));
+            cancion.setNombre(resultado.getString("nombre"));
+            cancion.setRuta(resultado.getString("ruta"));
+            canciones.add(cancion);
+        }
+        return canciones;
     }
 
 }

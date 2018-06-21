@@ -265,11 +265,15 @@ public class IGUBarraReproduccionController implements Initializable {
       String idImagen = imagen.getId();
       String stringCalificacion = idImagen.substring(idImagen.length() - 1);
       int calificacion = Integer.valueOf(stringCalificacion);
-      System.out.println("calificacion: " + calificacion);
+      Integer[] calificacionEnvio = new Integer[2];
+      
       cancion.setCalificacion(calificacion);
       iluminarEstrellas(calificacion);
+      System.out.println("calificacion: " + cancion.getCalificacion());
+      calificacionEnvio[0] = cancion.getIdCancion();
+      calificacionEnvio[1] = cancion.getCalificacion();
       Mensaje mensajeEnviar = new Mensaje("actualizarCalificación");
-      mensajeEnviar.setObjeto(cancion);
+      mensajeEnviar.setObjeto(calificacionEnvio);
       Cliente.enviarMensaje(mensajeEnviar);
    }
 

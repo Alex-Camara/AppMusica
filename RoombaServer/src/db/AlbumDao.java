@@ -6,6 +6,7 @@
 package db;
 
 import java.sql.SQLException;
+import java.util.List;
 import logica.Album;
 
 /**
@@ -17,4 +18,5 @@ import logica.Album;
 public interface AlbumDao {
     Album recuperarAlbumes(int idAlbum) throws SQLException;
     Album guardarAlbum(Album album) throws SQLException;
+    List<Album> recuperarAlbumGenero(int idGenero) throws SQLException;
 }

@@ -88,7 +88,7 @@ public class ManejadorCliente extends Thread {
             Mensaje mensajeRecibido = (Mensaje) entrada.readObject();
 
             String asunto = mensajeRecibido.getAsunto();
-            System.out.println("asun " + asunto);
+            System.out.println("asunto " + asunto);
             switch (asunto) {
                 case "recuperar usuario":
                     Usuario usuarioRecibido = (Usuario) mensajeRecibido.getObjeto();
@@ -127,7 +127,7 @@ public class ManejadorCliente extends Thread {
                     mensaje.setObjeto(generoCanciones);
                     salida.writeObject(mensaje);
                     salida.flush();
-                    
+
                     List<ListaReproduccion> listasReproduccion = new ArrayList<>();
                     ListasReproduccionDao listaServidor = new ListasReproduccionBD();
                     listasReproduccion = listaServidor.recuperarListas(bibliotecaServidor.getIdBiblioteca());
@@ -156,10 +156,14 @@ public class ManejadorCliente extends Thread {
                     salida.flush();
                     break;
                 case "actualizarCalificación":
-                    Cancion cancion = (Cancion) mensajeRecibido.getObjeto();
+                    Integer[] calificacionEnvio = new Integer[2];
+                    calificacionEnvio = (Integer[]) mensajeRecibido.getObjeto();
                     CancionDao cancionServidor = new CancionBD();
-                    System.out.println("calificacion a actualizar: " + cancion.getCalificacion());
-                    cancionServidor.actualizarCalificacion(cancion.getIdCancion(), cancion.getCalificacion());
+                    System.out.println("calificacion a actualizar: " + calificacionEnvio[1]);
+                    cancionServidor.actualizarCalificacion(calificacionEnvio[0], calificacionEnvio[1]);
+                    mensaje = new Mensaje("calificacionGuardada");
+                    salida.writeObject(mensaje);
+                    salida.flush();
                     break;
                 case "agregarLista":
                     ListaReproduccion lista = (ListaReproduccion) mensajeRecibido.getObjeto();
@@ -244,7 +248,7 @@ public class ManejadorCliente extends Thread {
                     continuar = false;
                     break;
                 case "agregarABiblioteca":
-                    cancion = (Cancion) mensajeRecibido.getObjeto();
+                    Cancion cancion = (Cancion) mensajeRecibido.getObjeto();
                     cancionesServidor = new CancionBD();
                     cancionesServidor.agregarCancionABiblioteca(idBiblioteca, cancion);
                     mensaje = new Mensaje("cancionAgregadaABiblioteca");
@@ -255,6 +259,21 @@ public class ManejadorCliente extends Thread {
                     int idCancion = (Integer) mensajeRecibido.getObjeto();
                     cancionesServidor = new CancionBD();
                     cancionesServidor.eliminarCancionLocal(idBiblioteca, idCancion);
+                    mensaje = new Mensaje("cancionEliminada");
+                    salida.writeObject(mensaje);
+                    salida.flush();
+                    break;
+                case "crearRadio":
+                    int idGenero = (Integer) mensajeRecibido.getObjeto();
+
+                    List<Album> albumes = recuperarAlbumesPorGenero(idGenero);
+                    List<Cancion> cancionesRadio = recuperarCancionesAlbum(albumes);
+                    
+                    mensaje = new Mensaje("cancionesRadio");
+                    mensaje.setObjeto(cancionesRadio);
+                    salida.writeObject(mensaje);
+                    salida.flush();
+                    break;
                 default:
                     break;
             }
@@ -276,7 +295,7 @@ public class ManejadorCliente extends Thread {
         cliente.close();
     }
 
-   private List<Album> recuperarAlbumes(Biblioteca bibliotecaServ) throws SQLException {
+    private List<Album> recuperarAlbumes(Biblioteca bibliotecaServ) throws SQLException {
         List<Album> albumes = new ArrayList<>();
         List<Integer> listaIdAlbumes = new ArrayList<>();
         int idAlbum;
@@ -310,6 +329,23 @@ public class ManejadorCliente extends Thread {
             }
         }
         return albumes;
+    }
+
+    private List<Album> recuperarAlbumesPorGenero(int idGenero) throws SQLException {
+        List<Album> albumes = new ArrayList<>();
+        AlbumDao albumServidor = new AlbumBD();
+        albumes = albumServidor.recuperarAlbumGenero(idGenero);
+        return albumes;
+    }
+
+    public List<Cancion> recuperarCancionesAlbum(List<Album> albumes) throws SQLException {
+        List<Cancion> canciones = new ArrayList<>();
+        CancionDao cancionesServidor = new CancionBD();
+        for (int i = 0; i < albumes.size(); i++) {
+            List<Cancion> cancionesTemp = cancionesServidor.recuperarCancionesAlbum(albumes.get(i).getIdAlbum());
+            canciones.addAll(cancionesTemp);
+        }
+        return canciones;
     }
 
     private List<Genero> recuperarGeneros(List<Album> albumesCanciones) throws SQLException {
