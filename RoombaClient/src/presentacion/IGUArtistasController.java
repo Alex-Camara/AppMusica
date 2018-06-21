@@ -91,7 +91,7 @@ public class IGUArtistasController implements Initializable {
         agregarListenersTablaArtistas(canciones);
     }
 
-    private void cargarTablaCancionesArtista(List<Cancion> cancionesArtista) {
+   private void cargarTablaCancionesArtista(List<Cancion> cancionesArtista) {
         //Ir o recargar las canciones del artista
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(cancionesArtista);
         tcaColumnNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
@@ -122,7 +122,13 @@ public class IGUArtistasController implements Initializable {
         });
     }
 
-    private List<Cancion> seleccionarCancionesArtista(String artista, List<Cancion> canciones) {
+   /**
+    * Método para seleccionar las canciones de acuerdo a un artísta
+    * @param artista Nombre del artista a buscar coincidencias
+    * @param canciones Lista de Cancion
+    * @return Lista de Cancion que cumplen con la coincidencia del artista
+    */
+   public List<Cancion> seleccionarCancionesArtista(String artista, List<Cancion> canciones) {
         labelPaneArtistaNombre.setText(artista);
         List<Cancion> cancionesSeleccionadas = new ArrayList<>();
         for (int i = 0; i < canciones.size(); i++) {

@@ -255,8 +255,6 @@ public class ManejadorCliente extends Thread {
                     int idCancion = (Integer) mensajeRecibido.getObjeto();
                     cancionesServidor = new CancionBD();
                     cancionesServidor.eliminarCancionLocal(idBiblioteca, idCancion);
-                    //mensaje = new Mensaje("cancionEliminada");
-                    //salida.writeObject(mensaje);
                 default:
                     break;
             }
@@ -278,7 +276,7 @@ public class ManejadorCliente extends Thread {
         cliente.close();
     }
 
-    private List<Album> recuperarAlbumes(Biblioteca bibliotecaServ) throws SQLException {
+   private List<Album> recuperarAlbumes(Biblioteca bibliotecaServ) throws SQLException {
         List<Album> albumes = new ArrayList<>();
         List<Integer> listaIdAlbumes = new ArrayList<>();
         int idAlbum;

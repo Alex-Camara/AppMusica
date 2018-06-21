@@ -13,10 +13,10 @@ import presentacion.IGUGenerosController;
  * @author José Valdivia
  * @author Alex Cámara
  */
-public class GenerosController {
+public class GenerosControllerTest {
    IGUGenerosController generosController = new IGUGenerosController();
    
-   public GenerosController() {
+   public GenerosControllerTest() {
    }
    
    @Test

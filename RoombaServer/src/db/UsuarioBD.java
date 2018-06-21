@@ -72,7 +72,7 @@ public class UsuarioBD implements UsuarioDao {
         return usuarioIngresado;
     }
 
-    public int agregarBiblioteca(Usuario usuario) throws SQLException {
+    private int agregarBiblioteca(Usuario usuario) throws SQLException {
         Connection conexion = null;
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
@@ -85,7 +85,7 @@ public class UsuarioBD implements UsuarioDao {
         return resultado;
     }
 
-    public int actualizarBiblioteca(int idUsuario) throws SQLException {
+    private int actualizarBiblioteca(int idUsuario) throws SQLException {
         int resultado = 0;
         Connection conexion = null;
         conexion = Conexion.conectar();
@@ -100,6 +100,7 @@ public class UsuarioBD implements UsuarioDao {
         return resultado;
     }
     
+    @Override
     public int actualizarUsuario(int idUsuario, String nombreArtistico) throws SQLException {
         int resultado = 0;
         Connection conexion = null;

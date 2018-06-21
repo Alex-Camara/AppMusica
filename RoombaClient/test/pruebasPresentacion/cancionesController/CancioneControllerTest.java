@@ -13,10 +13,10 @@ import presentacion.IGUCancionesController;
  * @author José Valdivia
  * @author Alex Cámara
  */
-public class CancioneController {
+public class CancioneControllerTest {
    IGUCancionesController cancionesController = new IGUCancionesController();
    
-   public CancioneController() {
+   public CancioneControllerTest() {
    }
    
    @Test

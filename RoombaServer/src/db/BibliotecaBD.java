@@ -19,6 +19,7 @@ public class BibliotecaBD implements BibliotecaDao {
 
    /**
     *
+    * @param idBiblioteca
     * @return @throws SQLException
     */
    @Override

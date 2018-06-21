@@ -9,10 +9,10 @@ import presentacion.IGURegistroController;
  * @author José Valdivia
  * @author Alex Cámara
  */
-public class RegistroController {
+public class RegistroControllerTest {
    IGURegistroController registroController = new IGURegistroController();
    
-   public RegistroController() {
+   public RegistroControllerTest() {
    }
    
    @Test
