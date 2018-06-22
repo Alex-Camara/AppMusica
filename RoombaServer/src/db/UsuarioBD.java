@@ -39,7 +39,7 @@ public class UsuarioBD implements UsuarioDao {
             usuario.setNombre(resultado.getString("nombre"));
             usuario.setPaterno(resultado.getString("paterno"));
             usuario.setMaterno(resultado.getString("materno"));
-            usuario.setTipoUsuario(resultado.getString("nombreArtistico"));
+            usuario.setNombreArtistico(resultado.getString("nombreArtistico"));
             usuario.setIdBiblioteca(resultado.getInt("idBiblioteca"));
             usuario.setTipoUsuario(resultado.getString("tipoUsuario"));
         }
@@ -107,7 +107,7 @@ public class UsuarioBD implements UsuarioDao {
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
 
-        String consulta = "update Usuario SET tipoUsuario = 'Creador', nombreArtistico = ? where idUsuario = ?;";
+        String consulta = "update Usuario SET tipoUsuario = 'creador', nombreArtistico = ? where idUsuario = ?;";
 
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setString(1, nombreArtistico);

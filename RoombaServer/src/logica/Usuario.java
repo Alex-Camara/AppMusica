@@ -82,7 +82,7 @@ public class Usuario implements Serializable{
     public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
-
+    
     public int getIdBiblioteca() {
         return idBiblioteca;
     }
@@ -90,6 +90,4 @@ public class Usuario implements Serializable{
     public void setIdBiblioteca(int idBiblioteca) {
         this.idBiblioteca = idBiblioteca;
     }
-    
-    
 }

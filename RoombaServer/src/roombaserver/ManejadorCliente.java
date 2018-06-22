@@ -88,7 +88,7 @@ public class ManejadorCliente extends Thread {
             Mensaje mensajeRecibido = (Mensaje) entrada.readObject();
 
             String asunto = mensajeRecibido.getAsunto();
-            System.out.println("asunto " + asunto);
+            System.out.println("Peticion: " + asunto);
             switch (asunto) {
                 case "recuperar usuario":
                     Usuario usuarioRecibido = (Usuario) mensajeRecibido.getObjeto();
@@ -100,9 +100,7 @@ public class ManejadorCliente extends Thread {
                 case "registrarUsuario":
                     usuarioRecibido = (Usuario) mensajeRecibido.getObjeto();
                     usuarioServidor = new UsuarioBD();
-
                     usuarioObtenido = usuarioServidor.registrarUsuario(usuarioRecibido);
-
                     salida.writeObject(usuarioObtenido);
                     salida.flush();
                     break;
@@ -150,7 +148,6 @@ public class ManejadorCliente extends Thread {
                     GeneroDao generoServidor = new GeneroBD();
                     List<Genero> generos = generoServidor.recuperarCatalogo();
                     mensaje = new Mensaje("catalogoGeneros");
-                    System.out.println("generos: " + generos);
                     mensaje.setObjeto(generos);
                     salida.writeObject(mensaje);
                     salida.flush();
@@ -239,10 +236,7 @@ public class ManejadorCliente extends Thread {
                 case "hacerCreador":
                     Usuario usuario = (Usuario) mensajeRecibido.getObjeto();
                     usuarioServidor = new UsuarioBD();
-                    System.out.println("nombre usuario: " + usuario.getNombreArtistico());
-                    System.out.println("id usuario: " + usuario.getIdUsuario());
                     usuarioServidor.actualizarUsuario(usuario.getIdUsuario(), usuario.getNombreArtistico());
-                    System.out.println("haciendo creador...");
                     break;
                 case "cerrarConexión":
                     continuar = false;
@@ -372,7 +366,6 @@ public class ManejadorCliente extends Thread {
             AlbumDao albumServidor = new AlbumBD();
             Album albumGuardado = albumServidor.guardarAlbum(cancion.getAlbum());
             cancion.setAlbum_idAlbum(albumGuardado.getIdAlbum());
-
             CancionDao cancionServidor = new CancionBD();
             cancionServidor.guardarCancion(cancion);
         }

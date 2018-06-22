@@ -78,7 +78,7 @@ public class ClienteStreaming {
     public static void solicitarCancion(String ruta) {
         new Thread(() -> {
             try {
-                final String rutaCompleta = ruta + "/2.mp3";
+                final String rutaCompleta = ruta + "/0.mp3";
                 salida = new PrintWriter(cliente.getOutputStream(), true);
                 salida.print(rutaCompleta);
                 salida.flush(); //Necesario para no añadir un salto en la direccón
