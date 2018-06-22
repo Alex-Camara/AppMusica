@@ -34,7 +34,7 @@ public class ClienteStreaming {
     public static void abrirConexion() {
         try {
             InetAddress inetAddress = InetAddress.getByName(HOST);
-            cliente = new Socket(inetAddress, PUERTO);
+            cliente = new Socket("localhost", PUERTO);
             System.out.println("Conexión establecida con servidor de streaming");
         } catch (UnknownHostException ex) {
             System.out.println("\n!ID de host no encontrado¡\n");

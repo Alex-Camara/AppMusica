@@ -1,4 +1,3 @@
-
 package presentacion;
 
 import java.io.File;
@@ -37,399 +36,422 @@ import presentacion.Utileria.Emergente;
 
 /**
  * Clase del controlador para mostrar la barra de reproducción.
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
- * */
+ *
+ */
 public class IGUBarraReproduccionController implements Initializable {
 
-   @FXML
-   private Pane paneBarraReproduccion;
-   @FXML
-   private Label labelTituloCancion;
-   @FXML
-   private ImageView imageEngrane;
-   @FXML
-   private ImageView imageSiguiente;
-   @FXML
-   private ImageView imageAnterior;
-   @FXML
-   private ImageView imageReproducir;
-   @FXML
-   private ImageView imageRepetir;
-   @FXML
-   private Label labelCalificacion;
-   @FXML
-   private ImageView imageEstrella1;
-   @FXML
-   private ImageView imageEstrella2;
-   @FXML
-   private ImageView imageEstrella3;
-   @FXML
-   private ImageView imageEstrella4;
-   @FXML
-   private ImageView imageEstrella5;
-   @FXML
-   private Label labelArtista;
-   @FXML
-   private Label labelTituloArtista;
+    @FXML
+    private Pane paneBarraReproduccion;
+    @FXML
+    private Label labelTituloCancion;
+    @FXML
+    private ImageView imageEngrane;
+    @FXML
+    private ImageView imageSiguiente;
+    @FXML
+    private ImageView imageAnterior;
+    @FXML
+    private ImageView imageReproducir;
+    @FXML
+    private ImageView imageRepetir;
+    @FXML
+    private Label labelCalificacion;
+    @FXML
+    private ImageView imageEstrella1;
+    @FXML
+    private ImageView imageEstrella2;
+    @FXML
+    private ImageView imageEstrella3;
+    @FXML
+    private ImageView imageEstrella4;
+    @FXML
+    private ImageView imageEstrella5;
+    @FXML
+    private Label labelArtista;
+    @FXML
+    private Label labelTituloArtista;
 
-   List<ImageView> estrellas = new ArrayList<>();
-   private Cancion cancion;
-   private static int calidad = 2;
-   private boolean reproduciendo = false;
-   private Usuario usuario = null;
-   private boolean repeticion = false;
+    List<ImageView> estrellas = new ArrayList<>();
+    private Cancion cancion;
+    private static int calidad = 2;
+    private boolean reproduciendo = false;
+    private Usuario usuario = null;
+    private boolean repeticion = false;
 
-   /**
-    * Método para asignar una canción que actualmente se reproduce
-    * @param cancion Cancion reproduciendo
-    */
-   public void setCancion(Cancion cancion) {
-      this.cancion = cancion;
-   }
+    /**
+     * Método para asignar una canción que actualmente se reproduce
+     *
+     * @param cancion Cancion reproduciendo
+     */
+    public void setCancion(Cancion cancion) {
+        this.cancion = cancion;
+    }
 
-   @FXML
-   void resaltarEstrella(MouseEvent event) {
-      ImageView imagen = (ImageView) (event.getSource());
-      imagen.setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
-   }
+    @FXML
+    void resaltarEstrella(MouseEvent event) {
+        ImageView imagen = (ImageView) (event.getSource());
+        imagen.setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
+    }
 
-   @FXML
-   void resetEstrella(MouseEvent event) {
-      ImageView imagen = (ImageView) (event.getSource());
-      imagen.setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
-   }
+    @FXML
+    void resetEstrella(MouseEvent event) {
+        ImageView imagen = (ImageView) (event.getSource());
+        imagen.setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
+    }
 
-   @FXML
-   void resaltarAnterior(MouseEvent event) {
-      imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewindSeleccionado.png"));
-   }
+    @FXML
+    void resaltarAnterior(MouseEvent event) {
+        imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewindSeleccionado.png"));
+    }
 
-   @FXML
-   void resaltarEngrane(MouseEvent event) {
-      imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settingsSeleccionado.png"));
-   }
+    @FXML
+    void resaltarEngrane(MouseEvent event) {
+        imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settingsSeleccionado.png"));
+    }
 
-   @FXML
-   void resaltarReproducir(MouseEvent event) {
-      if (reproduciendo) {
-         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausaSeleccionado.png"));
-      } else {
-         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducirSeleccionado.png"));
-      }
-   }
+    @FXML
+    void resaltarReproducir(MouseEvent event) {
+        if (reproduciendo) {
+            imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausaSeleccionado.png"));
+        } else {
+            imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducirSeleccionado.png"));
+        }
+    }
 
-   @FXML
-   void resaltarSiguiente(MouseEvent event) {
-      imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forwardSeleccionado.png"));
-   }
+    @FXML
+    void resaltarSiguiente(MouseEvent event) {
+        imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forwardSeleccionado.png"));
+    }
 
-   @FXML
-   void resaltarRepetir(MouseEvent event) {
-      if (repeticion) {
-         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
-      } else {
-         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
-      }
-   }
+    @FXML
+    void resaltarRepetir(MouseEvent event) {
+        if (repeticion) {
+            imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
+        } else {
+            imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
+        }
+    }
 
-   @FXML
-   void resetAnterior(MouseEvent event) {
-      imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewind.png"));
-   }
+    @FXML
+    void resetAnterior(MouseEvent event) {
+        imageAnterior.setImage(new Image("/presentacion/recursos/iconos/rewind.png"));
+    }
 
-   @FXML
-   void resetEngrane(MouseEvent event) {
-      imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settings.png"));
-   }
+    @FXML
+    void resetEngrane(MouseEvent event) {
+        imageEngrane.setImage(new Image("/presentacion/recursos/iconos/settings.png"));
+    }
 
-   @FXML
-   void resetReproducir(MouseEvent event) {
-      if (reproduciendo) {
-         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
-      } else {
-         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
-      }
-   }
+    @FXML
+    void resetReproducir(MouseEvent event) {
+        if (reproduciendo) {
+            imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
+        } else {
+            imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
+        }
+    }
 
-   @FXML
-   void resetSiguiente(MouseEvent event) {
-      imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forward.png"));
-   }
+    @FXML
+    void resetSiguiente(MouseEvent event) {
+        imageSiguiente.setImage(new Image("/presentacion/recursos/iconos/forward.png"));
+    }
 
-   @FXML
-   void resetRepetir(MouseEvent event) {
-      if (repeticion) {
-         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
-      } else {
-         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
-      }
+    @FXML
+    void resetRepetir(MouseEvent event) {
+        if (repeticion) {
+            imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
+        } else {
+            imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
+        }
 
-   }
+    }
 
-   /**
-    * Initializes the controller class.
-    */
-   @Override
-   public void initialize(URL url, ResourceBundle rb) {
-      estrellas.add(imageEstrella1);
-      estrellas.add(imageEstrella2);
-      estrellas.add(imageEstrella3);
-      estrellas.add(imageEstrella4);
-      estrellas.add(imageEstrella5);
-   }
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        estrellas.add(imageEstrella1);
+        estrellas.add(imageEstrella2);
+        estrellas.add(imageEstrella3);
+        estrellas.add(imageEstrella4);
+        estrellas.add(imageEstrella5);
+    }
 
-   /**
-    * Método para cargar la barra de reproducción con sus elementos y la asignación de la canción a
-    * reproducir
-    * @param cancionLocal Canción a reproducir
-    */
-   public void cargarBarraReproduccion(Cancion cancionLocal) {
-      labelTituloCancion.setText(cancionLocal.getNombre());
-      labelTituloArtista.setText(cancionLocal.getArtista());
+    /**
+     * Método para cargar la barra de reproducción con sus elementos y la
+     * asignación de la canción a reproducir
+     *
+     * @param cancionLocal Canción a reproducir
+     */
+    public void cargarBarraReproduccion(Cancion cancionLocal) {
+        labelTituloCancion.setText(cancionLocal.getNombre());
+        labelTituloArtista.setText(cancionLocal.getArtista());
 
-      labelTituloCancion.setVisible(true);
-      labelCalificacion.setVisible(true);
-      labelArtista.setVisible(true);
-      labelTituloArtista.setVisible(true);
+        labelTituloCancion.setVisible(true);
+        labelCalificacion.setVisible(true);
+        labelArtista.setVisible(true);
+        labelTituloArtista.setVisible(true);
 
-      imageEstrella1.setVisible(true);
-      imageEstrella2.setVisible(true);
-      imageEstrella3.setVisible(true);
-      imageEstrella4.setVisible(true);
-      imageEstrella5.setVisible(true);
+        if (IGUBibliotecaController.biblioteca) {
+            imageEstrella1.setVisible(true);
+            imageEstrella2.setVisible(true);
+            imageEstrella3.setVisible(true);
+            imageEstrella4.setVisible(true);
+            imageEstrella5.setVisible(true);
 
-      iluminarEstrellas(cancionLocal.getCalificacion());
-      cancion = cancionLocal;
-   }
+            iluminarEstrellas(cancionLocal.getCalificacion());
+        } else {
+            imageEstrella1.setDisable(true);
+            imageEstrella2.setDisable(true);
+            imageEstrella3.setDisable(true);
+            imageEstrella4.setDisable(true);
+            imageEstrella5.setDisable(true);
+        }
 
-   @FXML
-   private void clicReproducir() {
-      boolean pausa = Reproductor.pausaReanudar();
-      reproduciendo = !pausa;
-      if (reproduciendo) {
-         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
-      } else {
-         imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
-      }
-   }
+        cancion = cancionLocal;
+    }
 
-   @FXML
-   private void clicRepetir() {
-      repeticion = !repeticion;
-      Reproductor.repetir(repeticion);
-      if (repeticion) {
-         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
-      } else {
-         imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
-      }
-   }
+    @FXML
+    private void clicReproducir() {
+        boolean pausa = Reproductor.pausaReanudar();
+        reproduciendo = !pausa;
+        if (reproduciendo) {
+            imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
+        } else {
+            imageReproducir.setImage(new Image("/presentacion/recursos/iconos/reproducir.png"));
+        }
+    }
 
-   @FXML
-   private void clicAdelante() {
-      if (reproduciendo) {
-         List<CancionIntermediaria> colaTemporal = ColaReproduccion.getCola();
-         if (colaTemporal.size() == 1) {
-            Reproductor.rebobinar();
-         } else {
-            if (ColaReproduccion.getPosicionActual() < colaTemporal.size()) {
-               CancionIntermediaria cancionTemp = colaTemporal.get(ColaReproduccion.getPosicionActual()+1);
-               cargarBarraReproduccion(cancionTemp.getCancion());
-               Reproductor.reproducir(cancionTemp.getCancion(),
-                   cancionTemp.isLocal(), cancionTemp.getCalidad());
-            }
+    @FXML
+    private void clicRepetir() {
+        repeticion = !repeticion;
+        Reproductor.repetir(repeticion);
+        if (repeticion) {
+            imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetirSeleccionado.png"));
+        } else {
+            imageRepetir.setImage(new Image("/presentacion/recursos/iconos/repetir.png"));
+        }
+    }
 
-         }
-      }
-   }
-
-   @FXML
-   private void clicAtras() {
-      if (reproduciendo) {
-         List<CancionIntermediaria> colaTemporal = ColaReproduccion.getCola();
-         if (colaTemporal.size() == 1) {
-            Reproductor.rebobinar();
-         } else {
-            CancionIntermediaria cancionTemp = colaTemporal.get(ColaReproduccion.getPosicionActual() - 1);
-            cargarBarraReproduccion(cancionTemp.getCancion());
-            Reproductor.reproducir(cancionTemp.getCancion(),
-                cancionTemp.isLocal(), cancionTemp.getCalidad());
-
-         }
-      }
-   }
-
-   @FXML
-   void calificarCancion(MouseEvent event) {
-      ImageView imagen = (ImageView) (event.getSource());
-      String idImagen = imagen.getId();
-      String stringCalificacion = idImagen.substring(idImagen.length() - 1);
-      int calificacion = Integer.valueOf(stringCalificacion);
-      Integer[] calificacionEnvio = new Integer[2];
-      
-      cancion.setCalificacion(calificacion);
-      iluminarEstrellas(calificacion);
-      System.out.println("calificacion: " + cancion.getCalificacion());
-      calificacionEnvio[0] = cancion.getIdCancion();
-      calificacionEnvio[1] = cancion.getCalificacion();
-      Mensaje mensajeEnviar = new Mensaje("actualizarCalificación");
-      mensajeEnviar.setObjeto(calificacionEnvio);
-      Cliente.enviarMensaje(mensajeEnviar);
-   }
-
-   private void iluminarEstrellas(int calificacion) {
-      for (int i = 0; i < estrellas.size(); i++) {
-         if (i < calificacion) {
-            estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
-         } else {
-            estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
-         }
-      }
-   }
-
-   @FXML
-   void clicConfigurar(ActionEvent event) {
-      final String[] data = {"Automática", "Alta", "Media", "Baja"};
-      List<String> listICalidades = Arrays.asList(data);
-      ChoiceDialog choiceCalidad = new ChoiceDialog(listICalidades.get(0), listICalidades);
-      choiceCalidad.setHeaderText("Calidad del audio");
-      choiceCalidad.setContentText("Selecciona la calidad del audio");
-      Optional<ButtonType> eleccion = choiceCalidad.showAndWait();
-      if (eleccion.isPresent()) {
-         String selected = choiceCalidad.getResult().toString();
-         switch (selected) {
-            case "Alta":
-               calidad = 2;
-               break;
-            case "Media":
-               calidad = 1;
-               break;
-            case "Baja":
-               calidad = 0;
-               break;
-         }
-      }
-      calidad = 2;
-   }
-
-   /**
-    * Método para recuperar la canción y reproducirla
-    * @param cancion Canción a reproducir
-    * @param local Boolean para definir si la canción se podría encontrar en un directorio local
-    */
-   public void recuperarCancionYReproducir(Cancion cancion, boolean local) {
-      if (!checkExistencia(cancion.getRuta(), local)) {
-         try {
-            
-            ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
-            Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
-            while (!futureTask.isDone()) {
-
-            }
-            if (futureTask.get() == 1) {
-               cargarBarraReproduccion(cancion);
-               Reproductor.reproducir(cancion, local, calidad);
-               agregarCancionHistorial(cancion);
-               restaurarCola(new CancionIntermediaria(cancion, local, calidad));
-               setReproduciendo();
+    @FXML
+    private void clicAdelante() {
+        if (reproduciendo) {
+            List<CancionIntermediaria> colaTemporal = ColaReproduccion.getCola();
+            if (colaTemporal.size() == 1) {
+                Reproductor.rebobinar();
             } else {
-               Emergente.cargarEmergente("Error", "Imposible recuperar la canción, intenta más tarde.");
-            }
-         } catch (IOException | InterruptedException | ExecutionException ex) {
-            Logger.getLogger(IGUBarraReproduccionController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-      } else {
-         cargarBarraReproduccion(cancion);
-         Reproductor.reproducir(cancion, local, calidad);
-         agregarCancionHistorial(cancion);
-         restaurarCola(new CancionIntermediaria(cancion, local, calidad));
-         setReproduciendo();
-      }
-
-   }
-
-   /**
-    * Método para cargar el controller de la ventana
-    * @param usuario Usuario que ha ingresado al sistema
-    * @return Pane con la asignación del controller
-    */
-   public Pane abrirIGUBarraReproduccion(Usuario usuario) {
-      try {
-         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUBarraReproduccion.fxml"));
-
-         fxmlLoader.setController(this);
-         paneBarraReproduccion = fxmlLoader.load();
-         this.usuario = usuario;
-
-      } catch (IOException ex) {
-         Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      return paneBarraReproduccion;
-   }
-
-   private static boolean checkExistencia(String ruta, boolean local) {
-      String rutaCompleta;
-      String userHome = System.getProperty("user.home");
-      if (local) {
-         rutaCompleta = userHome + "/RombaFiles/local/" + ruta + "/" + calidad + ".mp3";
-      } else {
-         rutaCompleta = userHome + "/RombaFiles/cache/" + ruta + "/" + calidad + ".mp3";
-      }
-      File fileCheck = new File(rutaCompleta);
-      return fileCheck.exists();
-   }
-
-   private void agregarCancionHistorial(Cancion cancion) {
-      HashMap<Usuario, Cancion> hash = new HashMap<>();
-      hash.put(usuario, cancion);
-      Mensaje mensajeAgregarHistorial = new Mensaje("insertarEnHistorial");
-      mensajeAgregarHistorial.setObjeto(hash);
-      Cliente.enviarMensaje(mensajeAgregarHistorial);
-   }
-
-   private void restaurarCola(CancionIntermediaria cancion) {
-      ColaReproduccion.vaciarCola();
-      ColaReproduccion.agregarACola(cancion);
-   }
-
-   private void setReproduciendo() {
-      reproduciendo = true;
-      imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
-   }
-
-   void reajustarDatosColaReproduccion(Cancion cancion, boolean vaACola) {
-      if (vaACola) {
-         ColaReproduccion.agregarACola(new CancionIntermediaria(cancion, false, calidad));
-      } else {
-         ColaReproduccion.agregarAContinuacion(new CancionIntermediaria(cancion, false, calidad));
-      }
-   }
-
-   /**
-    * Método para descargar una canción a un directorio local
-    * @param cancion Canción a descargar
-    * @param local Boolean en caso de encontrarse en un directorio local
-    * @return Boolean del estatus de éxito
-    */
-   public static boolean obtenerCancion(Cancion cancion, boolean local) {
-      if (!checkExistencia(cancion.getRuta(), local)) {
-         try {
-            Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
-            ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
-            while (!futureTask.isDone()) {
+                if (ColaReproduccion.getPosicionActual() < colaTemporal.size()) {
+                    CancionIntermediaria cancionTemp = colaTemporal.get(ColaReproduccion.getPosicionActual() + 1);
+                    cargarBarraReproduccion(cancionTemp.getCancion());
+                    Reproductor.reproducir(cancionTemp.getCancion(),
+                            cancionTemp.isLocal(), cancionTemp.getCalidad());
+                }
 
             }
-            if (futureTask.get() == 1) {
-               return true;
+        }
+    }
+
+    @FXML
+    private void clicAtras() {
+        if (reproduciendo) {
+            List<CancionIntermediaria> colaTemporal = ColaReproduccion.getCola();
+            if (colaTemporal.size() == 1) {
+                Reproductor.rebobinar();
             } else {
-               Emergente.cargarEmergente("Error", "Imposible recuperar la canción, intenta más tarde.");
+                CancionIntermediaria cancionTemp = colaTemporal.get(ColaReproduccion.getPosicionActual() - 1);
+                cargarBarraReproduccion(cancionTemp.getCancion());
+                Reproductor.reproducir(cancionTemp.getCancion(),
+                        cancionTemp.isLocal(), cancionTemp.getCalidad());
+
             }
-         } catch (IOException | InterruptedException | ExecutionException ex) {
-            Logger.getLogger(IGUBarraReproduccionController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-      } else {
-         return true;
-      }
-      return false;
-   }
+        }
+    }
+
+    @FXML
+    void calificarCancion(MouseEvent event) {
+        ImageView imagen = (ImageView) (event.getSource());
+        String idImagen = imagen.getId();
+        String stringCalificacion = idImagen.substring(idImagen.length() - 1);
+        int calificacion = Integer.valueOf(stringCalificacion);
+        Integer[] calificacionEnvio = new Integer[2];
+
+        cancion.setCalificacion(calificacion);
+        iluminarEstrellas(calificacion);
+        System.out.println("calificacion: " + cancion.getCalificacion());
+        calificacionEnvio[0] = cancion.getIdCancion();
+        calificacionEnvio[1] = cancion.getCalificacion();
+        Mensaje mensajeEnviar = new Mensaje("actualizarCalificación");
+        mensajeEnviar.setObjeto(calificacionEnvio);
+        Cliente.enviarMensaje(mensajeEnviar);
+    }
+
+    private void iluminarEstrellas(int calificacion) {
+        for (int i = 0; i < estrellas.size(); i++) {
+            if (i < calificacion) {
+                estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrellaC.png"));
+            } else {
+                estrellas.get(i).setImage(new Image("/presentacion/recursos/iconos/estrella.png"));
+            }
+        }
+    }
+
+    @FXML
+    void clicConfigurar(ActionEvent event) {
+        final String[] data = {"Automática", "Alta", "Media", "Baja"};
+        List<String> listICalidades = Arrays.asList(data);
+        ChoiceDialog choiceCalidad = new ChoiceDialog(listICalidades.get(0), listICalidades);
+        choiceCalidad.setHeaderText("Calidad del audio");
+        choiceCalidad.setContentText("Selecciona la calidad del audio");
+        Optional<ButtonType> eleccion = choiceCalidad.showAndWait();
+        if (eleccion.isPresent()) {
+            String selected = choiceCalidad.getResult().toString();
+            switch (selected) {
+                case "Alta":
+                    calidad = 2;
+                    break;
+                case "Media":
+                    calidad = 1;
+                    break;
+                case "Baja":
+                    calidad = 0;
+                    break;
+            }
+        }
+        calidad = 2;
+    }
+
+    /**
+     * Método para recuperar la canción y reproducirla
+     *
+     * @param cancion Canción a reproducir
+     * @param local Boolean para definir si la canción se podría encontrar en un
+     * directorio local
+     */
+    public void recuperarCancionYReproducir(Cancion cancion, boolean local) {
+        if (!checkExistencia(cancion.getRuta(), local)) {
+            Thread recibir = new Thread() {
+                public void run() {
+                    try {
+
+                        ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
+                        Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
+                        while (!futureTask.isDone()) {
+
+                        }
+                        if (futureTask.get() == 1) {
+                            cargarBarraReproduccion(cancion);
+                            Reproductor.reproducir(cancion, local, calidad);
+                            agregarCancionHistorial(cancion);
+                            restaurarCola(new CancionIntermediaria(cancion, local, calidad));
+                            setReproduciendo();
+                        } else {
+                            Emergente.cargarEmergente("Error", "Imposible recuperar la canción, intenta más tarde.");
+                        }
+                    } catch (IOException | InterruptedException | ExecutionException ex) {
+                        Logger.getLogger(IGUBarraReproduccionController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+            recibir.start();
+
+        } else {
+            cargarBarraReproduccion(cancion);
+            Reproductor.reproducir(cancion, local, calidad);
+            agregarCancionHistorial(cancion);
+            restaurarCola(new CancionIntermediaria(cancion, local, calidad));
+            setReproduciendo();
+        }
+
+    }
+
+    /**
+     * Método para cargar el controller de la ventana
+     *
+     * @param usuario Usuario que ha ingresado al sistema
+     * @return Pane con la asignación del controller
+     */
+    public Pane abrirIGUBarraReproduccion(Usuario usuario) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUBarraReproduccion.fxml"));
+
+            fxmlLoader.setController(this);
+            paneBarraReproduccion = fxmlLoader.load();
+            this.usuario = usuario;
+
+        } catch (IOException ex) {
+            Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return paneBarraReproduccion;
+    }
+
+    private static boolean checkExistencia(String ruta, boolean local) {
+        String rutaCompleta;
+        String userHome = System.getProperty("user.home");
+        if (local) {
+            rutaCompleta = userHome + "/RombaFiles/local/" + ruta + "/" + calidad + ".mp3";
+        } else {
+            rutaCompleta = userHome + "/RombaFiles/cache/" + ruta + "/" + calidad + ".mp3";
+        }
+        File fileCheck = new File(rutaCompleta);
+        return fileCheck.exists();
+    }
+
+    private void agregarCancionHistorial(Cancion cancion) {
+        HashMap<Usuario, Cancion> hash = new HashMap<>();
+        hash.put(usuario, cancion);
+        Mensaje mensajeAgregarHistorial = new Mensaje("insertarEnHistorial");
+        mensajeAgregarHistorial.setObjeto(hash);
+        Cliente.enviarMensaje(mensajeAgregarHistorial);
+    }
+
+    private void restaurarCola(CancionIntermediaria cancion) {
+        ColaReproduccion.vaciarCola();
+        ColaReproduccion.agregarACola(cancion);
+    }
+
+    private void setReproduciendo() {
+        reproduciendo = true;
+        imageReproducir.setImage(new Image("/presentacion/recursos/iconos/pausa.png"));
+    }
+
+    void reajustarDatosColaReproduccion(Cancion cancion, boolean vaACola) {
+        if (vaACola) {
+            ColaReproduccion.agregarACola(new CancionIntermediaria(cancion, false, calidad));
+        } else {
+            ColaReproduccion.agregarAContinuacion(new CancionIntermediaria(cancion, false, calidad));
+        }
+    }
+
+    /**
+     * Método para descargar una canción a un directorio local
+     *
+     * @param cancion Canción a descargar
+     * @param local Boolean en caso de encontrarse en un directorio local
+     * @return Boolean del estatus de éxito
+     */
+    public static boolean obtenerCancion(Cancion cancion, boolean local) {
+        if (!checkExistencia(cancion.getRuta(), local)) {
+            try {
+                Future<Integer> futureTask = ClienteStreaming.recuperarCancion(cancion.getRuta(), local, calidad);
+                ClienteStreaming.solicitarCancion(cancion.getRuta(), calidad);
+                while (!futureTask.isDone()) {
+
+                }
+                if (futureTask.get() == 1) {
+                    return true;
+                } else {
+                    Emergente.cargarEmergente("Error", "Imposible recuperar la canción, intenta más tarde.");
+                }
+            } catch (IOException | InterruptedException | ExecutionException ex) {
+                Logger.getLogger(IGUBarraReproduccionController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return true;
+        }
+        return false;
+    }
 }

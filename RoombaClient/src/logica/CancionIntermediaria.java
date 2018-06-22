@@ -28,7 +28,4 @@ public class CancionIntermediaria {
    public int getCalidad() {
       return calidad;
    }
-   
-   
-
 }

@@ -56,7 +56,7 @@ public class IGUCancionesController implements Initializable {
     List<MenuItem> menues = new ArrayList<>();
     private List<Cancion> cancionesLocales;
     List<Album> albumes = new ArrayList<>();
-    boolean biblioteca;
+    static boolean biblioteca;
 
     public void setCanciones(List<Cancion> cancionesLocales) {
         this.cancionesLocales = cancionesLocales;
@@ -112,7 +112,7 @@ public class IGUCancionesController implements Initializable {
         tcColumnCalificacion.setCellValueFactory(new PropertyValueFactory<>("Calificacion"));
 
         tableCanciones.setItems(obsCanciones);
-        agregarListenersTablaCanciones(controladorBarraReproduccion);
+        //agregarListenersTablaCanciones(controladorBarraReproduccion);
     }
 
     public void agregarListenersTablaCanciones(IGUBarraReproduccionController controladorBarraReproduccion) {
@@ -136,7 +136,6 @@ public class IGUCancionesController implements Initializable {
 
                     seleccionMenuItem(row);
 
-                    rowMenu.getStyleClass().add("/presentacion/estilos/EstiloMenuContextual.css");
                     rowMenu.getItems().addAll(menuItemAgregarCancion, menuItemAgregarContinuacion, menuItemRadio, menuItemDescargar, menuItemEliminarCancion, menuItemAgregarALista);
 
                     //Eventos
@@ -225,12 +224,14 @@ public class IGUCancionesController implements Initializable {
 
     private void agregarNuevaLista() {
         String tituloLista = Emergente.cargarTextInputDialog(null, "Introduce el nombre de la lista:", null);
-        ListaReproduccion nuevaLista = new ListaReproduccion();
-        nuevaLista.setNombre(tituloLista);
-        listasReproduccion.add(nuevaLista);
-        Mensaje mensajeAgregarLista = new Mensaje("agregarLista");
-        mensajeAgregarLista.setObjeto(nuevaLista);
-        Cliente.enviarMensaje(mensajeAgregarLista);
+        if (tituloLista != null) {
+            ListaReproduccion nuevaLista = new ListaReproduccion();
+            nuevaLista.setNombre(tituloLista);
+            listasReproduccion.add(nuevaLista);
+            Mensaje mensajeAgregarLista = new Mensaje("agregarLista");
+            mensajeAgregarLista.setObjeto(nuevaLista);
+            Cliente.enviarMensaje(mensajeAgregarLista);
+        }
     }
 
     public void agregarCancionALista(Cancion cancion, ListaReproduccion lista) {

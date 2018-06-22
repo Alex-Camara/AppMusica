@@ -33,7 +33,7 @@ public class BibliotecaBD implements BibliotecaDao {
 
       String consulta = "select idCancion, nombre, artista,Album_idAlbum, ruta,"
               + " calificacion from Cancion inner join CancionLocal on "
-              + "idCancionLocal=idCancion where privada = 0 and idBiblioteca = ? ;";
+              + "idCancionLocal=idCancion where idBiblioteca = ? ;";
 
       sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);

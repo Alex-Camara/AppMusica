@@ -367,7 +367,8 @@ public class ManejadorCliente extends Thread {
             Album albumGuardado = albumServidor.guardarAlbum(cancion.getAlbum());
             cancion.setAlbum_idAlbum(albumGuardado.getIdAlbum());
             CancionDao cancionServidor = new CancionBD();
-            cancionServidor.guardarCancion(cancion);
+            boolean privada = true;
+            cancionServidor.guardarCancion(idBiblioteca, cancion, privada);
         }
     }
 }

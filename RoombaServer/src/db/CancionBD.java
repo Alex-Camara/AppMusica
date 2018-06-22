@@ -58,6 +58,22 @@ public class CancionBD implements CancionDao {
         cancion.setRuta(resultadoCancion.getString("ruta"));
         return cancion;
     }
+    
+    public int recuperarCancion(String nombre) throws SQLException {
+        Connection conexion = null;
+        conexion = Conexion.conectar();
+        PreparedStatement sentenciaCancion = null;
+        ResultSet resultadoCancion = null;
+        int idCancion = 0;
+        String consultaCancion = "SELECT * FROM Cancion WHERE nombre = ?;";
+        sentenciaCancion = conexion.prepareStatement(consultaCancion);
+        sentenciaCancion.setString(1, nombre);
+        resultadoCancion = sentenciaCancion.executeQuery();
+
+        resultadoCancion.next();
+        idCancion = resultadoCancion.getInt("idCancion");
+        return idCancion;
+    }
 
     @Override
     public int actualizarCalificacion(int idCancion, int calificacion) throws SQLException {
@@ -100,7 +116,7 @@ public class CancionBD implements CancionDao {
     }
 
     @Override
-    public int guardarCancion(Cancion cancion) throws SQLException {
+    public int guardarCancion(int idBiblioteca, Cancion cancion, boolean privada) throws SQLException {
         Connection conexion = null;
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
@@ -112,12 +128,16 @@ public class CancionBD implements CancionDao {
         sentencia.setString(2, cancion.getArtista());
         sentencia.setInt(3, cancion.getAlbum_idAlbum());
         sentencia.setString(4, cancion.getRuta());
-        sentencia.setBoolean(5, false);
+        sentencia.setBoolean(5, privada);
 
         resultado = sentencia.executeUpdate();
+        
+        int idCancion = recuperarCancion(cancion.getNombre());
+        cancion.setIdCancion(idCancion);
+        agregarCancionABiblioteca(idBiblioteca, cancion);
         return resultado;
     }
-
+    
     @Override
     public int agregarCancionABiblioteca(int idBiblioteca, Cancion cancion) throws SQLException {
         Connection conexion = null;
@@ -158,7 +178,7 @@ public class CancionBD implements CancionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "delete from cancionlocal_has_listareproduccion where idBiblioteca = ? and idCancionLocal = ?;";
+        String consulta = "delete from CancionLocal_has_ListaReproduccion where idBiblioteca = ? and idCancionLocal = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);
         sentencia.setInt(2, idCancion);
@@ -190,5 +210,4 @@ public class CancionBD implements CancionDao {
         }
         return canciones;
     }
-
 }

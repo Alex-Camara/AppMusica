@@ -115,5 +115,4 @@ public class UsuarioBD implements UsuarioDao {
         resultado = sentencia.executeUpdate();
         return resultado;
     }
-
 }

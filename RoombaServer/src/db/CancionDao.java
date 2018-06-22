@@ -20,7 +20,7 @@ public interface CancionDao {
    public Cancion recuperarCancion(int idCancion) throws SQLException;
    public int actualizarCalificacion(int idCancion, int calificacion) throws SQLException;
    public List<Cancion> recuperarCancionesExternas() throws SQLException;
-   public int guardarCancion(Cancion cancion) throws SQLException;
+   public int guardarCancion(int idBiblioteca, Cancion cancion, boolean privada) throws SQLException;
    public int agregarCancionABiblioteca(int idBiblioteca, Cancion cancion) throws SQLException;
    public int eliminarCancionLocal(int idBiblioteca, int idCancion) throws SQLException;
    public List<Cancion> recuperarCancionesAlbum(int idAlbum) throws SQLException;
