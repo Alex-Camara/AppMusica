@@ -32,23 +32,16 @@ public class Reproductor {
     */
    public static void reproducir(Cancion cancion, boolean local, int calidad) {
       String ruta = cancion.getRuta();
-      String userHome = System.getProperty("user.home");
-      String rutaCompleta;
-      if (local) {
-         rutaCompleta = userHome + "/RombaFiles/local/" + ruta + "/" + calidad + ".mp3";
-      } else {
-         rutaCompleta = userHome + "/RombaFiles/cache/" + ruta + "/" + calidad + ".mp3";
-      }
+      String rutaCompleta = obtenerRutaCompleta(ruta, local, calidad);
       if (mediaPlayer != null) {
          boolean playing = mediaPlayer.getStatus().equals(Status.PLAYING);
          if (playing) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(20),
                 new KeyValue(mediaPlayer.volumeProperty(), 0)));
+            timeline.pause();
             mediaPlayer.stop();
          }
       }
-      
-      ColaReproduccion.cambiarPosicion(+1);
       fileSound = new File(rutaCompleta);
       sound = new Media(fileSound.toURI().toString());
       mediaPlayer = new MediaPlayer(sound);
@@ -107,5 +100,23 @@ public class Reproductor {
             
          }
       }
+   }
+
+   /**
+    * Método para obtener la ruta completa de la ubicación de un archivo de audio
+    * @param ruta String base de la ruta
+    * @param local Boolean para determinar si el archivo es local permanente
+    * @param calidad int de la calidad del audio
+    * @return
+    */
+   public static String obtenerRutaCompleta(String ruta, boolean local, int calidad) {
+      String userHome = System.getProperty("user.home");
+      String rutaCompleta;
+      if (local) {
+         rutaCompleta = userHome + "/RombaFiles/local/" + ruta + "/" + calidad + ".mp3";
+      } else {
+         rutaCompleta = userHome + "/RombaFiles/cache/" + ruta + "/" + calidad + ".mp3";
+      }
+      return rutaCompleta;
    }
 }

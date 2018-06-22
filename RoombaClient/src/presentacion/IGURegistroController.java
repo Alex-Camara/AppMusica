@@ -133,7 +133,7 @@ public class IGURegistroController implements Initializable {
             controlador.abrirIGUBiblioteca(mainWindow, usuarioRecibido);
         } catch (IOException ex) {
             Logger.getLogger(IGURegistroController.class.getName()).log(Level.SEVERE, null, ex);
-            Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde”");
+            Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde");
         }
     }
 

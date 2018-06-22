@@ -102,7 +102,13 @@ public class IGUCancionesController implements Initializable {
         // TODO
     }
 
-    public void cargarTablaCanciones(List<Album> albumes, List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método para cargar la tabla de las canciones con lista de Album a utilizar
+    * @param albumes Lista de Album
+    * @param canciones Lista de Cancion
+    * @param controladorBarraReproduccion Controlador inicializado
+    */
+   public void cargarTablaCanciones(List<Album> albumes, List<Cancion> canciones, IGUBarraReproduccionController controladorBarraReproduccion) {
         this.albumes = albumes;
         tableCanciones.refresh();
         ObservableList<Cancion> obsCanciones = FXCollections.observableArrayList(canciones);
@@ -115,7 +121,11 @@ public class IGUCancionesController implements Initializable {
         //agregarListenersTablaCanciones(controladorBarraReproduccion);
     }
 
-    public void agregarListenersTablaCanciones(IGUBarraReproduccionController controladorBarraReproduccion) {
+   /**
+    * Método agregar listener a tabla de canciones
+    * @param controladorBarraReproduccion Controlador inicializado para utilizar métodos externos
+    */
+   public void agregarListenersTablaCanciones(IGUBarraReproduccionController controladorBarraReproduccion) {
         tableCanciones.setRowFactory(
                 new Callback<TableView<Cancion>, TableRow<Cancion>>() {
             @Override
@@ -145,7 +155,7 @@ public class IGUCancionesController implements Initializable {
                     });
                     menuItemDescargar.setOnAction((ActionEvent) -> {
                         Cancion cancion = row.getItem();
-                        IGUBarraReproduccionController.obtenerCancion(cancion, true);
+                        IGUBarraReproduccionController.descargarCancion(cancion, true);
                     });
                     menuItemEliminarCancion.setOnAction((ActionEvent) -> {
                         Cancion cancion = row.getItem();
@@ -173,7 +183,7 @@ public class IGUCancionesController implements Initializable {
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         Cancion cancion = row.getItem();
-                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion, false);
+                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion);
                         controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }
                 });
@@ -191,7 +201,7 @@ public class IGUCancionesController implements Initializable {
         });
     }
 
-    public void seleccionMenuItem(TableRow<Cancion> row) {
+    private void seleccionMenuItem(TableRow<Cancion> row) {
         for (int i = 0; i < listasReproduccion.size(); i++) {
             MenuItem menuItem = new MenuItem(listasReproduccion.get(i).getNombre());
             menues.add(menuItem);
@@ -234,7 +244,12 @@ public class IGUCancionesController implements Initializable {
         }
     }
 
-    public void agregarCancionALista(Cancion cancion, ListaReproduccion lista) {
+   /**
+    * Método para agregar canción a lista de reproducción
+    * @param cancion Cancion a agregar a lista
+    * @param lista ListaReproducción a añadir la canción
+    */
+   public void agregarCancionALista(Cancion cancion, ListaReproduccion lista) {
         boolean duplicada = verificarDuplicada(cancion, lista, listasReproduccion);
 
         if (!duplicada) {
@@ -273,7 +288,11 @@ public class IGUCancionesController implements Initializable {
         return duplicada;
     }
 
-    public void agregarABiblioteca(Cancion cancion) {
+   /**
+    * Método para agregar una canción a la biblioteca personal
+    * @param cancion Cancion a añadir
+    */
+   public void agregarABiblioteca(Cancion cancion) {
         boolean repetida = false;
 
         for (int i = 0; i < cancionesLocales.size(); i++) {
@@ -290,7 +309,11 @@ public class IGUCancionesController implements Initializable {
         }
     }
 
-    public void eliminarCancionDeBiblioteca(Integer idCancion) {
+   /**
+    * Método para eliminar una canción de la biblioteca  personal
+    * @param idCancion int del identificador de la canción
+    */
+   public void eliminarCancionDeBiblioteca(Integer idCancion) {
         boolean eliminar = Emergente.cargarEmergenteConOpciones("Eliminar canción", "¿Estás seguro de eliminar esta canción de tu biblioteca?");
         System.out.println("respuesta: " + eliminar);
         Mensaje mensaje = new Mensaje("eliminarCancion");
@@ -299,14 +322,23 @@ public class IGUCancionesController implements Initializable {
         Cliente.enviarMensaje(mensaje);
     }
 
-    public void crearRadio(int idCancion) {
+   /**
+    * Método para crear una rádio a partir del identificador de una canción
+    * @param idCancion int del identificador de la canción
+    */
+   public void crearRadio(int idCancion) {
         int idGenero = recuperarGenero(idCancion);
         Mensaje mensaje = new Mensaje("crearRadio");
         mensaje.setObjeto(idGenero);
         Cliente.enviarMensaje(mensaje);
     }
 
-    public int recuperarGenero(int idCancion) {
+   /**
+    * Método para recuperar el identificador de género de una canción
+    * @param idCancion int del identificador de la canción
+    * @return int del identificador del Genero
+    */
+   public int recuperarGenero(int idCancion) {
         int idGenero = 0;
         for (int i = 0; i < albumes.size(); i++) {
             if (idCancion == albumes.get(i).getIdGenero()) {
@@ -316,7 +348,11 @@ public class IGUCancionesController implements Initializable {
         return idGenero;
     }
 
-    public Pane abrirIGUCanciones() {
+   /**
+    * Método para abrir el inicializar el controllador de la clase
+    * @return Pane inicializado
+    */
+   public Pane abrirIGUCanciones() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/presentacion/IGUCanciones.fxml"));
 

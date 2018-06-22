@@ -68,31 +68,6 @@ public class ClienteStreaming {
             }
         }).start();
     }
-
-    /**
-     * Método para solicitar los datos de una canción. Predefinida la calidad
-     * más alta.
-     *
-     * @param ruta String de la ruta del archivo de la canción
-     */
-    public static void solicitarCancion(String ruta) {
-        new Thread(() -> {
-            try {
-                final String rutaCompleta = ruta + "/0.mp3";
-                salida = new PrintWriter(cliente.getOutputStream(), true);
-                salida.print(rutaCompleta);
-                salida.flush(); //Necesario para no añadir un salto en la direccón
-                System.out.println("Canción solicitada");
-            } catch (SocketException ex) {
-                abrirConexion();
-                Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                abrirConexion();
-                Logger.getLogger(ClienteStreaming.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }).start();
-    }
-
     /**
      * Método para recuperar los datos de la canción por medio de la conexión
      * del socket antes establecida.
@@ -100,6 +75,7 @@ public class ClienteStreaming {
      * @param ruta String de la ruta del archivo. Utilizada para guardarla
      * @param local Boolean para determinar si es un archivo caché o una
      * descarga a archivo local
+    * @param calidad int de la calidad deseada a descargar
      * @return Future<Integer> para validar la disponibilidad de la información
      * de la canción
      * @throws IOException
@@ -117,13 +93,13 @@ public class ClienteStreaming {
                     fileCancion = new File(userHome + "/RombaFiles/cache/" + ruta);
                 }
                 fileCancion.mkdirs();
+                System.out.println("Calidad "+ calidad);
                 FileOutputStream fos = new FileOutputStream(fileCancion + "/" + calidad + ".mp3");
                 System.out.println("file cancion: " + fileCancion);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 InputStream is = cliente.getInputStream();
                 int bytesRead = 0;
                 while ((bytesRead = is.read(paquete)) != -1) {
-                    System.out.println("bytes read: " + bytesRead);
                     bos.write(paquete, 0, bytesRead);
                 }
                 bos.flush();

@@ -52,7 +52,6 @@ public class RoombaClient extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Cliente.abrirConexion();
         launch(args);
     }
 

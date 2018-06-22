@@ -113,7 +113,7 @@ public class IGUArtistasController implements Initializable {
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         Cancion cancion = row.getItem();
-                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion, false);
+                        controladorBarraReproduccion.recuperarCancionYReproducir(cancion);
                         controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }
                 });

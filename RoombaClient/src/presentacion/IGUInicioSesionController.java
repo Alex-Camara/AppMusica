@@ -68,7 +68,7 @@ public class IGUInicioSesionController implements Initializable {
                 }
             } catch (IOException ex) {
                 Logger.getLogger(IGUInicioSesionController.class.getName()).log(Level.SEVERE, null, ex);
-                Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde”");
+                Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde");
             }
         }
     }
