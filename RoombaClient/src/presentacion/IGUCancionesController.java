@@ -256,6 +256,7 @@ public class IGUCancionesController implements Initializable {
             HashMap<ListaReproduccion, Cancion> hash = new HashMap<>();
             hash.put(lista, cancion);
             Mensaje mensajeAgregarCancionALista = new Mensaje("agregarCancionALista");
+            System.out.println("agregando canción a lista...");
             mensajeAgregarCancionALista.setObjeto(hash);
             Cliente.enviarMensaje(mensajeAgregarCancionALista);
 

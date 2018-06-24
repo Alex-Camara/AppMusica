@@ -91,13 +91,13 @@ public class IGUAgregarCancionLocalController implements Initializable {
             Cancion cancion = new Cancion();
             Album album = new Album();
 
-            cancion.setNombre(tFieldNombreArchivo.getText());
-            cancion.setArtista(tFieldArtistaArchivo.getText());
-            album.setNombre(tFieldAlbumArchivo.getText());
+            cancion.setNombre(tFieldNombreArchivo.getText().trim());
+            cancion.setArtista(tFieldArtistaArchivo.getText().trim());
+            album.setNombre(tFieldAlbumArchivo.getText().trim());
             album.setIdGenero(comboGenero.getSelectionModel().getSelectedItem().getIdGenero());
             cancion.setAlbum(album);
-            String directorioAGuardar =cancion.getArtista()
-                    + "/" + cancion.getAlbum() + "/" + cancion.getNombre() + "/";
+            String directorioAGuardar = cancion.getArtista()
+                    + "/" + cancion.getAlbum() + "/" + cancion.getNombre();
             cancion.setRuta(directorioAGuardar);
             hashmapCanciones.put(cancion, file);
 
@@ -130,45 +130,62 @@ public class IGUAgregarCancionLocalController implements Initializable {
         if (!listaArchivos.isEmpty()) {
             Thread recibir = new Thread() {
                 public void run() {
-                    try {
-
-                        for (int i = 0; i < listaArchivos.size(); i++) {
+                    for (int i = 0; i < listaArchivos.size(); i++) {
+                        try {
                             ClienteFormatos.abrirConexion();
                             System.out.println("abrir conexión");
                             Cancion cancion = listaArchivos.get(i);
                             File archivo = hashmapCanciones.get(cancion);
                             ClienteFormatos.enviarArchivo(cancion, archivo);
                             ClienteFormatos.cerrarConexion();
+                        } catch (IOException ex) {
+                            Emergente.cargarEmergente("Aviso", "Hubo un error al subir la canción");
+                            Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            guardarCanciones();
+                            Platform.runLater(() -> {
+
+                                Emergente.cargarEmergente("Aviso", "Canciones subidas");
+                                resetPane(esCreador);
+                                listaArchivos.clear();
+                                hashmapCanciones.clear();
+                                listArchivos.getItems().clear();
+                            });
                         }
-                    } catch (IOException ex) {
-                        Platform.runLater(() -> {
-                            Emergente.cargarEmergente("Error", "Sin servicio, intenta más tarde");
-                        });
-                        Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
                 }
             };
             recibir.start();
-            try {
+            /*try {
                 recibir.join();
-                Emergente.cargarEmergente("Aviso", "Canciones subidas");
-                guardarCanciones();
-                resetPane(esCreador);
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         } else {
             Emergente.cargarEmergente("Advertencia", "Sin canciones que agregar");
         }
     }
 
     /**
-     * Métod para agregar las canciones seleccionadas al servidor
+     * Método para agregar las canciones seleccionadas al servidor
      */
     public void guardarCanciones() {
-        Mensaje mensaje = new Mensaje("guardarCanciones");
-        mensaje.setObjeto(listaArchivos);
-        Cliente.enviarMensaje(mensaje);
+        System.out.println("se guardo una vez");
+        System.out.println("tipo de usuario: " + artista);
+        if (artista != null) {
+            //System.out.println("entro al 1");
+            Mensaje mensaje = new Mensaje("guardarCancionesCreador");
+            mensaje.setObjeto(listaArchivos);
+            Cliente.enviarMensaje(mensaje);
+        } else {
+            //System.out.println("entro al 2");
+            Mensaje mensaje = new Mensaje("guardarCanciones");
+            mensaje.setObjeto(listaArchivos);
+            Cliente.enviarMensaje(mensaje);
+        }
+
     }
 
     /**

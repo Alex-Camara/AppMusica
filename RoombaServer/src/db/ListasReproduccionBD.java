@@ -62,9 +62,9 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         ResultSet resultado = null;
         List<Cancion> listasCanciones = new ArrayList<>();
 
-        String consulta = "select nombre, artista, calificacion, Album_idAlbum from CancionLocal_has_ListaReproduccion "
+        String consulta = "select nombre, artista, calificacion, Album_idAlbum, ruta from CancionLocal_has_ListaReproduccion "
                 + "chl inner join CancionLocal cl on chl.idCancionLocal=cl.idCancionLocal inner join "
-                + "Cancion on idCancion = cl.idCancionLocal and chl.idBiblioteca = ? and "
+                + "Cancion c on c.idCancion = cl.idCancionLocal and chl.idBiblioteca = ? and "
                 + "idListaReproduccion = ?;";
 
         try {
@@ -79,6 +79,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
                 cancion.setArtista(resultado.getString("artista"));
                 cancion.setCalificacion(resultado.getInt("calificacion"));
                 cancion.setAlbum_idAlbum(resultado.getInt("Album_idAlbum"));
+                cancion.setRuta(resultado.getString("ruta"));
                 listasCanciones.add(cancion);
 
             }

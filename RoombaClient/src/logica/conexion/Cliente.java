@@ -22,7 +22,7 @@ import presentacion.IGUBibliotecaController;
 public class Cliente {
 
    private static final int PUERTO = 1234;
-   private static final String DIRECCION_IP = "127.0.0.1";
+   private static final String DIRECCION_IP = "192.168.43.130";
    public static ObjectInputStream entradaRed;
    private static ObjectOutputStream salidaRed;
    private static Socket socket = null;

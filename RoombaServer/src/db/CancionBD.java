@@ -195,7 +195,7 @@ public class CancionBD implements CancionDao {
         ResultSet resultado = null;
         List<Cancion> canciones = new ArrayList<>();
 
-        String consulta = "SELECT * FROM Cancion WHERE privada = 0 and idAlbum = ?;";
+        String consulta = "SELECT * FROM Cancion WHERE privada = 0 and Album_idAlbum = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idAlbum);
         resultado = sentencia.executeQuery();

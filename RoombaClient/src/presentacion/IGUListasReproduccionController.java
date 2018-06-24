@@ -86,7 +86,6 @@ public class IGUListasReproduccionController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }
 
    /**
@@ -138,6 +137,7 @@ public class IGUListasReproduccionController implements Initializable {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         ListaReproduccion listaSeleccionadata = row.getItem();
                         habilitarCanciones(listaSeleccionadata);
+                        System.out.println("lista seleccionada: " + listaSeleccionadata.getCanciones());
                     }
                 });
                 return row;
@@ -187,6 +187,7 @@ public class IGUListasReproduccionController implements Initializable {
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         Cancion cancion = row.getItem();
+                        System.out.println("ruta de la cancion: " + cancion.getRuta());
                         controladorBarraReproduccion.recuperarCancionYReproducir(cancion);
                         controladorBarraReproduccion.cargarBarraReproduccion(cancion);
                     }

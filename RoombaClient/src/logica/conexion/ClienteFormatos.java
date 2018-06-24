@@ -16,7 +16,7 @@ public class ClienteFormatos {
 
     static Socket socket;
     static int PORT = 1236;
-    private static final String DIRECCION_IP = "192.168.0.34";
+    private static final String DIRECCION_IP = "192.168.43.130";
 
    /**
     * Método para establecer la conexión con el servidor

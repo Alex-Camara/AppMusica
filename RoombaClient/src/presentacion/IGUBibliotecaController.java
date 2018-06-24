@@ -300,7 +300,7 @@ public class IGUBibliotecaController implements Initializable {
                 usuarioLocal.setNombreArtistico(nombreArtistico);
                 mensaje.setObjeto(usuarioLocal);
                 Cliente.enviarMensaje(mensaje);
-                buttonContenido.setText("Subir contenido");
+                buttonContenido.setText("       Subir contenido");
                 usuario.setTipoUsuario("creador");
                 abrirSubirContenidoCreador(usuario);
             }
@@ -325,7 +325,7 @@ public class IGUBibliotecaController implements Initializable {
     private void clicSalir() throws InterruptedException {
         Mensaje mensajeSalida = new Mensaje("cerrarConexión");
         Cliente.enviarMensaje(mensajeSalida);
-        ClienteStreaming.cerrarConexion();
+        //ClienteStreaming.cerrarConexion();
         String userHome = System.getProperty("user.home");
         String finalPath = userHome + "/RombaFiles/cache/";
         File file = new File(finalPath);
@@ -353,7 +353,10 @@ public class IGUBibliotecaController implements Initializable {
             ocultarSeleccion();
             buttonRadio.setStyle(COLOR_TEXTO_RESALTADO);
             controladorRadio.cargarTablaCanciones(cancionesRadio, controladorBarraReproduccion);
-            borderPanePrincipal.setCenter(paneRadio);
+            Platform.runLater(() -> {
+                borderPanePrincipal.setCenter(paneRadio);
+            });
+
         }
     }
 
@@ -524,7 +527,14 @@ public class IGUBibliotecaController implements Initializable {
                 clicCanciones();
                 break;
             case "calificacionGuardada":
-                clicCanciones();
+                Platform.runLater(() -> {
+                    clicCanciones();
+                });
+                break;
+            case "cancionesGuardadas":
+                Platform.runLater(() -> {
+                    clicCanciones();
+                });
                 break;
             case "cancionesRadio":
                 cancionesRadio = (List<Cancion>) mensaje.getObjeto();

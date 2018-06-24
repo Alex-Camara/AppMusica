@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class ClienteStreaming {
 
-    private static final String HOST = "192.168.0.34";
+    private static final String HOST = "192.168.43.130";
     private static final int PUERTO = 1235;
     private static Socket cliente;
     private static PrintWriter salida;
@@ -34,7 +34,7 @@ public class ClienteStreaming {
     public static void abrirConexion() {
         try {
             InetAddress inetAddress = InetAddress.getByName(HOST);
-            cliente = new Socket("localhost", PUERTO);
+            cliente = new Socket(HOST, PUERTO);
             System.out.println("Conexión establecida con servidor de streaming");
         } catch (UnknownHostException ex) {
             System.out.println("\n!ID de host no encontrado¡\n");
@@ -83,6 +83,13 @@ public class ClienteStreaming {
     public static Future<Integer> recuperarCancion(String ruta, boolean local, int calidad) throws IOException {
         return Executors.newSingleThreadExecutor().submit(() -> {
             try {
+                abrirConexion();
+                final String rutaCompleta = ruta + "/" + calidad + ".mp3";
+                salida = new PrintWriter(cliente.getOutputStream(), true);
+                salida.print(rutaCompleta);
+                salida.flush(); //Necesario para no añadir un salto en la direccón
+                System.out.println("Canción solicitada");
+                
                 byte[] paquete = new byte[4096];
                 byte[] bufferTotal = new byte[0];
                 String userHome = System.getProperty("user.home");
