@@ -306,27 +306,29 @@ public class IGUBarraReproduccionController implements Initializable {
 
     @FXML
     void clicConfigurar(ActionEvent event) {
-        final String[] data = {"Alta", "Media", "Baja"};
+        final String[] data = {"Baja", "Media", "Alta"};
         List<String> listICalidades = Arrays.asList(data);
-        ChoiceDialog choiceCalidad = new ChoiceDialog(listICalidades.get(0), listICalidades);
+        ChoiceDialog choiceCalidad = new ChoiceDialog(listICalidades.get(calidad), listICalidades);
         choiceCalidad.setHeaderText("Calidad del audio");
         choiceCalidad.setContentText("Selecciona la calidad del audio");
         Optional<ButtonType> eleccion = choiceCalidad.showAndWait();
         if (eleccion.isPresent()) {
             String selected = choiceCalidad.getResult().toString();
             switch (selected) {
-                case "Alta":
-                    calidad = 2;
+                case "Baja":
+                    calidad = 0;
                     break;
                 case "Media":
                     calidad = 1;
                     break;
-                case "Baja":
+                case "Alta":
+                    calidad = 2;
+                    break;
+                default:
                     calidad = 0;
                     break;
             }
         }
-        calidad = 2;
     }
 
     /**
