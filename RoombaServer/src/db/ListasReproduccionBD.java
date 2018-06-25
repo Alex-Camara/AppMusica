@@ -62,10 +62,10 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         ResultSet resultado = null;
         List<Cancion> listasCanciones = new ArrayList<>();
 
-        String consulta = "select nombre, artista, calificacion, Album_idAlbum, ruta from CancionLocal_has_ListaReproduccion "
-                + "chl inner join CancionLocal cl on chl.idCancionLocal=cl.idCancionLocal inner join "
-                + "Cancion c on c.idCancion = cl.idCancionLocal and chl.idBiblioteca = ? and "
-                + "idListaReproduccion = ?;";
+        String consulta = "select chl.idCancion,nombre,artista, calificacion, Album_idAlbum, ruta from "
+                + "CancionLocal_has_ListaReproduccion chl inner join "
+                + "CancionLocal cl on chl.idCancion=cl.idCancion inner join Cancion c on "
+                + "cl.idCancion= c.idCancion and chl.idBiblioteca= ? and idListaReproduccion = ?;";
 
         try {
             sentencia = conexion.prepareStatement(consulta);
@@ -75,6 +75,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
             resultado = sentencia.executeQuery();
             while (resultado != null && resultado.next()) {
                 Cancion cancion = new Cancion();
+                cancion.setIdCancion(resultado.getInt("idCancion"));
                 cancion.setNombre(resultado.getString("nombre"));
                 cancion.setArtista(resultado.getString("artista"));
                 cancion.setCalificacion(resultado.getInt("calificacion"));
@@ -155,7 +156,7 @@ public class ListasReproduccionBD implements ListasReproduccionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into CancionLocal_has_ListaReproduccion (idBiblioteca, idCancionLocal, idListaReproduccion) values(?, ?, ?)";
+        String consulta = "insert into CancionLocal_has_ListaReproduccion (idBiblioteca, idCancion, idListaReproduccion) values(?, ?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, lista.getIdBiblioteca());
         sentencia.setInt(2, cancion.getIdCancion());

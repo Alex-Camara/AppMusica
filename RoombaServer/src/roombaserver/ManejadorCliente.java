@@ -83,9 +83,9 @@ public class ManejadorCliente extends Thread {
      */
     public boolean escucharMensajes() throws SQLException {
         boolean continuar = true;
-
+        Mensaje mensajeRecibido;
         try {
-            Mensaje mensajeRecibido = (Mensaje) entrada.readObject();
+            mensajeRecibido = (Mensaje) entrada.readObject();
 
             String asunto = mensajeRecibido.getAsunto();
             System.out.println("Peticion: " + asunto);
@@ -200,8 +200,8 @@ public class ManejadorCliente extends Thread {
                     Map.Entry<ListaReproduccion, Cancion> entry = hash.entrySet().iterator().next();
                     lista2 = entry.getKey();
                     Cancion cancion2 = entry.getValue();
-                    System.out.println("lista: " + lista2);
-                    System.out.println("cancion: " + cancion2);
+                    System.out.println("cancion a lista: " + cancion2);
+                    System.out.println("lista para agregar: " + lista2);
                     listaServidor.agregarCancionALista(cancion2, lista2);
                     listasReproduccion = listaServidor.recuperarListas(idBiblioteca);
                     mensaje = new Mensaje("listasReproduccion");
@@ -232,17 +232,17 @@ public class ManejadorCliente extends Thread {
                     break;
                 case "guardarCanciones":
                     List<Cancion> cancionesAGuardar = (List<Cancion>) mensajeRecibido.getObjeto();
-                    System.out.println("canciones: " + cancionesAGuardar);
+                    System.out.println("canciones a guardar: " + cancionesAGuardar);
                     guardarCanciones(cancionesAGuardar, true);
-                    mensaje = new Mensaje("cancionesAgregadas");
+                    mensaje = new Mensaje("cancionesGuardadas");
                     salida.writeObject(mensaje);
                     salida.flush();
                     break;
                 case "guardarCancionesCreador":
-                    cancionesAGuardar = (List<Cancion>) mensajeRecibido.getObjeto();
-                    System.out.println("canciones: " + cancionesAGuardar);
-                    guardarCanciones(cancionesAGuardar, false);
-                    mensaje = new Mensaje("cancionesAgregadas");
+                     List<Cancion> cancionesAGuardar2 = (List<Cancion>) mensajeRecibido.getObjeto();
+                    System.out.println("canciones a guardar: " + cancionesAGuardar2);
+                    guardarCanciones(cancionesAGuardar2, false);
+                    mensaje = new Mensaje("cancionesGuardadas");
                     salida.writeObject(mensaje);
                     salida.flush();
                     break;
@@ -285,6 +285,7 @@ public class ManejadorCliente extends Thread {
                     break;
             }
         } catch (IOException | ClassNotFoundException ex) {
+            mensajeRecibido = null;
             Logger.getLogger(ManejadorCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         return continuar;

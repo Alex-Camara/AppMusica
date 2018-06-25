@@ -82,7 +82,7 @@ public class CancionBD implements CancionDao {
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
 
-        String consulta = "update CancionLocal SET calificacion = ? where idCancionLocal = ?;";
+        String consulta = "update CancionLocal SET calificacion = ? where idCancion = ?;";
 
         try {
             sentencia = conexion.prepareStatement(consulta);
@@ -145,11 +145,11 @@ public class CancionBD implements CancionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "insert into CancionLocal (idBiblioteca, idCancionLocal) values(?, ?)";
+        String consulta = "insert into CancionLocal (idBiblioteca, idCancion) values(?, ?)";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);
         sentencia.setInt(2, cancion.getIdCancion());
-
+        System.out.println("id de cancion a agregar: " + cancion.getIdCancion());
         resultado = sentencia.executeUpdate();
         return resultado;
     }
@@ -163,7 +163,7 @@ public class CancionBD implements CancionDao {
 
         eliminarCancionDeListas(idBiblioteca, idCancion);
         
-        String consulta = "delete from CancionLocal where idBiblioteca = ? and idCancionLocal = ?;";
+        String consulta = "delete from CancionLocal where idBiblioteca = ? and idCancion = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);
         sentencia.setInt(2, idCancion);
@@ -178,7 +178,7 @@ public class CancionBD implements CancionDao {
         PreparedStatement sentencia = null;
         int resultado = 0;
 
-        String consulta = "delete from CancionLocal_has_ListaReproduccion where idBiblioteca = ? and idCancionLocal = ?;";
+        String consulta = "delete from CancionLocal_has_ListaReproduccion where idBiblioteca = ? and idCancion = ?;";
         sentencia = conexion.prepareStatement(consulta);
         sentencia.setInt(1, idBiblioteca);
         sentencia.setInt(2, idCancion);

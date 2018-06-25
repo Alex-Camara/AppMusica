@@ -504,6 +504,12 @@ public class IGUBibliotecaController implements Initializable {
                 break;
             case "listasReproduccion":
                 listasReproduccion = (List<ListaReproduccion>) mensaje.getObjeto();
+                System.out.println("listas de reproducción: " + listasReproduccion);
+                for (int i = 0; i < listasReproduccion.size(); i++) {
+                    for (int j = 0; j < listasReproduccion.get(i).getCanciones().size(); j++) {
+                        System.out.println("cancion: " + listasReproduccion.get(i).getCanciones().get(i).getNombre());
+                    }
+                }
                 controladorCanciones.setListasReproduccion(listasReproduccion);
                 controladorCanciones.cargarTablaCanciones(albumes, canciones, controladorBarraReproduccion);
                 controladorCanciones.agregarListenersTablaCanciones(controladorBarraReproduccion);

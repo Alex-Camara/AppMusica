@@ -130,28 +130,29 @@ public class IGUAgregarCancionLocalController implements Initializable {
         if (!listaArchivos.isEmpty()) {
             Thread recibir = new Thread() {
                 public void run() {
-                    for (int i = 0; i < listaArchivos.size(); i++) {
-                        try {
+                    try {
+                        for (int i = 0; i < listaArchivos.size(); i++) {
+
                             ClienteFormatos.abrirConexion();
                             System.out.println("abrir conexión");
                             Cancion cancion = listaArchivos.get(i);
                             File archivo = hashmapCanciones.get(cancion);
                             ClienteFormatos.enviarArchivo(cancion, archivo);
                             ClienteFormatos.cerrarConexion();
-                        } catch (IOException ex) {
-                            Emergente.cargarEmergente("Aviso", "Hubo un error al subir la canción");
-                            Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
-                        } finally {
-                            guardarCanciones();
-                            Platform.runLater(() -> {
-
-                                Emergente.cargarEmergente("Aviso", "Canciones subidas");
-                                resetPane(esCreador);
-                                listaArchivos.clear();
-                                hashmapCanciones.clear();
-                                listArchivos.getItems().clear();
-                            });
                         }
+                    } catch (IOException ex) {
+                        Emergente.cargarEmergente("Aviso", "Hubo un error al subir la canción");
+                        Logger.getLogger(IGUAgregarCancionLocalController.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        guardarCanciones();
+                        Platform.runLater(() -> {
+
+                            Emergente.cargarEmergente("Aviso", "Canciones subidas");
+                            resetPane(esCreador);
+                            listaArchivos.clear();
+                            hashmapCanciones.clear();
+                            listArchivos.getItems().clear();
+                        });
                     }
 
                 }
@@ -177,13 +178,18 @@ public class IGUAgregarCancionLocalController implements Initializable {
         if (artista != null) {
             //System.out.println("entro al 1");
             Mensaje mensaje = new Mensaje("guardarCancionesCreador");
+            System.out.println("canciones a enviar: " + listaArchivos);
             mensaje.setObjeto(listaArchivos);
             Cliente.enviarMensaje(mensaje);
+
+            System.out.println("lista de archivos resultantes: " + listaArchivos);
         } else {
             //System.out.println("entro al 2");
             Mensaje mensaje = new Mensaje("guardarCanciones");
+            System.out.println("canciones a enviar: " + listaArchivos);
             mensaje.setObjeto(listaArchivos);
             Cliente.enviarMensaje(mensaje);
+
         }
 
     }
