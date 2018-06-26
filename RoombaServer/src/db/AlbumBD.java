@@ -93,7 +93,7 @@ public class AlbumBD implements AlbumDao {
         conexion = Conexion.conectar();
         PreparedStatement sentencia = null;
         ResultSet resultado = null;
-        Album album = new Album();
+        
         List<Album> albumes = new ArrayList<>();
 
         String consulta = "SELECT * FROM Album WHERE idGenero = ?;";
@@ -103,6 +103,9 @@ public class AlbumBD implements AlbumDao {
         resultado = sentencia.executeQuery();
 
         while (resultado != null && resultado.next()) {
+            Album album = new Album();
+            album.setNombre(resultado.getString("nombre"));
+            System.out.println("nombre recuperado: " + album.getNombre());
             album.setIdAlbum(resultado.getInt("idAlbum"));
             album.setIdGenero(resultado.getInt("idGenero"));
             albumes.add(album);

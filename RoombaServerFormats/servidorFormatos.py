@@ -11,16 +11,7 @@ class ClientThread(threading.Thread):
         self.csocket = clientsocket
         print ("Nueva conexion ", clientAddress)
     def run(self):
-        print ("Connection from : ", clientAddress)
-        #self.csocket.send(bytes("Hi, This is from Server..",'utf-8'))
-        msg = ''
-        #while True:
-        """data = self.csocket.recv(2048)
-        msg = data.decode()
-        if msg=='bye':
-          break
-        print ("from client", msg)
-        self.csocket.send(bytes(msg,'UTF-8'))"""
+        print ("Conexion de: ", clientAddress)
 
         print("directorio actual: " + os.getcwd())
 
@@ -49,12 +40,12 @@ class ClientThread(threading.Thread):
             while True:
                 print('Recibiendo...')
                 data = self.csocket.recv(1024)
-                print('Descarga completa! ', data)
+                #print('Descarga completa! ', data)
                 if not data:
-                    print('Breaking from file write')
+                    print('Saliendo de la escritura de archivo')
                     break
                 fw.write(data)
-                print('Se escribio el archivo: ', data)
+                #print('Se escribio el archivo: ', data)
             fw.close()
             print("Cancion recibida..")
 
@@ -69,16 +60,16 @@ class ClientThread(threading.Thread):
 
             print("removiendo archivo original: " + archivo)
             os.remove(archivo)
-        print ("Client at ", clientAddress , " disconnected...")
+        print ("Cliente: ", clientAddress , " se desconecto...")
 LOCALHOST = ''
 PORT = 1236
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((LOCALHOST, PORT))
-print("Server started")
-print("Waiting for client request..")
+print("Servidor arriba...")
+print("Esperando RoombaClientes..")
 while True:
-    server.listen(1)
+    server.listen(20)
     clientsock, clientAddress = server.accept()
     newthread = ClientThread(clientAddress, clientsock)
     newthread.start()

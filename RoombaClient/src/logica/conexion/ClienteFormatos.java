@@ -22,7 +22,7 @@ public class ClienteFormatos {
     * Método para establecer la conexión con el servidor
     * @throws IOException en caso de no encontrar disponible el servidor
     */
-   public static void abrirConexion() throws IOException {
+   public void abrirConexion() throws IOException {
         System.out.println("Abriendo puerto\n");
 
         socket = new Socket(DIRECCION_IP, PORT);
@@ -34,7 +34,7 @@ public class ClienteFormatos {
     * @param cancion Canción con la información del archivo
     * @param archivo File con el contenido de los datos de la canción
     */
-   public static void enviarArchivo(Cancion cancion, File archivo) {
+   public void enviarArchivo(Cancion cancion, File archivo) {
 
         FileInputStream fis = null;
         OutputStream os = null;
@@ -84,7 +84,7 @@ public class ClienteFormatos {
    /**
     * Método para cerra la conexión con el servidor
     */
-   public static void cerrarConexion() {
+   public void cerrarConexion() {
         try {
             socket.close();
         } catch (IOException ex) {

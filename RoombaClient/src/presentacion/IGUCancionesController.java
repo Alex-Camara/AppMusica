@@ -151,7 +151,7 @@ public class IGUCancionesController implements Initializable {
                     //Eventos
                     menuItemRadio.setOnAction((ActionEvent) -> {
                         Cancion cancion = row.getItem();
-                        crearRadio(cancion.getIdCancion());
+                        crearRadio(cancion);
                     });
                     menuItemDescargar.setOnAction((ActionEvent) -> {
                         Cancion cancion = row.getItem();
@@ -327,8 +327,9 @@ public class IGUCancionesController implements Initializable {
     * Método para crear una rádio a partir del identificador de una canción
     * @param idCancion int del identificador de la canción
     */
-   public void crearRadio(int idCancion) {
-        int idGenero = recuperarGenero(idCancion);
+   public void crearRadio(Cancion cancion) {
+        int idGenero = recuperarGenero(cancion.getAlbum_idAlbum());
+        System.out.println("id genero del la cancion: " + idGenero);
         Mensaje mensaje = new Mensaje("crearRadio");
         mensaje.setObjeto(idGenero);
         Cliente.enviarMensaje(mensaje);
@@ -339,10 +340,10 @@ public class IGUCancionesController implements Initializable {
     * @param idCancion int del identificador de la canción
     * @return int del identificador del Genero
     */
-   public int recuperarGenero(int idCancion) {
+   public int recuperarGenero(int idAlbum) {
         int idGenero = 0;
         for (int i = 0; i < albumes.size(); i++) {
-            if (idCancion == albumes.get(i).getIdGenero()) {
+            if (idAlbum == albumes.get(i).getIdAlbum()) {
                 idGenero = albumes.get(i).getIdGenero();
             }
         }

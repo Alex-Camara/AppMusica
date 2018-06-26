@@ -4,11 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logica.Cancion;
+import logica.Usuario;
 
 /**
  * Clase que implementa las interfaces declaradas en el DAO homólogo. Esta
@@ -137,6 +143,35 @@ public class CancionBD implements CancionDao {
         agregarCancionABiblioteca(idBiblioteca, cancion);
         return resultado;
     }
+    
+   public void actualizarHistorial(HashMap<Usuario, Cancion> hashRecibido) throws SQLException {
+      Map.Entry<Usuario, Cancion> entry = hashRecibido.entrySet().iterator().next();
+      Usuario usuario = entry.getKey();
+      Cancion cancion = entry.getValue();
+      List<Cancion> cancionesUsuario = recuperarCancionesHistorial(usuario.getIdUsuario());
+      if (!contiene(cancionesUsuario, cancion)) {
+         Connection conexion = null;
+         conexion = Conexion.conectar();
+         PreparedStatement sentencia = null;
+         final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
+         Date date = new Date();
+         String consulta = "INSERT INTO Historial (idUsuario, idCancion, fecha) VALUES(?, ?, ?);";
+         sentencia = conexion.prepareStatement(consulta);
+         sentencia.setInt(1, usuario.getIdUsuario());
+         sentencia.setInt(2, cancion.getIdCancion());
+         sentencia.setString(3, DATEFORMAT.format(date));
+         sentencia.executeUpdate();
+      }
+   }
+   
+   private boolean contiene(List<Cancion> cancionesUsuario, Cancion cancion) {
+      for (int i = 0; i < cancionesUsuario.size(); i++) {
+         if (cancionesUsuario.get(i).getIdCancion() == cancion.getIdCancion()) {
+            return true;
+         }
+      }
+      return false;
+   }
     
     @Override
     public int agregarCancionABiblioteca(int idBiblioteca, Cancion cancion) throws SQLException {

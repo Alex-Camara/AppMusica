@@ -7,35 +7,40 @@ import presentacion.IGUBibliotecaController;
 
 /**
  * Clase para recibir las respuestas del servidor de base de datos
+ *
  * @author José Valdivia
  * @author Alejandro Cámara
  */
 public class EscuchaMensajes extends Thread {
 
-   IGUBibliotecaController iguBiblioteca;
+    IGUBibliotecaController iguBiblioteca;
 
-   /**
-    * Método para asignar el controllado con el cual se comunicará la clase
-    * @param iguBiblioteca
-    */
-   public EscuchaMensajes(IGUBibliotecaController iguBiblioteca) {
-      this.iguBiblioteca = iguBiblioteca;
-   }
-   
+    /**
+     * Método para asignar el controllado con el cual se comunicará la clase
+     *
+     * @param iguBiblioteca
+     */
+    public EscuchaMensajes(IGUBibliotecaController iguBiblioteca) {
+        this.iguBiblioteca = iguBiblioteca;
+    }
 
-   @Override
-   public void run() {
-      Object respuesta = null;
-      do {
-         try {
-            System.out.println("Esperando...");
-            respuesta = Cliente.entradaRed.readObject();
-         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         iguBiblioteca.recibirMensaje(respuesta);
-      } while (true);
+    @Override
+    public void run() {
+        boolean continuar = true;
+        Object respuesta = null;
+        do {
+            try {
+                System.out.println("Esperando...");
+                respuesta = Cliente.entradaRed.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Se ha caido el servidor");
+                //respuesta = new Mensaje("cerrarConexión");
+                //continuar = false;
+            }
+            iguBiblioteca.recibirMensaje(respuesta);
+        } while (continuar);
 
-   }
+    }
 
 }

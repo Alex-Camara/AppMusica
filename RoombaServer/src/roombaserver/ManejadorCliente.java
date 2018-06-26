@@ -239,7 +239,7 @@ public class ManejadorCliente extends Thread {
                     salida.flush();
                     break;
                 case "guardarCancionesCreador":
-                     List<Cancion> cancionesAGuardar2 = (List<Cancion>) mensajeRecibido.getObjeto();
+                    List<Cancion> cancionesAGuardar2 = (List<Cancion>) mensajeRecibido.getObjeto();
                     System.out.println("canciones a guardar: " + cancionesAGuardar2);
                     guardarCanciones(cancionesAGuardar2, false);
                     mensaje = new Mensaje("cancionesGuardadas");
@@ -261,6 +261,12 @@ public class ManejadorCliente extends Thread {
                     mensaje = new Mensaje("cancionAgregadaABiblioteca");
                     salida.writeObject(mensaje);
                     salida.flush();
+                    break;
+                case "insertarEnHistorial":
+                    HashMap<Usuario, Cancion> hashHistorial = new HashMap<>();
+                    hashHistorial = (HashMap<Usuario, Cancion>) mensajeRecibido.getObjeto();
+                    CancionBD cancionesServidorHistorial = new CancionBD();
+                    cancionesServidorHistorial.actualizarHistorial(hashHistorial);
                     break;
                 case "eliminarCancion":
                     int idCancion = (Integer) mensajeRecibido.getObjeto();
@@ -286,6 +292,7 @@ public class ManejadorCliente extends Thread {
             }
         } catch (IOException | ClassNotFoundException ex) {
             mensajeRecibido = null;
+            continuar = false;
             Logger.getLogger(ManejadorCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         return continuar;
@@ -343,6 +350,7 @@ public class ManejadorCliente extends Thread {
         List<Album> albumes = new ArrayList<>();
         AlbumDao albumServidor = new AlbumBD();
         albumes = albumServidor.recuperarAlbumGenero(idGenero);
+        System.out.println("albumes por genero: " + albumes);
         return albumes;
     }
 
@@ -353,6 +361,7 @@ public class ManejadorCliente extends Thread {
             List<Cancion> cancionesTemp = cancionesServidor.recuperarCancionesAlbum(albumes.get(i).getIdAlbum());
             canciones.addAll(cancionesTemp);
         }
+        System.out.println("canciones por album: " + canciones);
         return canciones;
     }
 

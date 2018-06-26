@@ -5,7 +5,7 @@ import threading
 
 class ServidorThread():
     def __init__(self):
-        self.host = "127.0.0.1"
+        self.host = ''
         self.port = 1235
         self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serverSocket.bind((self.host, self.port))    
@@ -32,8 +32,8 @@ class ServidorThread():
 
     def recuperarArchivo(self, cliente, address):
         BUFFER_SIZE = 4096
-        home = expanduser("~")
-        home = home + "/LibreriaMusica/"
+        #home = expanduser("~")
+        home = os.getcwd() + "/LibreriaMusica/"
 
         ruta = cliente.recv(BUFFER_SIZE)
         pathArchivo = home + ruta
@@ -41,6 +41,7 @@ class ServidorThread():
         if os.path.isfile(pathArchivo):
             print "Recupero archivo"
             archivo = open(pathArchivo, "rb")
+
             self.enviarDatos(archivo, cliente)  
                     
 if __name__ == '__main__':  

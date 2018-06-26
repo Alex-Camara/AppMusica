@@ -31,7 +31,6 @@ import logica.ListaReproduccion;
 import logica.Usuario;
 import logica.conexion.Mensaje;
 import logica.conexion.Cliente;
-import logica.conexion.ClienteStreaming;
 import presentacion.Utileria.Emergente;
 
 /**
@@ -344,20 +343,15 @@ public class IGUBibliotecaController implements Initializable {
 
     @FXML
     void clicRadio() {
-        if (cancionesRadio.isEmpty()) {
-            Platform.runLater(() -> {
-                Emergente.cargarEmergente("Aviso", "No hay canciones en tu radio");
-            });
 
-        } else {
-            ocultarSeleccion();
-            buttonRadio.setStyle(COLOR_TEXTO_RESALTADO);
-            controladorRadio.cargarTablaCanciones(cancionesRadio, controladorBarraReproduccion);
-            Platform.runLater(() -> {
-                borderPanePrincipal.setCenter(paneRadio);
-            });
+        ocultarSeleccion();
+        buttonRadio.setDisable(false);
+        buttonRadio.setStyle(COLOR_TEXTO_RESALTADO);
+        controladorRadio.cargarTablaCanciones(cancionesRadio, controladorBarraReproduccion);
+        Platform.runLater(() -> {
+            borderPanePrincipal.setCenter(paneRadio);
+        });
 
-        }
     }
 
     private void ocultarSeleccion() {
@@ -495,9 +489,10 @@ public class IGUBibliotecaController implements Initializable {
                 generos = (List<Genero>) mensaje.getObjeto();
                 break;
             case "historial":
-                List<Cancion> cancionesHistorial = (List<Cancion>) mensaje.getObjeto();
-                controladorCanciones.cargarTablaCanciones(albumes, cancionesHistorial, controladorBarraReproduccion);
-                break;
+            List<Cancion> cancionesHistorial = (List<Cancion>) mensaje.getObjeto();
+            //System.out.println("Canciones Historial " + cancionesHistorial.get(0).getNombre());
+            controladorCanciones.cargarTablaCanciones(albumes, cancionesHistorial, controladorBarraReproduccion);
+            break;
             case "catalogoGeneros":
                 List<Genero> catalogoGeneros = (List<Genero>) mensaje.getObjeto();
                 controladorAgregarLocal.cargarComboGeneros(catalogoGeneros);
@@ -505,11 +500,11 @@ public class IGUBibliotecaController implements Initializable {
             case "listasReproduccion":
                 listasReproduccion = (List<ListaReproduccion>) mensaje.getObjeto();
                 System.out.println("listas de reproducción: " + listasReproduccion);
-                for (int i = 0; i < listasReproduccion.size(); i++) {
+                /*for (int i = 0; i < listasReproduccion.size(); i++) {
                     for (int j = 0; j < listasReproduccion.get(i).getCanciones().size(); j++) {
                         System.out.println("cancion: " + listasReproduccion.get(i).getCanciones().get(i).getNombre());
                     }
-                }
+                }*/
                 controladorCanciones.setListasReproduccion(listasReproduccion);
                 controladorCanciones.cargarTablaCanciones(albumes, canciones, controladorBarraReproduccion);
                 controladorCanciones.agregarListenersTablaCanciones(controladorBarraReproduccion);
@@ -554,6 +549,9 @@ public class IGUBibliotecaController implements Initializable {
                 break;
             case "cerrarConexión":
                 Cliente.cerrarConexion();
+                break;
+            default:
+                System.out.println("servidor caido");
                 break;
         }
 

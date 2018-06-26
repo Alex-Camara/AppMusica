@@ -24,8 +24,8 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <JFXButton fx:id="buttonAgregarLista" layoutX="589.0" layoutY="20.0" onAction="#agregarLista" text="Agregar lista" />
-      <JFXButton fx:id="buttonRegresar" layoutX="21.0" layoutY="14.0" onAction="#regresar" text="Regresar" visible="false">
+      <JFXButton fx:id="buttonAgregarLista" focusTraversable="false" layoutX="589.0" layoutY="20.0" onAction="#agregarLista" text="Agregar lista" />
+      <JFXButton fx:id="buttonRegresar" focusTraversable="false" layoutX="21.0" layoutY="14.0" onAction="#regresar" text="Regresar" visible="false">
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="32.0" preserveRatio="true">
                <image>

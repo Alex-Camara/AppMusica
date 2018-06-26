@@ -199,7 +199,7 @@ public class IGUBarraReproduccionController implements Initializable {
             labelArtista.setVisible(true);
             labelTituloArtista.setVisible(true);
 
-            if (IGUBibliotecaController.biblioteca) {
+            //if (IGUBibliotecaController.biblioteca) {
                 imageEstrella1.setVisible(true);
                 imageEstrella2.setVisible(true);
                 imageEstrella3.setVisible(true);
@@ -207,13 +207,13 @@ public class IGUBarraReproduccionController implements Initializable {
                 imageEstrella5.setVisible(true);
 
                 iluminarEstrellas(cancionLocal.getCalificacion());
-            } else {
+            /*} else {
                 imageEstrella1.setDisable(true);
                 imageEstrella2.setDisable(true);
                 imageEstrella3.setDisable(true);
                 imageEstrella4.setDisable(true);
                 imageEstrella5.setDisable(true);
-            }
+            }*/
 
             cancion = cancionLocal;
         });
