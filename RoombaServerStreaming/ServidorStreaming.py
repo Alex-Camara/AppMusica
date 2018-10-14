@@ -13,7 +13,7 @@ class ServidorThread():
     def escucha (self):
         self.serverSocket.listen(15)
         while True:
-            print "Servidor en espera de clientes"
+            print "Servidor streaming en espera de clientes"
             cliente, address = self.serverSocket.accept()
             threading.Thread(target = self.recuperarArchivo, args = (cliente, address)).start()
     @staticmethod

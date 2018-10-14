@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import logica.conexion.Cliente;
 
 /**
  * Clase de cliente de la aplicación de música en streaming Roomba.

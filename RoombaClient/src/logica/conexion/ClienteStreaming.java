@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class ClienteStreaming {
 
-    private static final String HOST = "192.168.43.130";
+    private static final String HOST = "localhost";
     private static final int PUERTO = 1235;
     private static Socket cliente;
     private static PrintWriter salida;
